@@ -147,7 +147,9 @@
 
 
 /* peripheral libraries and drivers */
-
+#define RT_USING_SFUD
+#define RT_SFUD_USING_SFDP
+#define RT_SFUD_USING_FLASH_INFO_TABLE
 
 /* miscellaneous packages */
 
@@ -166,6 +168,9 @@
 /* On-chip Peripheral Drivers */
 
 #define BSP_USING_GPIO
+
+#define RT_USING_SPI
+#define BSP_USING_SPI1
 
 #define BSP_USING_UART
 #define BSP_USING_UART4

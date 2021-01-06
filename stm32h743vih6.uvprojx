@@ -339,7 +339,7 @@
               <MiscControls></MiscControls>
               <Define>USE_FULL_LL_DRIVER,USE_HAL_DRIVER,STM32H743xx,ARM_MATH_CM7,ARM_MATH_ROUNDING,__TARGET_FPU_VFP</Define>
               <Undefine></Undefine>
-              <IncludePath>.\include;.\include\cmsis;.\include\machine;.\include\math;.\lib\STM32H7xx_HAL_Driver\Inc;.\lib\STM32H7xx_HAL_Driver\Inc\Legacy;.\main;.\thirdParty\rt-thread-all\components\finsh;.\thirdParty\rt-thread-all\include;.\thirdParty\rt-thread-all\include\libc;.\thirdParty\rt-thread-all\user;.\thirdParty\rt-thread-all\bsp\stm32\libraries\HAL_Drivers\config\h7;.\thirdParty\rt-thread-all\bsp\stm32\libraries\HAL_Drivers;.\thirdParty\rt-thread-all\components\drivers\include;.\thirdParty\rt-thread-all\components\drivers\include\ipc;.\thirdParty\rt-thread-all\components\drivers\include\drivers;.\thirdParty\rt-thread-all\components\drivers\hwcrypto;.\thirdParty\rt-thread-all\components\drivers\include\ipc;.\thirdParty\rt-thread-all\components\libc\compilers\common</IncludePath>
+              <IncludePath>.\include;.\include\cmsis;.\include\machine;.\include\math;.\lib\STM32H7xx_HAL_Driver\Inc;.\lib\STM32H7xx_HAL_Driver\Inc\Legacy;.\main;.\thirdParty\rt-thread-all\components\finsh;.\thirdParty\rt-thread-all\include;.\thirdParty\rt-thread-all\include\libc;.\thirdParty\rt-thread-all\user;.\thirdParty\rt-thread-all\bsp\stm32\libraries\HAL_Drivers\config\h7;.\thirdParty\rt-thread-all\bsp\stm32\libraries\HAL_Drivers;.\thirdParty\rt-thread-all\components\drivers\include;.\thirdParty\rt-thread-all\components\drivers\include\ipc;.\thirdParty\rt-thread-all\components\drivers\include\drivers;.\thirdParty\rt-thread-all\components\drivers\hwcrypto;.\thirdParty\rt-thread-all\components\drivers\include\ipc;.\thirdParty\rt-thread-all\components\libc\compilers\common;.\thirdParty\rt-thread-all\components\drivers\spi;.\thirdParty\rt-thread-all\components\drivers\spi\sfud\inc</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -1498,6 +1498,26 @@
               <FileType>1</FileType>
               <FilePath>.\thirdParty\rt-thread-all\components\drivers\rtc\rtc.c</FilePath>
             </File>
+            <File>
+              <FileName>spi_core.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\thirdParty\rt-thread-all\components\drivers\spi\spi_core.c</FilePath>
+            </File>
+            <File>
+              <FileName>spi_dev.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\thirdParty\rt-thread-all\components\drivers\spi\spi_dev.c</FilePath>
+            </File>
+            <File>
+              <FileName>spi_flash_sfud.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\thirdParty\rt-thread-all\components\drivers\spi\spi_flash_sfud.c</FilePath>
+            </File>
+            <File>
+              <FileName>qspi_core.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\thirdParty\rt-thread-all\components\drivers\spi\qspi_core.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -1607,6 +1627,11 @@
               <FileType>1</FileType>
               <FilePath>.\thirdParty\rt-thread-all\components\drivers\hwcrypto\hwcrypto.c</FilePath>
             </File>
+            <File>
+              <FileName>drv_qspi.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\thirdParty\rt-thread-all\bsp\stm32\libraries\HAL_Drivers\drv_qspi.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -1616,6 +1641,21 @@
               <FileName>time.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\thirdParty\rt-thread-all\components\libc\compilers\common\time.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>ThridParty/rtt/sfud</GroupName>
+          <Files>
+            <File>
+              <FileName>sfud.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\thirdParty\rt-thread-all\components\drivers\spi\sfud\src\sfud.c</FilePath>
+            </File>
+            <File>
+              <FileName>sfud_sfdp.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\thirdParty\rt-thread-all\components\drivers\spi\sfud\src\sfud_sfdp.c</FilePath>
             </File>
           </Files>
         </Group>

@@ -29,8 +29,7 @@
 #define LOG_TAG              "drv.spi"
 #include <drv_log.h>
 
-enum
-{
+enum {
 #ifdef BSP_USING_SPI1
     SPI1_INDEX,
 #endif
@@ -78,72 +77,52 @@ static struct stm32_spi_config spi_config[] =
 #endif
 };
 
-static struct stm32_spi spi_bus_obj[sizeof(spi_config) / sizeof(spi_config[0])] = {0};
+static struct stm32_spi spi_bus_obj[sizeof(spi_config) / sizeof(spi_config[0])] = { 0 };
 
-static rt_err_t stm32_spi_init(struct stm32_spi *spi_drv, struct rt_spi_configuration *cfg)
+static rt_err_t stm32_spi_init(struct stm32_spi* spi_drv, struct rt_spi_configuration* cfg)
 {
     RT_ASSERT(spi_drv != RT_NULL);
     RT_ASSERT(cfg != RT_NULL);
 
-    SPI_HandleTypeDef *spi_handle = &spi_drv->handle;
+    SPI_HandleTypeDef* spi_handle = &spi_drv->handle;
 
-    if (cfg->mode & RT_SPI_SLAVE)
-    {
+    if (cfg->mode & RT_SPI_SLAVE) {
         spi_handle->Init.Mode = SPI_MODE_SLAVE;
-    }
-    else
-    {
+    } else {
         spi_handle->Init.Mode = SPI_MODE_MASTER;
     }
 
-    if (cfg->mode & RT_SPI_3WIRE)
-    {
+    if (cfg->mode & RT_SPI_3WIRE) {
         spi_handle->Init.Direction = SPI_DIRECTION_1LINE;
-    }
-    else
-    {
+    } else {
         spi_handle->Init.Direction = SPI_DIRECTION_2LINES;
     }
 
-    if (cfg->data_width == 8)
-    {
+    if (cfg->data_width == 8) {
         spi_handle->Init.DataSize = SPI_DATASIZE_8BIT;
         spi_handle->TxXferSize = 8;
         spi_handle->RxXferSize = 8;
-    }
-    else if (cfg->data_width == 16)
-    {
+    } else if (cfg->data_width == 16) {
         spi_handle->Init.DataSize = SPI_DATASIZE_16BIT;
-    }
-    else
-    {
+    } else {
         return RT_EIO;
     }
 
-    if (cfg->mode & RT_SPI_CPHA)
-    {
+    if (cfg->mode & RT_SPI_CPHA) {
         spi_handle->Init.CLKPhase = SPI_PHASE_2EDGE;
-    }
-    else
-    {
+    } else {
         spi_handle->Init.CLKPhase = SPI_PHASE_1EDGE;
     }
 
-    if (cfg->mode & RT_SPI_CPOL)
-    {
+    if (cfg->mode & RT_SPI_CPOL) {
         spi_handle->Init.CLKPolarity = SPI_POLARITY_HIGH;
-    }
-    else
-    {
+    } else {
         spi_handle->Init.CLKPolarity = SPI_POLARITY_LOW;
     }
 
-    if (cfg->mode & RT_SPI_NO_CS)
-    {
+    if (cfg->mode & RT_SPI_NO_CS) {
         spi_handle->Init.NSS = SPI_NSS_HARD_OUTPUT;
-    }
-    else
-    {
+    } else {
         spi_handle->Init.NSS = SPI_NSS_SOFT;
     }
 
@@ -157,56 +136,38 @@ static rt_err_t stm32_spi_init(struct stm32_spi *spi_drv, struct rt_spi_configur
     SPI_APB_CLOCK = HAL_RCC_GetPCLK2Freq();
 #endif
 
-    if (cfg->max_hz >= SPI_APB_CLOCK / 2)
-    {
+    if (cfg->max_hz >= SPI_APB_CLOCK / 2) {
         spi_handle->Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_2;
-    }
-    else if (cfg->max_hz >= SPI_APB_CLOCK / 4)
-    {
+    } else if (cfg->max_hz >= SPI_APB_CLOCK / 4) {
         spi_handle->Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_4;
-    }
-    else if (cfg->max_hz >= SPI_APB_CLOCK / 8)
-    {
+    } else if (cfg->max_hz >= SPI_APB_CLOCK / 8) {
         spi_handle->Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_8;
-    }
-    else if (cfg->max_hz >= SPI_APB_CLOCK / 16)
-    {
+    } else if (cfg->max_hz >= SPI_APB_CLOCK / 16) {
         spi_handle->Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_16;
-    }
-    else if (cfg->max_hz >= SPI_APB_CLOCK / 32)
-    {
+    } else if (cfg->max_hz >= SPI_APB_CLOCK / 32) {
         spi_handle->Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_32;
-    }
-    else if (cfg->max_hz >= SPI_APB_CLOCK / 64)
-    {
+    } else if (cfg->max_hz >= SPI_APB_CLOCK / 64) {
         spi_handle->Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_64;
-    }
-    else if (cfg->max_hz >= SPI_APB_CLOCK / 128)
-    {
+    } else if (cfg->max_hz >= SPI_APB_CLOCK / 128) {
         spi_handle->Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_128;
-    }
-    else
-    {
+    } else {
         /*  min prescaler 256 */
         spi_handle->Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_256;
     }
 
     LOG_D("sys freq: %d, pclk2 freq: %d, SPI limiting freq: %d, BaudRatePrescaler: %d",
 #if defined(SOC_SERIES_STM32MP1)
-          HAL_RCC_GetSystemCoreClockFreq(),
+        HAL_RCC_GetSystemCoreClockFreq(),
 #else
-          HAL_RCC_GetSysClockFreq(),
+        HAL_RCC_GetSysClockFreq(),
 #endif
-          SPI_APB_CLOCK,
-          cfg->max_hz,
-          spi_handle->Init.BaudRatePrescaler);
+        SPI_APB_CLOCK,
+        cfg->max_hz,
+        spi_handle->Init.BaudRatePrescaler);
 
-    if (cfg->mode & RT_SPI_MSB)
-    {
+    if (cfg->mode & RT_SPI_MSB) {
         spi_handle->Init.FirstBit = SPI_FIRSTBIT_MSB;
-    }
-    else
-    {
+    } else {
         spi_handle->Init.FirstBit = SPI_FIRSTBIT_LSB;
     }
 
@@ -214,25 +175,24 @@ static rt_err_t stm32_spi_init(struct stm32_spi *spi_drv, struct rt_spi_configur
     spi_handle->Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
     spi_handle->State = HAL_SPI_STATE_RESET;
 #if defined(SOC_SERIES_STM32L4) || defined(SOC_SERIES_STM32G0) || defined(SOC_SERIES_STM32F0) || defined(SOC_SERIES_STM32WB)
-    spi_handle->Init.NSSPMode          = SPI_NSS_PULSE_DISABLE;
+    spi_handle->Init.NSSPMode = SPI_NSS_PULSE_DISABLE;
 #elif defined(SOC_SERIES_STM32H7) || defined(SOC_SERIES_STM32MP1)
-    spi_handle->Init.Mode                       = SPI_MODE_MASTER;
-    spi_handle->Init.NSS                        = SPI_NSS_SOFT;
-    spi_handle->Init.NSSPMode                   = SPI_NSS_PULSE_DISABLE;
-    spi_handle->Init.NSSPolarity                = SPI_NSS_POLARITY_LOW;
-    spi_handle->Init.CRCPolynomial              = 7;
+    spi_handle->Init.Mode = SPI_MODE_MASTER;
+    spi_handle->Init.NSS = SPI_NSS_SOFT;
+    spi_handle->Init.NSSPMode = SPI_NSS_PULSE_DISABLE;
+    spi_handle->Init.NSSPolarity = SPI_NSS_POLARITY_LOW;
+    spi_handle->Init.CRCPolynomial = 7;
     spi_handle->Init.TxCRCInitializationPattern = SPI_CRC_INITIALIZATION_ALL_ZERO_PATTERN;
     spi_handle->Init.RxCRCInitializationPattern = SPI_CRC_INITIALIZATION_ALL_ZERO_PATTERN;
-    spi_handle->Init.MasterSSIdleness           = SPI_MASTER_SS_IDLENESS_00CYCLE;
-    spi_handle->Init.MasterInterDataIdleness    = SPI_MASTER_INTERDATA_IDLENESS_00CYCLE;
-    spi_handle->Init.MasterReceiverAutoSusp     = SPI_MASTER_RX_AUTOSUSP_DISABLE;
+    spi_handle->Init.MasterSSIdleness = SPI_MASTER_SS_IDLENESS_00CYCLE;
+    spi_handle->Init.MasterInterDataIdleness = SPI_MASTER_INTERDATA_IDLENESS_00CYCLE;
+    spi_handle->Init.MasterReceiverAutoSusp = SPI_MASTER_RX_AUTOSUSP_DISABLE;
     spi_handle->Init.MasterKeepIOState = SPI_MASTER_KEEP_IO_STATE_ENABLE;
-    spi_handle->Init.IOSwap                     = SPI_IO_SWAP_DISABLE;
-    spi_handle->Init.FifoThreshold              = SPI_FIFO_THRESHOLD_08DATA;
+    spi_handle->Init.IOSwap = SPI_IO_SWAP_DISABLE;
+    spi_handle->Init.FifoThreshold = SPI_FIFO_THRESHOLD_08DATA;
 #endif
 
-    if (HAL_SPI_Init(spi_handle) != HAL_OK)
-    {
+    if (HAL_SPI_Init(spi_handle) != HAL_OK) {
         return RT_EIO;
     }
 
@@ -242,8 +202,7 @@ static rt_err_t stm32_spi_init(struct stm32_spi *spi_drv, struct rt_spi_configur
 #endif
 
     /* DMA configuration */
-    if (spi_drv->spi_dma_flag & SPI_USING_RX_DMA_FLAG)
-    {
+    if (spi_drv->spi_dma_flag & SPI_USING_RX_DMA_FLAG) {
         HAL_DMA_Init(&spi_drv->dma.handle_rx);
 
         __HAL_LINKDMA(&spi_drv->handle, hdmarx, spi_drv->dma.handle_rx);
@@ -253,8 +212,7 @@ static rt_err_t stm32_spi_init(struct stm32_spi *spi_drv, struct rt_spi_configur
         HAL_NVIC_EnableIRQ(spi_drv->config->dma_rx->dma_irq);
     }
 
-    if (spi_drv->spi_dma_flag & SPI_USING_TX_DMA_FLAG)
-    {
+    if (spi_drv->spi_dma_flag & SPI_USING_TX_DMA_FLAG) {
         HAL_DMA_Init(&spi_drv->dma.handle_tx);
 
         __HAL_LINKDMA(&spi_drv->handle, hdmatx, spi_drv->dma.handle_tx);
@@ -268,108 +226,85 @@ static rt_err_t stm32_spi_init(struct stm32_spi *spi_drv, struct rt_spi_configur
     return RT_EOK;
 }
 
-static rt_uint32_t spixfer(struct rt_spi_device *device, struct rt_spi_message *message)
+static rt_uint32_t spixfer(struct rt_spi_device* device, struct rt_spi_message* message)
 {
     HAL_StatusTypeDef state;
     rt_size_t message_length, already_send_length;
     rt_uint16_t send_length;
-    rt_uint8_t *recv_buf;
-    const rt_uint8_t *send_buf;
+    rt_uint8_t* recv_buf;
+    const rt_uint8_t* send_buf;
 
     RT_ASSERT(device != RT_NULL);
     RT_ASSERT(device->bus != RT_NULL);
     RT_ASSERT(device->bus->parent.user_data != RT_NULL);
     RT_ASSERT(message != RT_NULL);
 
-    struct stm32_spi *spi_drv =  rt_container_of(device->bus, struct stm32_spi, spi_bus);
-    SPI_HandleTypeDef *spi_handle = &spi_drv->handle;
-    struct stm32_hw_spi_cs *cs = device->parent.user_data;
+    struct stm32_spi* spi_drv = rt_container_of(device->bus, struct stm32_spi, spi_bus);
+    SPI_HandleTypeDef* spi_handle = &spi_drv->handle;
+    struct stm32_hw_spi_cs* cs = device->parent.user_data;
 
-    if (message->cs_take && !(device->config.mode & RT_SPI_NO_CS))
-    {
+    if (message->cs_take && !(device->config.mode & RT_SPI_NO_CS)) {
         HAL_GPIO_WritePin(cs->GPIOx, cs->GPIO_Pin, GPIO_PIN_RESET);
     }
 
     LOG_D("%s transfer prepare and start", spi_drv->config->bus_name);
     LOG_D("%s sendbuf: %X, recvbuf: %X, length: %d",
-          spi_drv->config->bus_name,
-          (uint32_t)message->send_buf,
-          (uint32_t)message->recv_buf, message->length);
+        spi_drv->config->bus_name,
+        (uint32_t)message->send_buf,
+        (uint32_t)message->recv_buf, message->length);
 
     message_length = message->length;
     recv_buf = message->recv_buf;
     send_buf = message->send_buf;
-    while (message_length)
-    {
+    while (message_length) {
         /* the HAL library use uint16 to save the data length */
-        if (message_length > 65535)
-        {
+        if (message_length > 65535) {
             send_length = 65535;
             message_length = message_length - 65535;
-        }
-        else
-        {
+        } else {
             send_length = message_length;
             message_length = 0;
         }
 
         /* calculate the start address */
         already_send_length = message->length - send_length - message_length;
-        send_buf = (rt_uint8_t *)message->send_buf + already_send_length;
-        recv_buf = (rt_uint8_t *)message->recv_buf + already_send_length;
-        
+        send_buf = (rt_uint8_t*)message->send_buf + already_send_length;
+        recv_buf = (rt_uint8_t*)message->recv_buf + already_send_length;
+
         /* start once data exchange in DMA mode */
-        if (message->send_buf && message->recv_buf)
-        {
-            if ((spi_drv->spi_dma_flag & SPI_USING_TX_DMA_FLAG) && (spi_drv->spi_dma_flag & SPI_USING_RX_DMA_FLAG))
-            {
-                state = HAL_SPI_TransmitReceive_DMA(spi_handle, (uint8_t *)send_buf, (uint8_t *)recv_buf, send_length);
+        if (message->send_buf && message->recv_buf) {
+            if ((spi_drv->spi_dma_flag & SPI_USING_TX_DMA_FLAG) && (spi_drv->spi_dma_flag & SPI_USING_RX_DMA_FLAG)) {
+                state = HAL_SPI_TransmitReceive_DMA(spi_handle, (uint8_t*)send_buf, (uint8_t*)recv_buf, send_length);
+            } else {
+                state = HAL_SPI_TransmitReceive(spi_handle, (uint8_t*)send_buf, (uint8_t*)recv_buf, send_length, 1000);
             }
-            else
-            {
-                state = HAL_SPI_TransmitReceive(spi_handle, (uint8_t *)send_buf, (uint8_t *)recv_buf, send_length, 1000);
-            }
-        }
-        else if (message->send_buf)
-        {
-            if (spi_drv->spi_dma_flag & SPI_USING_TX_DMA_FLAG)
-            {
-                state = HAL_SPI_Transmit_DMA(spi_handle, (uint8_t *)send_buf, send_length);
-            }
-            else
-            {
-                state = HAL_SPI_Transmit(spi_handle, (uint8_t *)send_buf, send_length, 1000);
+        } else if (message->send_buf) {
+            if (spi_drv->spi_dma_flag & SPI_USING_TX_DMA_FLAG) {
+                state = HAL_SPI_Transmit_DMA(spi_handle, (uint8_t*)send_buf, send_length);
+            } else {
+                state = HAL_SPI_Transmit(spi_handle, (uint8_t*)send_buf, send_length, 1000);
             }
 
-            if (message->cs_release && (device->config.mode & RT_SPI_3WIRE))
-            {
+            if (message->cs_release && (device->config.mode & RT_SPI_3WIRE)) {
                 /* release the CS by disable SPI when using 3 wires SPI */
                 __HAL_SPI_DISABLE(spi_handle);
             }
-        }
-        else
-        {
-            memset((uint8_t *)recv_buf, 0xff, send_length);
-            if (spi_drv->spi_dma_flag & SPI_USING_RX_DMA_FLAG)
-            {
-                state = HAL_SPI_Receive_DMA(spi_handle, (uint8_t *)recv_buf, send_length);
-            }
-            else
-            {
+        } else {
+            memset((uint8_t*)recv_buf, 0xff, send_length);
+            if (spi_drv->spi_dma_flag & SPI_USING_RX_DMA_FLAG) {
+                state = HAL_SPI_Receive_DMA(spi_handle, (uint8_t*)recv_buf, send_length);
+            } else {
                 /* clear the old error flag */
                 __HAL_SPI_CLEAR_OVRFLAG(spi_handle);
-                state = HAL_SPI_Receive(spi_handle, (uint8_t *)recv_buf, send_length, 1000);
+                state = HAL_SPI_Receive(spi_handle, (uint8_t*)recv_buf, send_length, 1000);
             }
         }
 
-        if (state != HAL_OK)
-        {
+        if (state != HAL_OK) {
             LOG_I("spi transfer error : %d", state);
             message->length = 0;
             spi_handle->State = HAL_SPI_STATE_READY;
-        }
-        else
-        {
+        } else {
             LOG_D("%s transfer done", spi_drv->config->bus_name);
         }
 
@@ -379,21 +314,20 @@ static rt_uint32_t spixfer(struct rt_spi_device *device, struct rt_spi_message *
         while (HAL_SPI_GetState(spi_handle) != HAL_SPI_STATE_READY);
     }
 
-    if (message->cs_release && !(device->config.mode & RT_SPI_NO_CS))
-    {
+    if (message->cs_release && !(device->config.mode & RT_SPI_NO_CS)) {
         HAL_GPIO_WritePin(cs->GPIOx, cs->GPIO_Pin, GPIO_PIN_SET);
     }
 
     return message->length;
 }
 
-static rt_err_t spi_configure(struct rt_spi_device *device,
-                              struct rt_spi_configuration *configuration)
+static rt_err_t spi_configure(struct rt_spi_device* device,
+    struct rt_spi_configuration* configuration)
 {
     RT_ASSERT(device != RT_NULL);
     RT_ASSERT(configuration != RT_NULL);
 
-    struct stm32_spi *spi_drv =  rt_container_of(device->bus, struct stm32_spi, spi_bus);
+    struct stm32_spi* spi_drv = rt_container_of(device->bus, struct stm32_spi, spi_bus);
     spi_drv->cfg = configuration;
 
     return stm32_spi_init(spi_drv, configuration);
@@ -408,14 +342,12 @@ static const struct rt_spi_ops stm_spi_ops =
 static int rt_hw_spi_bus_init(void)
 {
     rt_err_t result;
-    for (int i = 0; i < sizeof(spi_config) / sizeof(spi_config[0]); i++)
-    {
+    for (int i = 0; i < sizeof(spi_config) / sizeof(spi_config[0]); i++) {
         spi_bus_obj[i].config = &spi_config[i];
         spi_bus_obj[i].spi_bus.parent.user_data = &spi_config[i];
         spi_bus_obj[i].handle.Instance = spi_config[i].Instance;
 
-        if (spi_bus_obj[i].spi_dma_flag & SPI_USING_RX_DMA_FLAG)
-        {
+        if (spi_bus_obj[i].spi_dma_flag & SPI_USING_RX_DMA_FLAG) {
             /* Configure the DMA handler for Transmission process */
             spi_bus_obj[i].dma.handle_rx.Instance = spi_config[i].dma_rx->Instance;
 #if defined(SOC_SERIES_STM32F2) || defined(SOC_SERIES_STM32F4) || defined(SOC_SERIES_STM32F7)
@@ -423,18 +355,18 @@ static int rt_hw_spi_bus_init(void)
 #elif defined(SOC_SERIES_STM32L4) || defined(SOC_SERIES_STM32G0) || defined(SOC_SERIES_STM32MP1) || defined(SOC_SERIES_STM32WB)
             spi_bus_obj[i].dma.handle_rx.Init.Request = spi_config[i].dma_rx->request;
 #endif
-            spi_bus_obj[i].dma.handle_rx.Init.Direction           = DMA_PERIPH_TO_MEMORY;
-            spi_bus_obj[i].dma.handle_rx.Init.PeriphInc           = DMA_PINC_DISABLE;
-            spi_bus_obj[i].dma.handle_rx.Init.MemInc              = DMA_MINC_ENABLE;
+            spi_bus_obj[i].dma.handle_rx.Init.Direction = DMA_PERIPH_TO_MEMORY;
+            spi_bus_obj[i].dma.handle_rx.Init.PeriphInc = DMA_PINC_DISABLE;
+            spi_bus_obj[i].dma.handle_rx.Init.MemInc = DMA_MINC_ENABLE;
             spi_bus_obj[i].dma.handle_rx.Init.PeriphDataAlignment = DMA_PDATAALIGN_BYTE;
-            spi_bus_obj[i].dma.handle_rx.Init.MemDataAlignment    = DMA_MDATAALIGN_BYTE;
-            spi_bus_obj[i].dma.handle_rx.Init.Mode                = DMA_NORMAL;
-            spi_bus_obj[i].dma.handle_rx.Init.Priority            = DMA_PRIORITY_HIGH;
+            spi_bus_obj[i].dma.handle_rx.Init.MemDataAlignment = DMA_MDATAALIGN_BYTE;
+            spi_bus_obj[i].dma.handle_rx.Init.Mode = DMA_NORMAL;
+            spi_bus_obj[i].dma.handle_rx.Init.Priority = DMA_PRIORITY_HIGH;
 #if defined(SOC_SERIES_STM32F2) || defined(SOC_SERIES_STM32F4) || defined(SOC_SERIES_STM32F7) || defined(SOC_SERIES_STM32MP1)
-            spi_bus_obj[i].dma.handle_rx.Init.FIFOMode            = DMA_FIFOMODE_DISABLE;
-            spi_bus_obj[i].dma.handle_rx.Init.FIFOThreshold       = DMA_FIFO_THRESHOLD_FULL;
-            spi_bus_obj[i].dma.handle_rx.Init.MemBurst            = DMA_MBURST_INC4;
-            spi_bus_obj[i].dma.handle_rx.Init.PeriphBurst         = DMA_PBURST_INC4;
+            spi_bus_obj[i].dma.handle_rx.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
+            spi_bus_obj[i].dma.handle_rx.Init.FIFOThreshold = DMA_FIFO_THRESHOLD_FULL;
+            spi_bus_obj[i].dma.handle_rx.Init.MemBurst = DMA_MBURST_INC4;
+            spi_bus_obj[i].dma.handle_rx.Init.PeriphBurst = DMA_PBURST_INC4;
 #endif
 
             {
@@ -448,7 +380,7 @@ static int rt_hw_spi_bus_init(void)
                 /* Delay after an RCC peripheral clock enabling */
                 tmpreg = READ_BIT(RCC->AHB1ENR, spi_config[i].dma_rx->dma_rcc);
 #elif defined(SOC_SERIES_STM32MP1) 
-                __HAL_RCC_DMAMUX_CLK_ENABLE(); 
+                __HAL_RCC_DMAMUX_CLK_ENABLE();
                 SET_BIT(RCC->MP_AHB2ENSETR, spi_config[i].dma_rx->dma_rcc);
                 tmpreg = READ_BIT(RCC->MP_AHB2ENSETR, spi_config[i].dma_rx->dma_rcc);
 #endif
@@ -456,8 +388,7 @@ static int rt_hw_spi_bus_init(void)
             }
         }
 
-        if (spi_bus_obj[i].spi_dma_flag & SPI_USING_TX_DMA_FLAG)
-        {
+        if (spi_bus_obj[i].spi_dma_flag & SPI_USING_TX_DMA_FLAG) {
             /* Configure the DMA handler for Transmission process */
             spi_bus_obj[i].dma.handle_tx.Instance = spi_config[i].dma_tx->Instance;
 #if defined(SOC_SERIES_STM32F2) || defined(SOC_SERIES_STM32F4) || defined(SOC_SERIES_STM32F7)
@@ -465,18 +396,18 @@ static int rt_hw_spi_bus_init(void)
 #elif defined(SOC_SERIES_STM32L4) || defined(SOC_SERIES_STM32G0) || defined(SOC_SERIES_STM32MP1) || defined(SOC_SERIES_STM32WB)
             spi_bus_obj[i].dma.handle_tx.Init.Request = spi_config[i].dma_tx->request;
 #endif
-            spi_bus_obj[i].dma.handle_tx.Init.Direction           = DMA_MEMORY_TO_PERIPH;
-            spi_bus_obj[i].dma.handle_tx.Init.PeriphInc           = DMA_PINC_DISABLE;
-            spi_bus_obj[i].dma.handle_tx.Init.MemInc              = DMA_MINC_ENABLE;
+            spi_bus_obj[i].dma.handle_tx.Init.Direction = DMA_MEMORY_TO_PERIPH;
+            spi_bus_obj[i].dma.handle_tx.Init.PeriphInc = DMA_PINC_DISABLE;
+            spi_bus_obj[i].dma.handle_tx.Init.MemInc = DMA_MINC_ENABLE;
             spi_bus_obj[i].dma.handle_tx.Init.PeriphDataAlignment = DMA_PDATAALIGN_BYTE;
-            spi_bus_obj[i].dma.handle_tx.Init.MemDataAlignment    = DMA_MDATAALIGN_BYTE;
-            spi_bus_obj[i].dma.handle_tx.Init.Mode                = DMA_NORMAL;
-            spi_bus_obj[i].dma.handle_tx.Init.Priority            = DMA_PRIORITY_LOW;
+            spi_bus_obj[i].dma.handle_tx.Init.MemDataAlignment = DMA_MDATAALIGN_BYTE;
+            spi_bus_obj[i].dma.handle_tx.Init.Mode = DMA_NORMAL;
+            spi_bus_obj[i].dma.handle_tx.Init.Priority = DMA_PRIORITY_LOW;
 #if defined(SOC_SERIES_STM32F2) || defined(SOC_SERIES_STM32F4) || defined(SOC_SERIES_STM32F7) || defined(SOC_SERIES_STM32MP1)
-            spi_bus_obj[i].dma.handle_tx.Init.FIFOMode            = DMA_FIFOMODE_DISABLE;
-            spi_bus_obj[i].dma.handle_tx.Init.FIFOThreshold       = DMA_FIFO_THRESHOLD_FULL;
-            spi_bus_obj[i].dma.handle_tx.Init.MemBurst            = DMA_MBURST_INC4;
-            spi_bus_obj[i].dma.handle_tx.Init.PeriphBurst         = DMA_PBURST_INC4;
+            spi_bus_obj[i].dma.handle_tx.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
+            spi_bus_obj[i].dma.handle_tx.Init.FIFOThreshold = DMA_FIFO_THRESHOLD_FULL;
+            spi_bus_obj[i].dma.handle_tx.Init.MemBurst = DMA_MBURST_INC4;
+            spi_bus_obj[i].dma.handle_tx.Init.PeriphBurst = DMA_PBURST_INC4;
 #endif
 
             {
@@ -490,7 +421,7 @@ static int rt_hw_spi_bus_init(void)
                 /* Delay after an RCC peripheral clock enabling */
                 tmpreg = READ_BIT(RCC->AHB1ENR, spi_config[i].dma_tx->dma_rcc);
 #elif defined(SOC_SERIES_STM32MP1)
-                __HAL_RCC_DMAMUX_CLK_ENABLE(); 
+                __HAL_RCC_DMAMUX_CLK_ENABLE();
                 SET_BIT(RCC->MP_AHB2ENSETR, spi_config[i].dma_tx->dma_rcc);
                 tmpreg = READ_BIT(RCC->MP_AHB2ENSETR, spi_config[i].dma_tx->dma_rcc);
 #endif
@@ -510,14 +441,14 @@ static int rt_hw_spi_bus_init(void)
 /**
   * Attach the spi device to SPI bus, this function must be used after initialization.
   */
-rt_err_t rt_hw_spi_device_attach(const char *bus_name, const char *device_name, GPIO_TypeDef *cs_gpiox, uint16_t cs_gpio_pin)
+rt_err_t rt_hw_spi_device_attach(const char* bus_name, const char* device_name, GPIO_TypeDef* cs_gpiox, uint16_t cs_gpio_pin)
 {
     RT_ASSERT(bus_name != RT_NULL);
     RT_ASSERT(device_name != RT_NULL);
 
     rt_err_t result;
-    struct rt_spi_device *spi_device;
-    struct stm32_hw_spi_cs *cs_pin;
+    struct rt_spi_device* spi_device;
+    struct stm32_hw_spi_cs* cs_pin;
 
     /* initialize the cs pin && select the slave*/
     GPIO_InitTypeDef GPIO_Initure;
@@ -529,16 +460,15 @@ rt_err_t rt_hw_spi_device_attach(const char *bus_name, const char *device_name, 
     HAL_GPIO_WritePin(cs_gpiox, cs_gpio_pin, GPIO_PIN_SET);
 
     /* attach the device to spi bus*/
-    spi_device = (struct rt_spi_device *)rt_malloc(sizeof(struct rt_spi_device));
+    spi_device = (struct rt_spi_device*)rt_malloc(sizeof(struct rt_spi_device));
     RT_ASSERT(spi_device != RT_NULL);
-    cs_pin = (struct stm32_hw_spi_cs *)rt_malloc(sizeof(struct stm32_hw_spi_cs));
+    cs_pin = (struct stm32_hw_spi_cs*)rt_malloc(sizeof(struct stm32_hw_spi_cs));
     RT_ASSERT(cs_pin != RT_NULL);
     cs_pin->GPIOx = cs_gpiox;
     cs_pin->GPIO_Pin = cs_gpio_pin;
-    result = rt_spi_bus_attach_device(spi_device, device_name, bus_name, (void *)cs_pin);
+    result = rt_spi_bus_attach_device(spi_device, device_name, bus_name, (void*)cs_pin);
 
-    if (result != RT_EOK)
-    {
+    if (result != RT_EOK) {
         LOG_E("%s attach to %s faild, %d\n", device_name, bus_name, result);
     }
 
@@ -900,28 +830,71 @@ static void stm32_get_dma_info(void)
 }
 
 #if defined(SOC_SERIES_STM32F0)
-void SPI1_DMA_RX_TX_IRQHandler(void) 
+void SPI1_DMA_RX_TX_IRQHandler(void)
 {
 #if defined(BSP_USING_SPI1) && defined(BSP_SPI1_TX_USING_DMA)
     SPI1_DMA_TX_IRQHandler();
 #endif
-    
+
 #if defined(BSP_USING_SPI1) && defined(BSP_SPI1_RX_USING_DMA)
     SPI1_DMA_RX_IRQHandler();
 #endif
 }
 
-void SPI2_DMA_RX_TX_IRQHandler(void) 
+void SPI2_DMA_RX_TX_IRQHandler(void)
 {
 #if defined(BSP_USING_SPI2) && defined(BSP_SPI2_TX_USING_DMA)
     SPI2_DMA_TX_IRQHandler();
 #endif
-    
+
 #if defined(BSP_USING_SPI2) && defined(BSP_SPI2_RX_USING_DMA)
     SPI2_DMA_RX_IRQHandler();
 #endif
 }
 #endif  /* SOC_SERIES_STM32F0 */
+
+
+
+
+void HAL_SPI_MspInit(SPI_HandleTypeDef* spiHandle)
+{
+    GPIO_InitTypeDef GPIO_InitStruct = { 0 };
+    if (spiHandle->Instance == SPI1) {
+      /* SPI1 clock enable */
+        __HAL_RCC_SPI1_CLK_ENABLE();
+
+        __HAL_RCC_GPIOA_CLK_ENABLE();
+        /**SPI1 GPIO Configuration
+        PA5     ------> SPI1_SCK
+        PA6     ------> SPI1_MISO
+        PA7     ------> SPI1_MOSI
+        */
+        GPIO_InitStruct.Pin = GPIO_PIN_5 | GPIO_PIN_6 | GPIO_PIN_7;
+        GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+        GPIO_InitStruct.Pull = GPIO_NOPULL;
+        GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+        GPIO_InitStruct.Alternate = GPIO_AF5_SPI1;
+        HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+    }
+}
+
+void HAL_SPI_MspDeInit(SPI_HandleTypeDef* spiHandle)
+{
+
+    if (spiHandle->Instance == SPI1) {
+
+      /* Peripheral clock disable */
+        __HAL_RCC_SPI1_CLK_DISABLE();
+
+        /**SPI1 GPIO Configuration
+        PA5     ------> SPI1_SCK
+        PA6     ------> SPI1_MISO
+        PA7     ------> SPI1_MOSI
+        */
+        HAL_GPIO_DeInit(GPIOA, GPIO_PIN_5 | GPIO_PIN_6 | GPIO_PIN_7);
+    }
+}
+
 
 int rt_hw_spi_init(void)
 {
