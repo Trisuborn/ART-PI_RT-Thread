@@ -23,18 +23,18 @@
 #endif
 
 /* Global variables */
-const struct dfs_filesystem_ops *filesystem_operation_table[DFS_FILESYSTEM_TYPES_MAX];
+const struct dfs_filesystem_ops* filesystem_operation_table[DFS_FILESYSTEM_TYPES_MAX];
 struct dfs_filesystem filesystem_table[DFS_FILESYSTEMS_MAX];
 
 /* device filesystem lock */
 static struct rt_mutex fslock;
 
 #ifdef DFS_USING_WORKDIR
-char working_directory[DFS_PATH_MAX] = {"/"};
+char working_directory[DFS_PATH_MAX] = { "/" };
 #endif
 
 static struct dfs_fdtable _fdtab;
-static int  fd_alloc(struct dfs_fdtable *fdt, int startfd);
+static int  fd_alloc(struct dfs_fdtable* fdt, int startfd);
 
 /**
  * @addtogroup DFS
@@ -49,14 +49,15 @@ int dfs_init(void)
 {
     static rt_bool_t init_ok = RT_FALSE;
 
-    if (init_ok)
-    {
+    rt_kprintf("dfs init.\n");
+
+    if (init_ok)     {
         rt_kprintf("dfs already init.\n");
         return 0;
     }
 
     /* clear filesystem operations table */
-    memset((void *)filesystem_operation_table, 0, sizeof(filesystem_operation_table));
+    memset((void*)filesystem_operation_table, 0, sizeof(filesystem_operation_table));
     /* clear filesystem table */
     memset(filesystem_table, 0, sizeof(filesystem_table));
     /* clean fd table */
@@ -97,13 +98,11 @@ void dfs_lock(void)
 {
     rt_err_t result = -RT_EBUSY;
 
-    while (result == -RT_EBUSY)
-    {
+    while (result == -RT_EBUSY)     {
         result = rt_mutex_take(&fslock, RT_WAITING_FOREVER);
     }
 
-    if (result != RT_EOK)
-    {
+    if (result != RT_EOK)     {
         RT_ASSERT(0);
     }
 }
@@ -118,13 +117,12 @@ void dfs_unlock(void)
     rt_mutex_release(&fslock);
 }
 
-static int fd_alloc(struct dfs_fdtable *fdt, int startfd)
+static int fd_alloc(struct dfs_fdtable* fdt, int startfd)
 {
     int idx;
 
     /* find an empty fd entry */
-    for (idx = startfd; idx < (int)fdt->maxfd; idx++)
-    {
+    for (idx = startfd; idx < (int)fdt->maxfd; idx++)     {
         if (fdt->fds[idx] == RT_NULL)
             break;
         if (fdt->fds[idx]->ref_count == 0)
@@ -132,32 +130,29 @@ static int fd_alloc(struct dfs_fdtable *fdt, int startfd)
     }
 
     /* allocate a larger FD container */
-    if (idx == fdt->maxfd && fdt->maxfd < DFS_FD_MAX)
-    {
+    if (idx == fdt->maxfd && fdt->maxfd < DFS_FD_MAX)     {
         int cnt, index;
-        struct dfs_fd **fds;
+        struct dfs_fd** fds;
 
         /* increase the number of FD with 4 step length */
         cnt = fdt->maxfd + 4;
         cnt = cnt > DFS_FD_MAX ? DFS_FD_MAX : cnt;
 
-        fds = (struct dfs_fd **)rt_realloc(fdt->fds, cnt * sizeof(struct dfs_fd *));
+        fds = (struct dfs_fd**)rt_realloc(fdt->fds, cnt * sizeof(struct dfs_fd*));
         if (fds == NULL) goto __exit; /* return fdt->maxfd */
 
         /* clean the new allocated fds */
-        for (index = fdt->maxfd; index < cnt; index ++)
-        {
+        for (index = fdt->maxfd; index < cnt; index++)         {
             fds[index] = NULL;
         }
 
-        fdt->fds   = fds;
+        fdt->fds = fds;
         fdt->maxfd = cnt;
     }
 
     /* allocate  'struct dfs_fd' */
-    if (idx < (int)fdt->maxfd && fdt->fds[idx] == RT_NULL)
-    {
-        fdt->fds[idx] = (struct dfs_fd *)rt_calloc(1, sizeof(struct dfs_fd));
+    if (idx < (int)fdt->maxfd && fdt->fds[idx] == RT_NULL)     {
+        fdt->fds[idx] = (struct dfs_fd*)rt_calloc(1, sizeof(struct dfs_fd));
         if (fdt->fds[idx] == RT_NULL)
             idx = fdt->maxfd;
     }
@@ -174,9 +169,9 @@ __exit:
  */
 int fd_new(void)
 {
-    struct dfs_fd *d;
+    struct dfs_fd* d;
     int idx;
-    struct dfs_fdtable *fdt;
+    struct dfs_fdtable* fdt;
 
     fdt = dfs_fdtable_get();
     /* lock filesystem */
@@ -186,8 +181,7 @@ int fd_new(void)
     idx = fd_alloc(fdt, 0);
 
     /* can't find an empty fd entry */
-    if (idx == fdt->maxfd)
-    {
+    if (idx == fdt->maxfd)     {
         idx = -(1 + DFS_FD_OFFSET);
         LOG_E("DFS fd new is failed! Could not found an empty fd entry.");
         goto __result;
@@ -211,10 +205,10 @@ __result:
  * @return NULL on on this file descriptor or the file descriptor structure
  * pointer.
  */
-struct dfs_fd *fd_get(int fd)
+struct dfs_fd* fd_get(int fd)
 {
-    struct dfs_fd *d;
-    struct dfs_fdtable *fdt;
+    struct dfs_fd* d;
+    struct dfs_fdtable* fdt;
 
 #if defined(RT_USING_DFS_DEVFS) && defined(RT_USING_POSIX)
     if ((0 <= fd) && (fd <= 2))
@@ -230,14 +224,13 @@ struct dfs_fd *fd_get(int fd)
     d = fdt->fds[fd];
 
     /* check dfs_fd valid or not */
-    if ((d == NULL) || (d->magic != DFS_FD_MAGIC))
-    {
+    if ((d == NULL) || (d->magic != DFS_FD_MAGIC))     {
         dfs_unlock();
         return NULL;
     }
 
     /* increase the reference count */
-    d->ref_count ++;
+    d->ref_count++;
     dfs_unlock();
 
     return d;
@@ -248,25 +241,22 @@ struct dfs_fd *fd_get(int fd)
  *
  * This function will put the file descriptor.
  */
-void fd_put(struct dfs_fd *fd)
+void fd_put(struct dfs_fd* fd)
 {
     RT_ASSERT(fd != NULL);
 
     dfs_lock();
 
-    fd->ref_count --;
+    fd->ref_count--;
 
     /* clear this fd entry */
-    if (fd->ref_count == 0)
-    {
+    if (fd->ref_count == 0)     {
         int index;
-        struct dfs_fdtable *fdt;
+        struct dfs_fdtable* fdt;
 
         fdt = dfs_fdtable_get();
-        for (index = 0; index < (int)fdt->maxfd; index ++)
-        {
-            if (fdt->fds[index] == fd)
-            {
+        for (index = 0; index < (int)fdt->maxfd; index++)         {
+            if (fdt->fds[index] == fd)             {
                 rt_free(fd);
                 fdt->fds[index] = 0;
                 break;
@@ -285,22 +275,20 @@ void fd_put(struct dfs_fd *fd)
  *
  * @return 0 on file has been open successfully, -1 on open failed.
  */
-int fd_is_open(const char *pathname)
+int fd_is_open(const char* pathname)
 {
-    char *fullpath;
+    char* fullpath;
     unsigned int index;
-    struct dfs_filesystem *fs;
-    struct dfs_fd *fd;
-    struct dfs_fdtable *fdt;
+    struct dfs_filesystem* fs;
+    struct dfs_fd* fd;
+    struct dfs_fdtable* fdt;
 
     fdt = dfs_fdtable_get();
     fullpath = dfs_normalize_path(NULL, pathname);
-    if (fullpath != NULL)
-    {
-        char *mountpath;
+    if (fullpath != NULL)     {
+        char* mountpath;
         fs = dfs_filesystem_lookup(fullpath);
-        if (fs == NULL)
-        {
+        if (fs == NULL)         {
             /* can't find mounted file system */
             rt_free(fullpath);
 
@@ -315,13 +303,11 @@ int fd_is_open(const char *pathname)
 
         dfs_lock();
 
-        for (index = 0; index < fdt->maxfd; index++)
-        {
+        for (index = 0; index < fdt->maxfd; index++)         {
             fd = fdt->fds[index];
             if (fd == NULL || fd->fops == NULL || fd->path == NULL) continue;
 
-            if (fd->fs == fs && strcmp(fd->path, mountpath) == 0)
-            {
+            if (fd->fs == fs && strcmp(fd->path, mountpath) == 0)             {
                 /* found file in file descriptor table */
                 rt_free(fullpath);
                 dfs_unlock();
@@ -345,17 +331,16 @@ int fd_is_open(const char *pathname)
  *
  * @return the subdir pointer in filename
  */
-const char *dfs_subdir(const char *directory, const char *filename)
+const char* dfs_subdir(const char* directory, const char* filename)
 {
-    const char *dir;
+    const char* dir;
 
     if (strlen(directory) == strlen(filename)) /* it's a same path */
         return NULL;
 
     dir = filename + strlen(directory);
-    if ((*dir != '/') && (dir != filename))
-    {
-        dir --;
+    if ((*dir != '/') && (dir != filename))     {
+        dir--;
     }
 
     return dir;
@@ -371,10 +356,10 @@ RTM_EXPORT(dfs_subdir);
  *
  * @return the built full file path (absolute path)
  */
-char *dfs_normalize_path(const char *directory, const char *filename)
+char* dfs_normalize_path(const char* directory, const char* filename)
 {
-    char *fullpath;
-    char *dst0, *dst, *src;
+    char* fullpath;
+    char* dst0, * dst, * src;
 
     /* check parameters */
     RT_ASSERT(filename != NULL);
@@ -383,8 +368,7 @@ char *dfs_normalize_path(const char *directory, const char *filename)
     if (directory == NULL) /* shall use working directory */
         directory = &working_directory[0];
 #else
-    if ((directory == NULL) && (filename[0] != '/'))
-    {
+    if ((directory == NULL) && (filename[0] != '/'))     {
         rt_kprintf(NO_WORKING_DIR);
 
         return NULL;
@@ -393,7 +377,7 @@ char *dfs_normalize_path(const char *directory, const char *filename)
 
     if (filename[0] != '/') /* it's a absolute path, use it directly */
     {
-        fullpath = (char *)rt_malloc(strlen(directory) + strlen(filename) + 2);
+        fullpath = (char*)rt_malloc(strlen(directory) + strlen(filename) + 2);
 
         if (fullpath == NULL)
             return NULL;
@@ -401,9 +385,7 @@ char *dfs_normalize_path(const char *directory, const char *filename)
         /* join path and file name */
         rt_snprintf(fullpath, strlen(directory) + strlen(filename) + 2,
                     "%s/%s", directory, filename);
-    }
-    else
-    {
+    }     else     {
         fullpath = rt_strdup(filename); /* copy string */
 
         if (fullpath == NULL)
@@ -414,37 +396,29 @@ char *dfs_normalize_path(const char *directory, const char *filename)
     dst = fullpath;
 
     dst0 = dst;
-    while (1)
-    {
+    while (1)     {
         char c = *src;
 
-        if (c == '.')
-        {
-            if (!src[1]) src ++; /* '.' and ends */
-            else if (src[1] == '/')
-            {
+        if (c == '.')         {
+            if (!src[1]) src++; /* '.' and ends */
+            else if (src[1] == '/')             {
                 /* './' case */
                 src += 2;
 
                 while ((*src == '/') && (*src != '\0'))
-                    src ++;
+                    src++;
                 continue;
-            }
-            else if (src[1] == '.')
-            {
-                if (!src[2])
-                {
+            }             else if (src[1] == '.')             {
+                if (!src[2])                 {
                     /* '..' and ends case */
                     src += 2;
                     goto up_one;
-                }
-                else if (src[2] == '/')
-                {
+                }                 else if (src[2] == '/')                 {
                     /* '../' case */
                     src += 3;
 
                     while ((*src == '/') && (*src != '\0'))
-                        src ++;
+                        src++;
                     goto up_one;
                 }
             }
@@ -452,42 +426,38 @@ char *dfs_normalize_path(const char *directory, const char *filename)
 
         /* copy up the next '/' and erase all '/' */
         while ((c = *src++) != '\0' && c != '/')
-            *dst ++ = c;
+            *dst++ = c;
 
-        if (c == '/')
-        {
-            *dst ++ = '/';
+        if (c == '/')         {
+            *dst++ = '/';
             while (c == '/')
                 c = *src++;
 
-            src --;
-        }
-        else if (!c)
+            src--;
+        }         else if (!c)
             break;
 
         continue;
 
-up_one:
-        dst --;
-        if (dst < dst0)
-        {
+    up_one:
+        dst--;
+        if (dst < dst0)         {
             rt_free(fullpath);
             return NULL;
         }
         while (dst0 < dst && dst[-1] != '/')
-            dst --;
+            dst--;
     }
 
     *dst = '\0';
 
     /* remove '/' in the end of path if exist */
-    dst --;
+    dst--;
     if ((dst != fullpath) && (*dst == '/'))
         *dst = '\0';
 
     /* final check fullpath is not empty, for the special path of lwext "/.." */
-    if ('\0' == fullpath[0])
-    {
+    if ('\0' == fullpath[0])     {
         fullpath[0] = '/';
         fullpath[1] = '\0';
     }
@@ -499,13 +469,13 @@ RTM_EXPORT(dfs_normalize_path);
 /**
  * This function will get the file descriptor table of current process.
  */
-struct dfs_fdtable *dfs_fdtable_get(void)
+struct dfs_fdtable* dfs_fdtable_get(void)
 {
-    struct dfs_fdtable *fdt;
+    struct dfs_fdtable* fdt;
 #ifdef RT_USING_LWP
-    struct rt_lwp *lwp;
+    struct rt_lwp* lwp;
 
-    lwp = (struct rt_lwp *)rt_thread_self()->lwp;
+    lwp = (struct rt_lwp*)rt_thread_self()->lwp;
     if (lwp)
         fdt = &lwp->fdt;
     else
@@ -522,7 +492,7 @@ struct dfs_fdtable *dfs_fdtable_get(void)
 int list_fd(void)
 {
     int index;
-    struct dfs_fdtable *fd_table;
+    struct dfs_fdtable* fd_table;
 
     fd_table = dfs_fdtable_get();
     if (!fd_table) return -1;
@@ -531,12 +501,10 @@ int list_fd(void)
 
     rt_kprintf("fd type    ref magic  path\n");
     rt_kprintf("-- ------  --- ----- ------\n");
-    for (index = 0; index < (int)fd_table->maxfd; index ++)
-    {
-        struct dfs_fd *fd = fd_table->fds[index];
+    for (index = 0; index < (int)fd_table->maxfd; index++)     {
+        struct dfs_fd* fd = fd_table->fds[index];
 
-        if (fd && fd->fops)
-        {
+        if (fd && fd->fops)         {
             rt_kprintf("%2d ", index + DFS_FD_OFFSET);
             if (fd->type == FT_DIRECTORY)    rt_kprintf("%-7.7s ", "dir");
             else if (fd->type == FT_REGULAR) rt_kprintf("%-7.7s ", "file");
@@ -546,12 +514,9 @@ int list_fd(void)
             else rt_kprintf("%-8.8s ", "unknown");
             rt_kprintf("%3d ", fd->ref_count);
             rt_kprintf("%04x  ", fd->magic);
-            if (fd->path)
-            {
+            if (fd->path)             {
                 rt_kprintf("%s\n", fd->path);
-            }
-            else
-            {
+            }             else             {
                 rt_kprintf("\n");
             }
         }

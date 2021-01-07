@@ -20,6 +20,8 @@
 #include <drivers/mmcsd_core.h>
 #include <drivers/sdio.h>
 
+#ifdef BSP_USING_SDIO
+
 #if defined(SOC_SERIES_STM32F1) || defined(SOC_SERIES_STM32F2) || defined(SOC_SERIES_STM32F4)
 #define SDCARD_INSTANCE_TYPE              SDIO_TypeDef
 #elif defined(SOC_SERIES_STM32L4) || defined(SOC_SERIES_STM32F7)
@@ -194,3 +196,5 @@ struct stm32_sdio_class
 extern void stm32_mmcsd_change(void);
 
 #endif
+
+#endif /* BSP_USING_SDIO */

@@ -72,7 +72,7 @@
 #ifdef RT_DFS_ELM_CODE_PAGE
 #    define _CODE_PAGE	RT_DFS_ELM_CODE_PAGE
 #else
-#    define _CODE_PAGE	936
+#    define _CODE_PAGE	437 
 #endif
 /* This option specifies the OEM code page to be used on the target system.
 /  Incorrect setting of the code page can cause a file open failure.
@@ -163,13 +163,13 @@
 #ifdef RT_DFS_ELM_DRIVES
 #define _VOLUMES RT_DFS_ELM_DRIVES
 #else
-#define _VOLUMES	1
+#define _VOLUMES	3
 #endif
 /* Number of volumes (logical drives) to be used. */
 
 
-#define _STR_VOLUME_ID	0
-#define _VOLUME_STRS	"RAM","NAND","CF","SD","SD2","USB","USB2","USB3"
+#define _STR_VOLUME_ID	1
+#define _VOLUME_STRS	"SPIF","SD","RAM"
 /* _STR_VOLUME_ID switches string support of volume ID.
 /  When _STR_VOLUME_ID is set to 1, also pre-defined strings can be used as drive
 /  number in the path name. _VOLUME_STRS defines the drive ID strings for each
@@ -190,7 +190,7 @@
 #ifdef RT_DFS_ELM_MAX_SECTOR_SIZE
 #define _MAX_SS     RT_DFS_ELM_MAX_SECTOR_SIZE
 #else
-#define	_MAX_SS		512		/* 512, 1024, 2048 or 4096 */
+#define	_MAX_SS		4096		/* 512, 1024, 2048 or 4096 */
 #endif
 /* These options configure the range of sector size to be supported. (512, 1024,
 /  2048 or 4096) Always set both 512 for most systems, all type of memory cards and

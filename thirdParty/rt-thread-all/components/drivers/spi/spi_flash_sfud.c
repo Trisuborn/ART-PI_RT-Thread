@@ -23,23 +23,30 @@
 #endif
 
 /* read the JEDEC SFDP command must run at 50 MHz or less */
+#ifndef RT_SFUD_DEFAULT_SPI_CFG  
 #define RT_SFUD_DEFAULT_SPI_CFG                  \
 {                                                \
-    .mode = RT_SPI_MODE_0 | RT_SPI_MSB,          \
+    .mode = RT_SPI_MODE_3 | RT_SPI_MSB,          \
     .data_width = 8,                             \
     .max_hz = RT_SFUD_SPI_MAX_HZ,                \
 }
 #endif /* RT_SFUD_DEFAULT_SPI_CFG */
+#endif /* RT_SFUD_DEFAULT_SPI_CFG */
+
 
 #ifdef SFUD_USING_QSPI
+#ifndef RT_SFUD_DEFAULT_QSPI_CFG
 #define RT_SFUD_DEFAULT_QSPI_CFG                 \
 {                                                \
     RT_SFUD_DEFAULT_SPI_CFG,                     \
     .medium_size = 0x800000,                     \
-    .ddr_mode = 0,                               \
+    .ddr_mode = 1,                               \
     .qspi_dl_width = 4,                          \
 }
 #endif /* SFUD_USING_QSPI */
+#endif /* SFUD_USING_QSPI */
+
+
 
 static rt_err_t rt_sfud_control(rt_device_t dev, int cmd, void *args) {
     RT_ASSERT(dev);

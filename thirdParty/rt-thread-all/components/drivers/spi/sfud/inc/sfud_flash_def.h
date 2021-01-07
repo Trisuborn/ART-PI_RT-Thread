@@ -181,6 +181,27 @@ typedef struct {
 }
 #endif /* SFUD_USING_QSPI */
 
+
+
+#define RT_SFUD_DEFAULT_SPI_CFG                  \
+{                                                \
+    .mode = RT_SPI_MODE_3 | RT_SPI_MSB,          \
+    .data_width = 8,                             \
+    .max_hz = RT_SFUD_SPI_MAX_HZ,                \
+}
+
+#ifdef RT_SFUD_USING_QSPI
+#define RT_SFUD_DEFAULT_QSPI_CFG                 \
+{                                                \
+    RT_SFUD_DEFAULT_SPI_CFG,                     \
+    .medium_size = 0x800000,                     \
+    .ddr_mode = 1,                               \
+    .qspi_dl_width = 4,                          \
+}
+#endif /* RT_SFUD_USING_QSPI */
+
+
+
 #ifdef __cplusplus
 }
 #endif

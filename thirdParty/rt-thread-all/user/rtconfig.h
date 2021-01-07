@@ -17,6 +17,7 @@
 #define RT_IDLE_HOOK_LIST_SIZE 4
 #define IDLE_THREAD_STACK_SIZE 256
 #define RT_DEBUG
+#define RT_DEBUG_COLOR
 
 /* Inter-Thread communication */
 
@@ -31,6 +32,7 @@
 #define RT_USING_MEMPOOL
 #define RT_USING_SMALL_MEM
 #define RT_USING_HEAP
+// #define RT_USING_MEMHEAP_AS_HEAP
 
 /* Kernel Device Object */
 
@@ -49,7 +51,7 @@
 
 #define RT_USING_COMPONENTS_INIT
 #define RT_USING_USER_MAIN
-#define RT_MAIN_THREAD_STACK_SIZE 4096
+#define RT_MAIN_THREAD_STACK_SIZE 1024
 #define RT_MAIN_THREAD_PRIORITY 10
 
 /* C++ features */
@@ -64,7 +66,7 @@
 #define FINSH_USING_SYMTAB
 #define FINSH_USING_DESCRIPTION
 #define FINSH_THREAD_PRIORITY 20
-#define FINSH_THREAD_STACK_SIZE (32*1024)
+#define FINSH_THREAD_STACK_SIZE (36*1024)
 #define FINSH_CMD_SIZE 128
 #define FINSH_USING_MSH
 #define FINSH_USING_MSH_DEFAULT
@@ -83,10 +85,10 @@
 // #define RT_SERIAL_USING_DMA
 #define RT_SERIAL_RB_BUFSZ 64
 #define RT_USING_PIN
-#define RT_USING_HWCRYPTO
-#define RT_HWCRYPTO_DEFAULT_NAME "hwcryto"
-#define RT_HWCRYPTO_IV_MAX_SIZE 16
-#define RT_HWCRYPTO_KEYBIT_MAX_SIZE 256
+// #define RT_USING_HWCRYPTO
+// #define RT_HWCRYPTO_DEFAULT_NAME "hwcryto"
+// #define RT_HWCRYPTO_IV_MAX_SIZE 16
+// #define RT_HWCRYPTO_KEYBIT_MAX_SIZE 256
 #define RT_HWCRYPTO_USING_RNG
 #define RT_HWCRYPTO_USING_CRC
 
@@ -95,7 +97,7 @@
 
 /* POSIX layer and C standard library */
 
-// #define RT_LIBC_USING_TIME
+#define RT_LIBC_USING_TIME
 
 /* Network */
 
@@ -146,11 +148,18 @@
 
 
 /* system packages */
-
+#define RT_USING_DFS
+#define RT_USING_DFS_ELMFAT
+#define RT_USING_DFS_DEVFS
+#define DFS_USING_WORKDIR
+#define DFS_FILESYSTEMS_MAX 2
+#define DFS_FILESYSTEM_TYPES_MAX 2
+#define DFS_FD_MAX 16
 
 /* peripheral libraries and drivers */
 #define RT_USING_SFUD
 #define RT_SFUD_USING_SFDP
+#define RT_SFUD_USING_QSPI
 #define RT_SFUD_USING_FLASH_INFO_TABLE
 #define RT_SFUD_SPI_MAX_HZ  (120 * 1000000)
 /* miscellaneous packages */
@@ -171,8 +180,22 @@
 
 #define BSP_USING_GPIO
 
+#define BSP_USING_LCD
+#define LCD_BACKLIGHT_USING_GPIO
+
+#define RT_USING_SDIO
+#define RT_SDIO_STACK_SIZE 512
+#define RT_SDIO_THREAD_PRIORITY 15
+#define RT_MMCSD_STACK_SIZE 1024
+#define RT_MMCSD_THREAD_PREORITY 22
+#define RT_MMCSD_MAX_PARTITION 16
+
 #define RT_USING_SPI
 #define BSP_USING_SPI1
+
+#define RT_USING_QSPI
+#define BSP_USING_QSPI
+#define BSP_USING_QSPI_FLASH
 
 #define BSP_USING_UART
 #define BSP_USING_UART4

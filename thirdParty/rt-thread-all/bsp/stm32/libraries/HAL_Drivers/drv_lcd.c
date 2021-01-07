@@ -11,7 +11,7 @@
 #include <board.h>
 
 #ifdef BSP_USING_LCD
-#include <lcd_port.h>
+//#include <lcd_port.h>
 #include <string.h>
 
 //#define DRV_DEBUG
@@ -150,9 +150,9 @@ rt_err_t stm32_lcd_init(struct drv_lcd_device *lcd)
     LtdcHandle.Init.TotalWidth = LtdcHandle.Init.AccumulatedActiveW + LCD_HFP;
 
     /* Configure R,G,B component values for LCD background color */
-    LtdcHandle.Init.Backcolor.Blue = 0;
-    LtdcHandle.Init.Backcolor.Green = 0;
-    LtdcHandle.Init.Backcolor.Red = 0;
+    LtdcHandle.Init.Backcolor.Blue = 0xFF;
+    LtdcHandle.Init.Backcolor.Green = 0xFF;
+    LtdcHandle.Init.Backcolor.Red = 0xFF;
 
     LtdcHandle.Instance = LTDC;
 
