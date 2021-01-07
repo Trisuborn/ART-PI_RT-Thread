@@ -19,7 +19,7 @@
 #ifndef RT_SFUD_DEFAULT_SPI_CFG
 
 #ifndef RT_SFUD_SPI_MAX_HZ
-#define RT_SFUD_SPI_MAX_HZ 50000000
+#define RT_SFUD_SPI_MAX_HZ (120 * 1000000)
 #endif
 
 /* read the JEDEC SFDP command must run at 50 MHz or less */

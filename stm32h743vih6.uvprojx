@@ -381,7 +381,7 @@
       </TargetOption>
       <Groups>
         <Group>
-          <GroupName>core</GroupName>
+          <GroupName>Core</GroupName>
           <Files>
             <File>
               <FileName>stm32h7xx_hal_msp.c</FileName>
@@ -406,10 +406,13 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>driver</GroupName>
+          <GroupName>App/app</GroupName>
         </Group>
         <Group>
-          <GroupName>main</GroupName>
+          <GroupName>App/driver</GroupName>
+        </Group>
+        <Group>
+          <GroupName>Main</GroupName>
           <Files>
             <File>
               <FileName>main.c</FileName>
