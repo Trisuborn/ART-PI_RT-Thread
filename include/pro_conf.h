@@ -16,7 +16,7 @@ extern "C" {
 #endif
 
 
-#define USER_USE_OS         0u
+#define USER_USE_OS         1u
 
 /* USER USE OS */
 #if USER_USE_OS == (1u)

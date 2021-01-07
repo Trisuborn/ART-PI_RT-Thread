@@ -32,7 +32,7 @@
 #define RT_USING_MEMPOOL
 #define RT_USING_SMALL_MEM
 #define RT_USING_HEAP
-// #define RT_USING_MEMHEAP_AS_HEAP
+//#define RT_USING_MEMHEAP_AS_HEAP
 
 /* Kernel Device Object */
 
@@ -51,7 +51,7 @@
 
 #define RT_USING_COMPONENTS_INIT
 #define RT_USING_USER_MAIN
-#define RT_MAIN_THREAD_STACK_SIZE 1024
+#define RT_MAIN_THREAD_STACK_SIZE 2048
 #define RT_MAIN_THREAD_PRIORITY 10
 
 /* C++ features */
@@ -66,7 +66,7 @@
 #define FINSH_USING_SYMTAB
 #define FINSH_USING_DESCRIPTION
 #define FINSH_THREAD_PRIORITY 20
-#define FINSH_THREAD_STACK_SIZE (36*1024)
+#define FINSH_THREAD_STACK_SIZE (64*1024)
 #define FINSH_CMD_SIZE 128
 #define FINSH_USING_MSH
 #define FINSH_USING_MSH_DEFAULT
@@ -91,6 +91,8 @@
 // #define RT_HWCRYPTO_KEYBIT_MAX_SIZE 256
 #define RT_HWCRYPTO_USING_RNG
 #define RT_HWCRYPTO_USING_CRC
+
+// #define DRV_DEBUG
 
 /* Using USB */
 
@@ -152,8 +154,8 @@
 #define RT_USING_DFS_ELMFAT
 #define RT_USING_DFS_DEVFS
 #define DFS_USING_WORKDIR
-#define DFS_FILESYSTEMS_MAX 2
-#define DFS_FILESYSTEM_TYPES_MAX 2
+#define DFS_FILESYSTEMS_MAX 10
+#define DFS_FILESYSTEM_TYPES_MAX 10
 #define DFS_FD_MAX 16
 
 /* peripheral libraries and drivers */
@@ -175,6 +177,8 @@
 #define SOC_STM32H750IB
 
 /* Onboard Peripheral Drivers */
+#define BSP_USING_SDRAM
+
 
 /* On-chip Peripheral Drivers */
 
@@ -184,11 +188,8 @@
 #define LCD_BACKLIGHT_USING_GPIO
 
 #define RT_USING_SDIO
-#define RT_SDIO_STACK_SIZE 512
-#define RT_SDIO_THREAD_PRIORITY 15
-#define RT_MMCSD_STACK_SIZE 1024
-#define RT_MMCSD_THREAD_PREORITY 22
-#define RT_MMCSD_MAX_PARTITION 16
+#define BSP_USING_SDMMC
+#define BSP_USING_SDIO
 
 #define RT_USING_SPI
 #define BSP_USING_SPI1

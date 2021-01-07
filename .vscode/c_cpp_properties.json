@@ -28,6 +28,7 @@
                 "f:\\work\\Embed\\project\\stm32\\STM32H7\\thirdParty\\rt-thread-all\\components\\dfs\\include",
                 "f:\\work\\Embed\\project\\stm32\\STM32H7\\thirdParty\\rt-thread-all\\components\\dfs\\filesystems\\devfs",
                 "f:\\work\\Embed\\project\\stm32\\STM32H7\\thirdParty\\rt-thread-all\\components\\dfs\\filesystems\\elmfat",
+                "f:\\work\\Embed\\project\\stm32\\STM32H7\\thirdParty\\rt-thread-all\\components\\dfs\\filesystems\\ramfs",
                 "f:\\work\\Embed\\project\\stm32\\STM32H7\\core",
                 "f:\\work\\Embed\\project\\stm32\\STM32H7\\core\\startup",
                 "f:\\work\\Embed\\project\\stm32\\STM32H7\\lib",
@@ -264,7 +265,8 @@
                 "f:\\work\\Embed\\project\\stm32\\STM32H7\\thirdParty\\rt-thread-all\\bsp\\stm32\\libraries\\HAL_Drivers\\drv_flash",
                 "f:\\work\\Embed\\project\\stm32\\STM32H7\\thirdParty\\rt-thread-all\\components\\drivers\\spi\\sfud\\src",
                 "f:\\work\\Embed\\project\\stm32\\STM32H7\\thirdParty\\rt-thread-all\\components\\dfs\\src",
-                "f:\\work\\Embed\\project\\stm32\\STM32H7\\thirdParty\\rt-thread-all\\components\\dfs\\filesystems\\elmfat\\option"
+                "f:\\work\\Embed\\project\\stm32\\STM32H7\\thirdParty\\rt-thread-all\\components\\dfs\\filesystems\\elmfat\\option",
+                "f:\\work\\Embed\\project\\stm32\\STM32H7\\thirdParty\\rt-thread-all\\components\\dfs\\filesystems\\ramfs"
             ],
             "defines": [
                 "USE_FULL_LL_DRIVER",

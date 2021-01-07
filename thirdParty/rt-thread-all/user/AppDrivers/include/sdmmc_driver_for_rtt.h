@@ -8,8 +8,8 @@
  * 2018-11-5      SummerGift   first version
  */
 
-#ifndef __W25QXX_DRIVER_FOR_RTT_H__
-#define __W25QXX_DRIVER_FOR_RTT_H__
+#ifndef __SDMMC_DRIVER_FOR_RTT_H__
+#define __SDMMC_DRIVER_FOR_RTT_H__
 
 #include <rtthread.h>
 #include <stm32h7xx.h>
@@ -20,7 +20,7 @@ extern "C" {
 
 
 
-int dfs_spi_flash_mnt_init(void);
+int dfs_sdmmc_mnt_init(void);
 
 #ifdef __cplusplus
 }

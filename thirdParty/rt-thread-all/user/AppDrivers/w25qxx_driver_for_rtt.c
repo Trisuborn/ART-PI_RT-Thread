@@ -21,6 +21,8 @@
 #include "drv_spi.h"
 #include <dfs_posix.h>
 
+#include "w25qxx_driver_for_rtt.h"
+
 #ifdef BSP_USING_QSPI_FLASH
 #include "drv_qspi.h"
 #include "spi_flash.h"
@@ -87,72 +89,79 @@ static int rt_hw_spi_flash_with_sfud_init(void)
         return -RT_ERROR;
     }
     return RT_EOK;
+
+    //rt_sdio_init
+
 }
 INIT_COMPONENT_EXPORT(rt_hw_spi_flash_with_sfud_init);
 
-#if defined(RT_USING_DFS_ELMFAT) && !defined(RT_USING_SDIO)
+#if defined(RT_USING_DFS_ELMFAT)
 #include <dfs_fs.h>
 
-#define SPI_DEV  "W25Q128"
-#define QSPI_DEV  "W25Q64"
+#define SF0    "W25Q128"
+#define SF0_MP "/SF0"
 
-int spi_flash_mnt_init(void)
+#define QSF0    "W25Q64"
+#define QSF0_MP "/QSF0"
+
+int dfs_spi_flash_mnt_init(void)
 {
     rt_thread_delay(RT_TICK_PER_SECOND);
 
-    // /* 确定挂载点是否存在 */
-    // DIR* dir = NULL;
-    // int res = -1;
+    /* 确定挂载点是否存在 */
+    DIR* dir = NULL;
+    int res = -1;
 
-    // uint8_t mnt_flag[2] = { 0 };
+    uint8_t mnt_flag[2] = { 0 };
 
-    // dir = opendir("/W25Q128");
-    // if (dir == NULL) {
-    //     rt_kprintf("No W25Q128 mounted point. ready to create...\n");
-    //     /* 创建挂载点 */
-    //     res = mkdir("/W25Q128", 0x777);
-    //     if (res != 0)
-    //         rt_kprintf("Create mounted point failed.\n");
-    //     else {
-    //         /* 挂载设备 */
-    //         res = dfs_mount(SPI_DEV, "/W25Q128", "elm", 0, NULL);
-    //         if (res != 0) {
-    //             rt_kprintf("DFS for /W25Q128 mounted failed.\n");
-    //             mnt_flag[0] = 1;
-    //         }
-    //     }
-    // }
-    // closedir(dir);
-
-    
-
-    if (dfs_mount(SPI_DEV, "/", "elm", 0, 0) == 0) {
-        rt_kprintf("01 file system initialization done!\n");
-    } else {
-        if (dfs_mkfs("elm", SPI_DEV) == 0) {
-            if (dfs_mount(SPI_DEV, "/", "elm", 0, 0) == 0) {
-                rt_kprintf("02 file system initialization done!\n");
-            } else {
-                rt_kprintf("02 file system initialization failed!\n");
+    dir = opendir(SF0_MP);
+    if (dir == NULL) {
+        rt_kprintf("No %s mounted point. ready to create... ", SF0);
+        /* 创建挂载点 */
+        res = mkdir(SF0_MP, 0x777);
+        if (res != 0)
+            rt_kprintf("\nCreate mounted point for %s failed.\n", SF0_MP);
+        else {
+            rt_kprintf("Ok \n");
+            /* 挂载设备 */
+            res = dfs_mount(SF0, SF0_MP, "elm", 0, NULL);
+            if (res != 0) {
+                rt_kprintf("DFS for %s mounted failed.\n", SF0_MP);
             }
         }
-    }
-	
-	if (dfs_mount(QSPI_DEV, "/", "elm", 0, 0) == 0) {
-        rt_kprintf("01 file system initialization done!\n");
     } else {
-        if (dfs_mkfs("elm", QSPI_DEV) == 0) {
-            if (dfs_mount(QSPI_DEV, "/", "elm", 0, 0) == 0) {
-                rt_kprintf("02 file system initialization done!\n");
-            } else {
-                rt_kprintf("02 file system initialization failed!\n");
-            }
+        res = dfs_mount(SF0, SF0_MP, "elm", 0, NULL);
+        if (res != 0) {
+            rt_kprintf("DFS for %s mounted failed.\n", SF0_MP);
         }
     }
+    closedir(dir);
+
+    dir = opendir(QSF0_MP);
+    if (dir == NULL) {
+        rt_kprintf("No %s mounted point. ready to create... ", QSF0);
+        /* 创建挂载点 */
+        res = mkdir(QSF0_MP, 0x777);
+        if (res != 0)
+            rt_kprintf("\nCreate mounted point for %s failed.\n", QSF0_MP);
+        else {
+            rt_kprintf("Ok \n");
+            /* 挂载设备 */
+            res = dfs_mount(QSF0, QSF0_MP, "elm", 0, NULL);
+            if (res != 0) {
+                rt_kprintf("DFS for %s mounted failed.\n", QSF0_MP);
+            }
+        }
+    } else {
+        res = dfs_mount(QSF0, QSF0_MP, "elm", 0, NULL);
+        if (res != 0) {
+            rt_kprintf("DFS for %s mounted failed.\n", QSF0_MP);
+        }
+    }
+    closedir(dir);
 
     return 0;
 }
-INIT_ENV_EXPORT(spi_flash_mnt_init);
 
 #endif /* defined(RT_USING_DFS_ELMFAT) && !defined(BSP_USING_SDCARD) */
 #endif /* BSP_USING_QSPI_FLASH */

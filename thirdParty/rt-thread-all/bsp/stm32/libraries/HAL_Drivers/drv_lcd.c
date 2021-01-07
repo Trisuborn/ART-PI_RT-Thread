@@ -11,7 +11,8 @@
 #include <board.h>
 
 #ifdef BSP_USING_LCD
-//#include <lcd_port.h>
+#include <lcd_port.h>
+#include <drv_gpio.h>
 #include <string.h>
 
 //#define DRV_DEBUG
@@ -195,7 +196,7 @@ rt_err_t stm32_lcd_init(struct drv_lcd_device *lcd)
 
     /* Default Color configuration (configure A,R,G,B component values) */
     pLayerCfg.Alpha0 = 255;
-    pLayerCfg.Backcolor.Blue = 0;
+    pLayerCfg.Backcolor.Blue = 1;
     pLayerCfg.Backcolor.Green = 0;
     pLayerCfg.Backcolor.Red = 0;
 
@@ -235,6 +236,52 @@ rt_err_t stm32_lcd_init(struct drv_lcd_device *lcd)
         return RT_EOK;
     }
 }
+
+
+void HAL_LTDC_MspInit(LTDC_HandleTypeDef* ltdcHandle)
+{
+
+  GPIO_InitTypeDef GPIO_InitStruct = {0};
+  if(ltdcHandle->Instance==LTDC)
+  {
+    /* LTDC clock enable */
+    __HAL_RCC_LTDC_CLK_ENABLE();
+
+    __HAL_RCC_GPIOK_CLK_ENABLE();
+    __HAL_RCC_GPIOJ_CLK_ENABLE();
+    __HAL_RCC_GPIOI_CLK_ENABLE();
+
+    GPIO_InitStruct.Pin = GPIO_PIN_5|GPIO_PIN_4|GPIO_PIN_6|GPIO_PIN_3 | GPIO_PIN_2
+                          |GPIO_PIN_7|GPIO_PIN_0|GPIO_PIN_1;
+    GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+    GPIO_InitStruct.Pull = GPIO_PULLUP;
+    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+    GPIO_InitStruct.Alternate = GPIO_AF14_LTDC;
+    HAL_GPIO_Init(GPIOK, &GPIO_InitStruct);
+
+
+    GPIO_InitStruct.Pin = GPIO_PIN_5|GPIO_PIN_4|GPIO_PIN_6|GPIO_PIN_3 | GPIO_PIN_2 |GPIO_PIN_7|GPIO_PIN_0
+						  |GPIO_PIN_1 |GPIO_PIN_8| GPIO_PIN_9| GPIO_PIN_10| GPIO_PIN_11
+						  | GPIO_PIN_12| GPIO_PIN_13| GPIO_PIN_14| GPIO_PIN_15;
+						  
+    GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+    GPIO_InitStruct.Pull = GPIO_PULLUP;
+    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+    GPIO_InitStruct.Alternate = GPIO_AF14_LTDC;
+    HAL_GPIO_Init(GPIOJ, &GPIO_InitStruct);
+
+    GPIO_InitStruct.Pin = GPIO_PIN_12|GPIO_PIN_13|GPIO_PIN_14 |GPIO_PIN_15;
+    GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+    GPIO_InitStruct.Pull = GPIO_PULLUP;
+    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+    GPIO_InitStruct.Alternate = GPIO_AF14_LTDC;
+    HAL_GPIO_Init(GPIOI, &GPIO_InitStruct);
+
+  }
+}
+
+
+
 #if defined(LCD_BACKLIGHT_USING_PWM)
 void turn_on_lcd_backlight(void)
 {
@@ -250,10 +297,10 @@ void turn_on_lcd_backlight(void)
 void turn_on_lcd_backlight(void)
 {
     rt_pin_mode(LCD_BL_GPIO_NUM, PIN_MODE_OUTPUT);
-    rt_pin_mode(LCD_DISP_GPIO_NUM, PIN_MODE_OUTPUT);
+    //rt_pin_mode(LCD_DISP_GPIO_NUM, PIN_MODE_OUTPUT);
 
-    rt_pin_write(LCD_DISP_GPIO_NUM, PIN_HIGH);
-    rt_pin_write(LCD_BL_GPIO_NUM, PIN_HIGH);
+    //rt_pin_write(LCD_DISP_GPIO_NUM, PIN_HIGH);
+    rt_pin_write(LCD_BL_GPIO_NUM, PIN_LOW);
 }
 #else
 void turn_on_lcd_backlight(void)
@@ -358,6 +405,7 @@ __exit:
     return result;
 }
 INIT_DEVICE_EXPORT(drv_lcd_hw_init);
+
 
 #ifdef DRV_DEBUG
 #ifdef FINSH_USING_MSH
