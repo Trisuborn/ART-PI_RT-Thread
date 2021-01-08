@@ -413,6 +413,8 @@ int rt_hw_sdio_init(void)
     hsd.Instance = SDMMC1;
     HAL_SD_MspInit(&hsd);
 
+    // clock
+
     host = sdio_host_create(&sdio_des);
     if (host == RT_NULL) {
         LOG_E("host create fail");
@@ -424,7 +426,7 @@ INIT_DEVICE_EXPORT(rt_hw_sdio_init);
 
 void HAL_SD_MspInit(SD_HandleTypeDef* sdHandle)
 {
-
+    
     GPIO_InitTypeDef GPIO_InitStruct = { 0 };
     if (sdHandle->Instance == SDMMC1) {
 

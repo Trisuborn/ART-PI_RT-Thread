@@ -268,7 +268,7 @@ void rt_system_scheduler_start(void)
 
 
 #ifdef RT_USING_SMP
-/**
+/** 
  * This function will handle IPI interrupt and do a scheduling in system;
  * 
  * @param vector, the number of IPI interrupt for system scheduling

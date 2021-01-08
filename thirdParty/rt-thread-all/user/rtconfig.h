@@ -6,7 +6,7 @@
 
 /* RT-Thread Kernel */
 
-#define RT_NAME_MAX 8
+#define RT_NAME_MAX 16
 #define RT_ALIGN_SIZE 4
 #define RT_THREAD_PRIORITY_32
 #define RT_THREAD_PRIORITY_MAX 32
@@ -15,7 +15,7 @@
 #define RT_USING_HOOK
 #define RT_USING_IDLE_HOOK
 #define RT_IDLE_HOOK_LIST_SIZE 4
-#define IDLE_THREAD_STACK_SIZE 256
+#define IDLE_THREAD_STACK_SIZE 4096
 #define RT_DEBUG
 #define RT_DEBUG_COLOR
 
@@ -29,10 +29,11 @@
 
 /* Memory Management */
 
-#define RT_USING_MEMPOOL
-#define RT_USING_SMALL_MEM
+// #define RT_USING_MEMPOOL
+// #define RT_USING_SMALL_MEM
 #define RT_USING_HEAP
-//#define RT_USING_MEMHEAP_AS_HEAP
+#define RT_USING_MEMHEAP
+#define RT_USING_MEMHEAP_AS_HEAP
 
 /* Kernel Device Object */
 
@@ -51,7 +52,7 @@
 
 #define RT_USING_COMPONENTS_INIT
 #define RT_USING_USER_MAIN
-#define RT_MAIN_THREAD_STACK_SIZE 2048
+#define RT_MAIN_THREAD_STACK_SIZE 1024
 #define RT_MAIN_THREAD_PRIORITY 10
 
 /* C++ features */
@@ -66,7 +67,7 @@
 #define FINSH_USING_SYMTAB
 #define FINSH_USING_DESCRIPTION
 #define FINSH_THREAD_PRIORITY 20
-#define FINSH_THREAD_STACK_SIZE (64*1024)
+#define FINSH_THREAD_STACK_SIZE (32*1024)
 #define FINSH_CMD_SIZE 128
 #define FINSH_USING_MSH
 #define FINSH_USING_MSH_DEFAULT

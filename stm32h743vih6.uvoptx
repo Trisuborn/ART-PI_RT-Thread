@@ -22,7 +22,7 @@
   </DaveTm>
 
   <Target>
-    <TargetName>stm32h743vih6</TargetName>
+    <TargetName>ARTPI</TargetName>
     <ToolsetNumber>0x4</ToolsetNumber>
     <ToolsetName>ARM-ADS</ToolsetName>
     <TargetOption>
@@ -148,24 +148,7 @@
           <Name>UL2CM3(-S0 -C0 -P0 -FD20000000 -FC8000 -FN1 -FF0STM32H7x_2048 -FS08000000 -FL0200000 -FP0($$Device:STM32H743VIHx$CMSIS\Flash\STM32H7x_2048.FLM))</Name>
         </SetRegEntry>
       </TargetDriverDllRegistry>
-      <Breakpoint>
-        <Bp>
-          <Number>0</Number>
-          <Type>0</Type>
-          <LineNumber>504</LineNumber>
-          <EnabledFlag>1</EnabledFlag>
-          <Address>134270308</Address>
-          <ByteObject>0</ByteObject>
-          <HtxType>0</HtxType>
-          <ManyObjects>0</ManyObjects>
-          <SizeOfObject>0</SizeOfObject>
-          <BreakByAccess>0</BreakByAccess>
-          <BreakIfRCount>1</BreakIfRCount>
-          <Filename>.\thirdParty\rt-thread-all\components\dfs\src\dfs.c</Filename>
-          <ExecCommand></ExecCommand>
-          <Expression>\\stm32h743vih6\thirdParty/rt-thread-all/components/dfs/src/dfs.c\504</Expression>
-        </Bp>
-      </Breakpoint>
+      <Breakpoint/>
       <Tracepoint>
         <THDelay>0</THDelay>
       </Tracepoint>
@@ -349,18 +332,18 @@
         <Bp>
           <Number>0</Number>
           <Type>0</Type>
-          <LineNumber>504</LineNumber>
+          <LineNumber>84</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>134272404</Address>
+          <Address>134226148</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
           <SizeOfObject>0</SizeOfObject>
           <BreakByAccess>0</BreakByAccess>
           <BreakIfRCount>1</BreakIfRCount>
-          <Filename>.\thirdParty\rt-thread-all\components\dfs\src\dfs.c</Filename>
+          <Filename>.\main\main.c</Filename>
           <ExecCommand></ExecCommand>
-          <Expression>\\stm32h743vih6\thirdParty/rt-thread-all/components/dfs/src/dfs.c\504</Expression>
+          <Expression>\\stm32h743vih6\main/main.c\84</Expression>
         </Bp>
       </Breakpoint>
       <Tracepoint>
@@ -3089,7 +3072,7 @@
 
   <Group>
     <GroupName>ThridParty/rtt/dfs/ramfs</GroupName>
-    <tvExp>0</tvExp>
+    <tvExp>1</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>

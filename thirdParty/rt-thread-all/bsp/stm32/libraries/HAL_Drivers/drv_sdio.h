@@ -27,7 +27,7 @@
 #endif
 
 #ifndef SDIO_CLOCK_FREQ
-#define SDIO_CLOCK_FREQ      (240 * 1000 * 1000)
+#define SDIO_CLOCK_FREQ      (480 * 1000 * 1000)
 #endif
 
 #ifndef SDIO_BUFF_SIZE

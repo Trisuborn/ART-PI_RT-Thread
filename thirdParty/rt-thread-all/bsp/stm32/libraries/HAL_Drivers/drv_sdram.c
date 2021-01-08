@@ -20,8 +20,14 @@
 static SDRAM_HandleTypeDef hsdram1;
 static FMC_SDRAM_CommandTypeDef command;
 #ifdef RT_USING_MEMHEAP_AS_HEAP
-static struct rt_memheap system_heap;
+struct rt_memheap system_heap0;
+
+struct rt_memheap *rt_get_main_memheap(void)
+{
+	return &system_heap0;
+}
 #endif
+
 
 /**
   * @brief  Perform the SDRAM exernal memory inialization sequence
@@ -169,16 +175,16 @@ static int SDRAM_Init(void)
 #endif
 
     /* Initialize the SDRAM controller */
-    if (HAL_SDRAM_Init(&hsdram1, &SDRAM_Timing) != HAL_OK)     {
+    if (HAL_SDRAM_Init(&hsdram1, &SDRAM_Timing) != HAL_OK) {
         LOG_E("SDRAM init failed!");
         result = -RT_ERROR;
-    }     else     {
+    } else {
         /* Program the SDRAM external device */
         SDRAM_Initialization_Sequence(&hsdram1, &command);
         LOG_D("sdram init success, mapped at 0x%X, size is %d bytes, data width is %d", SDRAM_BANK_ADDR, SDRAM_SIZE, SDRAM_DATA_WIDTH);
 #ifdef RT_USING_MEMHEAP_AS_HEAP
         /* If RT_USING_MEMHEAP_AS_HEAP is enabled, SDRAM is initialized to the heap */
-        rt_memheap_init(&system_heap, "sdram", (void*)SDRAM_BANK_ADDR, SDRAM_SIZE);
+        rt_memheap_init(&system_heap0, "sdram", (void*)SDRAM_BANK_ADDR, SDRAM_SIZE);
 #endif
     }
 
@@ -200,62 +206,45 @@ static void HAL_FMC_MspInit(void)
     /* Peripheral clock enable */
     __HAL_RCC_FMC_CLK_ENABLE();
 
-    __HAL_RCC_GPIOE_CLK_ENABLE();
+    __HAL_RCC_GPIOC_CLK_ENABLE();
+    __HAL_RCC_GPIOH_CLK_ENABLE();
     __HAL_RCC_GPIOG_CLK_ENABLE();
     __HAL_RCC_GPIOD_CLK_ENABLE();
+    __HAL_RCC_GPIOE_CLK_ENABLE();
     __HAL_RCC_GPIOF_CLK_ENABLE();
-    __HAL_RCC_GPIOC_CLK_ENABLE();
 
-    /* GPIO_InitStruct */
-    GPIO_InitStruct.Pin = GPIO_PIN_1 | GPIO_PIN_0 | GPIO_PIN_10 | GPIO_PIN_9
-        | GPIO_PIN_11 | GPIO_PIN_12 | GPIO_PIN_15 | GPIO_PIN_8
-        | GPIO_PIN_13 | GPIO_PIN_7 | GPIO_PIN_14;
+
+    /* FMC_A0 ~ FMC_A9 and FMC_SDNRAS */
+    GPIO_InitStruct.Pin = GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_2 | GPIO_PIN_3 | GPIO_PIN_4 | GPIO_PIN_5
+        | GPIO_PIN_11 | GPIO_PIN_12 | GPIO_PIN_13 | GPIO_PIN_14 | GPIO_PIN_15;
     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
     GPIO_InitStruct.Pull = GPIO_PULLUP;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
     GPIO_InitStruct.Alternate = GPIO_AF12_FMC;
-
-    HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
-
-    /* GPIO_InitStruct */
-    GPIO_InitStruct.Pin = GPIO_PIN_15 | GPIO_PIN_8 | GPIO_PIN_4 | GPIO_PIN_2
-        | GPIO_PIN_0 | GPIO_PIN_1;
-    GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
-    GPIO_InitStruct.Pull = GPIO_PULLUP;
-    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
-    GPIO_InitStruct.Alternate = GPIO_AF12_FMC;
-
-    HAL_GPIO_Init(GPIOG, &GPIO_InitStruct);
-
-    /* GPIO_InitStruct */
-    GPIO_InitStruct.Pin = GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_15 | GPIO_PIN_14
-        | GPIO_PIN_10 | GPIO_PIN_9 | GPIO_PIN_8;
-    GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
-    GPIO_InitStruct.Pull = GPIO_PULLUP;
-    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
-    GPIO_InitStruct.Alternate = GPIO_AF12_FMC;
-
-    HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
-
-    /* GPIO_InitStruct */
-    GPIO_InitStruct.Pin = GPIO_PIN_2 | GPIO_PIN_1 | GPIO_PIN_0 | GPIO_PIN_3
-        | GPIO_PIN_5 | GPIO_PIN_4 | GPIO_PIN_13 | GPIO_PIN_14
-        | GPIO_PIN_12 | GPIO_PIN_15 | GPIO_PIN_11;
-    GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
-    GPIO_InitStruct.Pull = GPIO_PULLUP;
-    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
-    GPIO_InitStruct.Alternate = GPIO_AF12_FMC;
-
     HAL_GPIO_Init(GPIOF, &GPIO_InitStruct);
 
-    /* GPIO_InitStruct */
-    GPIO_InitStruct.Pin = GPIO_PIN_0 | GPIO_PIN_2 | GPIO_PIN_3;
-    GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
-    GPIO_InitStruct.Pull = GPIO_PULLUP;
-    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
-    GPIO_InitStruct.Alternate = GPIO_AF12_FMC;
+    /* FMC_D0 ~ FMC_D15 */
+    GPIO_InitStruct.Pin = GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_14 | GPIO_PIN_15 | GPIO_PIN_8 | GPIO_PIN_9 | GPIO_PIN_10;
+    HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
+    GPIO_InitStruct.Pin = GPIO_PIN_7 | GPIO_PIN_8 | GPIO_PIN_9 | GPIO_PIN_10 | GPIO_PIN_11 | GPIO_PIN_12 | GPIO_PIN_13 | GPIO_PIN_14 | GPIO_PIN_15;
+    HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
 
+    /* FMC_SDNE0 and FMC_SDCKE0 */
+    GPIO_InitStruct.Pin = GPIO_PIN_2 | GPIO_PIN_3;
     HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+
+    /* FMC_SDNWE */
+    GPIO_InitStruct.Pin = GPIO_PIN_5;
+    HAL_GPIO_Init(GPIOH, &GPIO_InitStruct);
+
+    /* FMC_BA0, FMC_BA1, FMC_SDCLK, FMC_SDNCAS */
+    GPIO_InitStruct.Pin = GPIO_PIN_15 | GPIO_PIN_8 | GPIO_PIN_4 | GPIO_PIN_5;
+    HAL_GPIO_Init(GPIOG, &GPIO_InitStruct);
+
+    /* FMC_NBL0, FMC_NBL1 */
+    GPIO_InitStruct.Pin = GPIO_PIN_1 | GPIO_PIN_0;
+    HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
+
 }
 
 void HAL_SDRAM_MspInit(SDRAM_HandleTypeDef* sdramHandle)
@@ -286,7 +275,7 @@ int sdram_test(void)
     /* write data */
     LOG_D("Writing the %ld bytes data, waiting....", SDRAM_SIZE);
     start_time = rt_tick_get();
-    for (i = 0; i < SDRAM_SIZE / data_width; i++)     {
+    for (i = 0; i < SDRAM_SIZE / data_width; i++) {
 #if SDRAM_DATA_WIDTH == 8
         * (__IO uint8_t*)(SDRAM_BANK_ADDR + i * data_width) = (uint8_t)0x55;
 #elif SDRAM_DATA_WIDTH == 16
@@ -301,29 +290,29 @@ int sdram_test(void)
 
     /* read data */
     LOG_D("start Reading and verifying data, waiting....");
-    for (i = 0; i < SDRAM_SIZE / data_width; i++)     {
+    for (i = 0; i < SDRAM_SIZE / data_width; i++) {
 #if SDRAM_DATA_WIDTH == 8
         data = *(__IO uint8_t*)(SDRAM_BANK_ADDR + i * data_width);
-        if (data != 0x55)         {
+        if (data != 0x55) {
             LOG_E("SDRAM test failed!");
             break;
         }
 #elif SDRAM_DATA_WIDTH == 16
         data = *(__IO uint16_t*)(SDRAM_BANK_ADDR + i * data_width);
-        if (data != 0x5555)         {
-            LOG_E("SDRAM test failed!");
+        if (data != 0x5555) {
+            LOG_E("SDRAM test failed! (0x%x)\n", (SDRAM_BANK_ADDR + i * data_width));
             break;
         }
 #else
         data = *(__IO uint32_t*)(SDRAM_BANK_ADDR + i * data_width);
-        if (data != 0x55555555)         {
+        if (data != 0x55555555) {
             LOG_E("SDRAM test failed!");
             break;
         }
 #endif
     }
 
-    if (i >= SDRAM_SIZE / data_width)     {
+    if (i >= SDRAM_SIZE / data_width) {
         LOG_D("SDRAM test success!");
     }
 
@@ -332,4 +321,33 @@ int sdram_test(void)
 MSH_CMD_EXPORT(sdram_test, sdram test)
 #endif /* FINSH_USING_MSH */
 #endif /* DRV_DEBUG */
+
+static void sdram_t()
+{
+    __IO uint16_t* sdram_s = (__IO uint16_t*)SDRAM_BANK_ADDR;
+    __IO uint16_t* sdram_addr = (__IO uint16_t*)SDRAM_BANK_ADDR;
+    __IO uint16_t dat = 0x0807;
+
+    *(sdram_s) = dat;
+
+    for (uint32_t i = 0; i < SDRAM_SIZE; i += 2) {
+        *sdram_s++ = dat;
+    }
+
+    sdram_s = sdram_addr;
+
+    for (uint32_t i = 0; i < SDRAM_SIZE; i += 2) {
+        
+        if (*sdram_s != dat) {
+            rt_kprintf("SDRAM test failed! (0x%x)\n", sdram_s);
+            break;
+        }
+        sdram_s++;
+    }
+    rt_kprintf("SDRAM test Ok \n");
+}
+MSH_CMD_EXPORT(sdram_t, sdram_t)
+
+
+
 #endif /* BSP_USING_SDRAM */

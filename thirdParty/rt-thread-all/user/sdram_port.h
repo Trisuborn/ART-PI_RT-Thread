@@ -11,6 +11,10 @@
 #ifndef __SDRAM_PORT_H__
 #define __SDRAM_PORT_H__
 
+#ifdef RT_USING_MEMHEAP_AS_HEAP
+extern struct rt_memheap system_heap0;
+#endif
+
 /* parameters for sdram peripheral */
 /* Bank1 or Bank2 */
 #define SDRAM_TARGET_BANK               1
@@ -28,26 +32,63 @@
 #define SDRAM_RPIPE_DELAY               0
 /* clock divid: 2, 3 */
 #define SDCLOCK_PERIOD                  2
-/* refresh rate counter */
-#define SDRAM_REFRESH_COUNT             ((uint32_t)0x02A5)
-#define SDRAM_SIZE                      ((uint32_t)0x2000000)
+
+#define SDRAM_SIZE                      ((uint32_t)(32<<20))
 
 /* Timing configuration for W9825G6KH-6 */
-/* 100 MHz of HCKL3 clock frequency (200MHz/2) */
+/* 160 MHz (480MHz/3) */
+/* refresh rate counter */
+// #define SDRAM_REFRESH_COUNT             ((uint32_t)1230)
+// /* TMRD: 2 Clock cycles */
+// #define LOADTOACTIVEDELAY               2
+// /* TXSR: 8x10ns */
+// #define EXITSELFREFRESHDELAY            13
+// /* TRAS: 5x10ns */
+// #define SELFREFRESHTIME                 8
+// /* TRC:  6x10ns */
+// #define ROWCYCLEDELAY                   10
+// /* TWR:  2 Clock cycles */
+// #define WRITERECOVERYTIME               2
+// /* TRP:  2x10ns */
+// #define RPDELAY                         4
+// /* TRCD: 2x10ns */
+// #define RCDDELAY                        4
+
+/* 120 MHz (240MHz/2) */
+/* refresh rate counter */
+#define SDRAM_REFRESH_COUNT             ((uint32_t)917)
 /* TMRD: 2 Clock cycles */
 #define LOADTOACTIVEDELAY               2
 /* TXSR: 8x10ns */
-#define EXITSELFREFRESHDELAY            8
+#define EXITSELFREFRESHDELAY            10
 /* TRAS: 5x10ns */
-#define SELFREFRESHTIME                 6
-/* TRC:  7x10ns */
-#define ROWCYCLEDELAY                   6
+#define SELFREFRESHTIME                 7
+/* TRC:  6x10ns */
+#define ROWCYCLEDELAY                   8
 /* TWR:  2 Clock cycles */
 #define WRITERECOVERYTIME               2
 /* TRP:  2x10ns */
-#define RPDELAY                         2
+#define RPDELAY                         3
 /* TRCD: 2x10ns */
-#define RCDDELAY                        2
+#define RCDDELAY                        3
+
+// /* 40 MHz (80MHz/2) */
+/* refresh rate counter */
+// #define SDRAM_REFRESH_COUNT             ((uint32_t)292)
+// /* TMRD: 2 Clock cycles */
+// #define LOADTOACTIVEDELAY               2
+// /* TXSR: 8x10ns */
+// #define EXITSELFREFRESHDELAY            5
+// /* TRAS: 5x10ns */
+// #define SELFREFRESHTIME                 2
+// /* TRC:  6x10ns */
+// #define ROWCYCLEDELAY                   3
+// /* TWR:  2 Clock cycles */
+// #define WRITERECOVERYTIME               2
+// /* TRP:  2x10ns */
+// #define RPDELAY                         1
+// /* TRCD: 2x10ns */
+// #define RCDDELAY                        1
 
 /* memory mode register */
 #define SDRAM_MODEREG_BURST_LENGTH_1             ((uint16_t)0x0000)
@@ -61,5 +102,10 @@
 #define SDRAM_MODEREG_OPERATING_MODE_STANDARD    ((uint16_t)0x0000)
 #define SDRAM_MODEREG_WRITEBURST_MODE_PROGRAMMED ((uint16_t)0x0000)
 #define SDRAM_MODEREG_WRITEBURST_MODE_SINGLE     ((uint16_t)0x0200)
+
+
+
+
+struct rt_memheap* rt_get_main_memheap(void);
 
 #endif

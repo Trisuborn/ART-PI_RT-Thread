@@ -109,14 +109,10 @@ struct rt_mmcsd_host {
 
 rt_inline void mmcsd_delay_ms(rt_uint32_t ms)
 {
-	if (ms < 1000 / RT_TICK_PER_SECOND) 
-	{
-		rt_thread_delay(1);
-	} 
+	if ( ms < 1 )
+		rt_thread_delay(RT_TICK_PER_SECOND/1000);
 	else 
-	{
-		rt_thread_delay(ms/(1000 / RT_TICK_PER_SECOND));
-	}
+		rt_thread_delay(ms);
 }
 
 #ifdef __cplusplus
