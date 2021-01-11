@@ -79,6 +79,8 @@ static void rz(char *para)
     rt_device_t device;
     const char* device_name = finsh_get_device();
 
+    rt_kprintf("%s\r\n",device_name);
+
     device = rt_device_find(device_name);
     if( device == RT_NULL )
     {
@@ -95,6 +97,8 @@ static void rz(char *para)
     if (init_thread != RT_NULL) rt_thread_startup(init_thread);
 }
 FINSH_FUNCTION_EXPORT(rz, receive files by zmodem protocol)
+MSH_CMD_EXPORT(rz, receive files by zmodem protocol);
+
 static void sz(char *para)
 {
     rt_thread_t init_thread;
@@ -117,4 +121,5 @@ static void sz(char *para)
     if (init_thread != RT_NULL) rt_thread_startup(init_thread);
 }
 FINSH_FUNCTION_EXPORT(sz, send files by zmodem protocol)
+MSH_CMD_EXPORT(sz, send files by zmodem protocol);
 #endif

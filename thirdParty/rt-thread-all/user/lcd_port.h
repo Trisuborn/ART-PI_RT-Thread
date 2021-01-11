@@ -34,4 +34,6 @@
 #define LCD_DISP_GPIO_NUM   GET_PIN(B, 0)	// nonsense
 /* atk 4.3 inch screen, 480 * 272 */
 
+
+
 #endif /* __LCD_PORT_H__ */

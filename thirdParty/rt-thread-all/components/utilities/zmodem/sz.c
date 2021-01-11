@@ -117,7 +117,7 @@ static rt_err_t zsend_files(struct zfile *zf)
 	    rt_kprintf("\r\nerror: no file to be send.\r\n");
 		return res;
 	}
-	if ((zf->fd=open(zf->fname, DFS_O_RDONLY,0)) <0)
+	if ((zf->fd=open(zf->fname, O_RDONLY,0)) <0)
 	{
 	    rt_kprintf("\r\ncan not open file:%s\r\n",zf->fname+1);
 	    return res;

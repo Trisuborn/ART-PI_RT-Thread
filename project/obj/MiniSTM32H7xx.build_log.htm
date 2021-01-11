@@ -1,0 +1,63 @@
+<html>
+<body>
+<pre>
+<h1>µVision Build Log</h1>
+<h2>Tool Versions:</h2>
+IDE-Version: ¦ÌVision V5.31.0.0
+Copyright (C) 2020 ARM Ltd and ARM Germany GmbH. All rights reserved.
+License Information: 1 1, 1, LIC=PE7DL-0T7BV-NNPAF-66DUZ-Y2SW4-HILSR
+ 
+Tool Versions:
+Toolchain:       MDK-ARM Plus  Version: 5.31.0.0
+Toolchain Path:  F:\SoftWare\Keil_v5\ARM\ARMCLANG\Bin
+C Compiler:      ArmClang.exe V6.14
+Assembler:       Armasm.exe V6.14
+Linker/Locator:  ArmLink.exe V6.14
+Library Manager: ArmAr.exe V6.14
+Hex Converter:   FromElf.exe V6.14
+CPU DLL:         SARMCM3.DLL V5.31.0.0
+Dialog DLL:      DCM.DLL V1.17.3.0
+Target DLL:      STLink\ST-LINKIII-KEIL_SWO.dll V3.0.7.0
+Dialog DLL:      TCM.DLL V1.46.0.0
+ 
+<h2>Project:</h2>
+F:\work\Embed\project\stm32\STM32H7\stm32h743vih6.uvprojx
+Project File Date:  01/11/2021
+
+<h2>Output:</h2>
+*** Using Compiler 'V6.14', folder: 'F:\SoftWare\Keil_v5\ARM\ARMCLANG\Bin'
+Build target 'MiniSTM32H7xx'
+noos_drivers/screen/st7735/lcd_st7735.c(120): warning: incompatible pointer types initializing 'const init_fn_t' (aka 'int (*const)(void)') with an expression of type 'void (void)' [-Wincompatible-pointer-types]
+INIT_DEVICE_EXPORT(lcd_st7735_init);
+^                  ~~~~~~~~~~~~~~~
+./thirdParty/rt-thread-all/include\rtdef.h(231): note: expanded from macro 'INIT_DEVICE_EXPORT'
+#define INIT_DEVICE_EXPORT(fn)          INIT_EXPORT(fn, "3")
+                                        ^           ~~
+./thirdParty/rt-thread-all/include\rtdef.h(217): note: expanded from macro 'INIT_EXPORT'
+            RT_USED const init_fn_t __rt_init_##fn SECTION(".rti_fn." level) = fn
+                                    ^                                          ~~
+<scratch space>(71): note: expanded from here
+__rt_init_lcd_st7735_init
+^
+1 warning generated.
+compiling lcd_st7735.c...
+linking...
+Program Size: Code=100610 RO-data=12678 RW-data=712 ZI-data=100944  
+FromELF: creating hex file...
+".\project\obj\MiniSTM32H7xx.axf" - 0 Error(s), 1 Warning(s).
+
+<h2>Software Packages used:</h2>
+
+Package Vendor: Keil
+                https://www.keil.com/pack/Keil.STM32H7xx_DFP.2.7.0.pack
+                Keil.STM32H7xx_DFP.2.7.0
+                STMicroelectronics STM32H7 Series Device Support and Examples
+
+<h2>Collection of Component include folders:</h2>
+  F:\SoftWare\Keil_v5\Arm\Packs\Keil\STM32H7xx_DFP\2.7.0\Drivers\CMSIS\Device\ST\STM32H7xx\Include
+
+<h2>Collection of Component Files used:</h2>
+Build Time Elapsed:  00:00:04
+</pre>
+</body>
+</html>

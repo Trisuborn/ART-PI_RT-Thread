@@ -20,6 +20,15 @@
 
 #define LCD_DEVICE(dev)     (struct drv_lcd_device*)(dev)
 
+#if defined(BSP_USING_SDRAM) && defined(RT_USING_MEMHEAP)
+#define LCD_BUF_MALLOC  rt_memheap_alloc
+#define LCD_BUF_FREE  rt_memheap_free
+extern struct rt_memheap system_heap0;
+#else
+#define LCD_BUF_MALLOC  rt_malloc
+#define LCD_BUF_FREE  rt_free
+#endif
+
 static LTDC_HandleTypeDef LtdcHandle = { 0 };
 
 struct drv_lcd_device {
@@ -279,14 +288,10 @@ int drv_lcd_hw_init(void)
     _lcd.lcd_info.pixel_format = LCD_PIXEL_FORMAT;
 
     /* malloc memory for Triple Buffering */
-    extern struct rt_memheap system_heap0;
+    _lcd.lcd_info.framebuffer = (uint8_t*)rt_malloc(LCD_BUF_SIZE);
+    _lcd.back_buf = (uint8_t*)rt_malloc(LCD_BUF_SIZE);
+    _lcd.front_buf = (uint8_t*)rt_malloc(LCD_BUF_SIZE);
 
-    /* 确定SDRAM是否可用 */
-    
-
-    _lcd.lcd_info.framebuffer = rt_memheap_alloc(&system_heap0, LCD_BUF_SIZE);
-    _lcd.back_buf = rt_memheap_alloc(&system_heap0, LCD_BUF_SIZE);
-    _lcd.front_buf = rt_memheap_alloc(&system_heap0, LCD_BUF_SIZE);
     if (_lcd.lcd_info.framebuffer == RT_NULL || _lcd.back_buf == RT_NULL || _lcd.front_buf == RT_NULL) {
         LOG_E("init frame buffer failed!\n");
         result = -RT_ENOMEM;
@@ -294,7 +299,6 @@ int drv_lcd_hw_init(void)
     }
 
     /* rt_memset buff to 0xFF */
-
     rt_memset(_lcd.lcd_info.framebuffer, 0xFF, LCD_BUF_SIZE);
     rt_memset(_lcd.back_buf, 0xFF, LCD_BUF_SIZE);
     rt_memset(_lcd.front_buf, 0xFF, LCD_BUF_SIZE);
@@ -323,21 +327,27 @@ __exit:
         rt_sem_detach(&_lcd.lcd_lock);
 
         if (_lcd.lcd_info.framebuffer) {
-            rt_memheap_free(_lcd.lcd_info.framebuffer);
+            rt_free(_lcd.lcd_info.framebuffer);
         }
 
         if (_lcd.back_buf) {
-            rt_memheap_free(_lcd.back_buf);
+            rt_free(_lcd.back_buf);
         }
 
         if (_lcd.front_buf) {
-            rt_memheap_free(_lcd.front_buf);
+            rt_free(_lcd.front_buf);
         }
     }
     return result;
 }
 INIT_DEVICE_EXPORT(drv_lcd_hw_init);
 
+void a_sdram()
+{
+    static uint8_t* buf;
+    buf = (uint8_t*)LCD_BUF_MALLOC(&system_heap0, LCD_BUF_SIZE);
+}
+MSH_CMD_EXPORT(a_sdram, a_sdram);
 
 void HAL_LTDC_MspInit(LTDC_HandleTypeDef* ltdcHandle)
 {

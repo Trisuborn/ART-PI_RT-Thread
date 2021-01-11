@@ -16,6 +16,7 @@ extern "C" {
 #endif
 
 
+
 #define USER_USE_OS         1u
 
 /* USER USE OS */
@@ -60,7 +61,7 @@ extern "C" {
 	#define MEMCMP          RT_MEMCMP
 	#define MEMCPY          RT_MEMCPY
 #else
-	#define SECTION(x) __attribute__((section(x)))
+	#define SECTION(x)      __attribute__((section(x)))
 	#define DEBUG_PRINT     printf
 	#define DELAY           HAL_Delay
 	#define STRCMP          strcmp

@@ -4,6 +4,12 @@
 /* Automatically generated file; DO NOT EDIT. */
 /* RT-Thread Configuration */
 
+
+#define USER_USE_ARTPI				1
+#define USER_USE_MiniSTM32H7xx		2
+#define USER_USE_BOARD	USER_USE_MiniSTM32H7xx
+
+
 /* RT-Thread Kernel */
 
 #define RT_NAME_MAX 16
@@ -15,7 +21,7 @@
 #define RT_USING_HOOK
 #define RT_USING_IDLE_HOOK
 #define RT_IDLE_HOOK_LIST_SIZE 4
-#define IDLE_THREAD_STACK_SIZE 4096
+#define IDLE_THREAD_STACK_SIZE 512
 #define RT_DEBUG
 #define RT_DEBUG_COLOR
 
@@ -36,12 +42,16 @@
 #define RT_USING_MEMHEAP_AS_HEAP
 
 /* Kernel Device Object */
-
 #define RT_USING_DEVICE
 #define RT_USING_CONSOLE
-#define RT_CONSOLEBUF_SIZE 128
-//#define RT_CONSOLE_DEVICE_NAME "lpuart1"
+#define RT_CONSOLEBUF_SIZE 256
+
+#if USER_USE_BOARD == USER_USE_ARTPI
 #define RT_CONSOLE_DEVICE_NAME "uart4"
+#elif USER_USE_BOARD == USER_USE_MiniSTM32H7xx
+#define RT_CONSOLE_DEVICE_NAME "lpuart1"
+#endif
+
 #define RT_VER_NUM 0x40002
 #define ARCH_ARM
 #define RT_USING_CPU_FFS
@@ -52,7 +62,7 @@
 
 #define RT_USING_COMPONENTS_INIT
 #define RT_USING_USER_MAIN
-#define RT_MAIN_THREAD_STACK_SIZE 1024
+#define RT_MAIN_THREAD_STACK_SIZE 4096
 #define RT_MAIN_THREAD_PRIORITY 10
 
 /* C++ features */
@@ -67,7 +77,7 @@
 #define FINSH_USING_SYMTAB
 #define FINSH_USING_DESCRIPTION
 #define FINSH_THREAD_PRIORITY 20
-#define FINSH_THREAD_STACK_SIZE (32*1024)
+#define FINSH_THREAD_STACK_SIZE (64*1024)
 #define FINSH_CMD_SIZE 128
 #define FINSH_USING_MSH
 #define FINSH_USING_MSH_DEFAULT
@@ -86,10 +96,10 @@
 // #define RT_SERIAL_USING_DMA
 #define RT_SERIAL_RB_BUFSZ 64
 #define RT_USING_PIN
-// #define RT_USING_HWCRYPTO
-// #define RT_HWCRYPTO_DEFAULT_NAME "hwcryto"
-// #define RT_HWCRYPTO_IV_MAX_SIZE 16
-// #define RT_HWCRYPTO_KEYBIT_MAX_SIZE 256
+#define RT_USING_HWCRYPTO
+#define RT_HWCRYPTO_DEFAULT_NAME "hwcryto"
+#define RT_HWCRYPTO_IV_MAX_SIZE 16
+#define RT_HWCRYPTO_KEYBIT_MAX_SIZE 256
 #define RT_HWCRYPTO_USING_RNG
 #define RT_HWCRYPTO_USING_CRC
 
@@ -99,8 +109,9 @@
 
 
 /* POSIX layer and C standard library */
-
-#define RT_LIBC_USING_TIME
+// #define RT_USING_LIBC
+// #define RT_USING_POSIX
+// #define RT_LIBC_USING_TIME
 
 /* Network */
 
@@ -178,8 +189,9 @@
 #define SOC_STM32H750IB
 
 /* Onboard Peripheral Drivers */
+#if USER_USE_BOARD == USER_USE_ARTPI
 #define BSP_USING_SDRAM
-
+#endif
 
 /* On-chip Peripheral Drivers */
 
@@ -194,6 +206,7 @@
 
 #define RT_USING_SPI
 #define BSP_USING_SPI1
+#define BSP_USING_SPI4
 
 #define RT_USING_QSPI
 #define BSP_USING_QSPI

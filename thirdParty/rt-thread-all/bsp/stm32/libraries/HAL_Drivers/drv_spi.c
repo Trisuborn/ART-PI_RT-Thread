@@ -17,6 +17,8 @@
 #include <rtdevice.h>
 #include "board.h"
 
+#include "lcd_st7735.h"
+
 #ifdef RT_USING_SPI
 
 #if defined(BSP_USING_SPI1) || defined(BSP_USING_SPI2) || defined(BSP_USING_SPI3) || defined(BSP_USING_SPI4) || defined(BSP_USING_SPI5) || defined(BSP_USING_SPI6)
@@ -888,25 +890,18 @@ void HAL_SPI_MspInit(SPI_HandleTypeDef* spiHandle)
         GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
         GPIO_InitStruct.Alternate = GPIO_AF5_SPI1;
         HAL_GPIO_Init(GPIOG, &GPIO_InitStruct);
+    } else if (spiHandle->Instance == SPI4) {
+      /* SPI1 clock enable */
+        __HAL_RCC_SPI4_CLK_ENABLE();
+        __HAL_RCC_GPIOE_CLK_ENABLE();
 
-        /**SPI1 GPIO Configuration
-        PD7     ------> SPI1_MOSI
-        PB3 (JTDO/TRACESWO)     ------> SPI1_SCK
-        PB4 (NJTRST)     ------> SPI1_MISO
-        */
-        // GPIO_InitStruct.Pin = GPIO_PIN_7;
-        // GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
-        // GPIO_InitStruct.Pull = GPIO_PULLUP;
-        // GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
-        // GPIO_InitStruct.Alternate = GPIO_AF5_SPI1;
-        // HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
-
-        // GPIO_InitStruct.Pin = GPIO_PIN_3 | GPIO_PIN_4;
-        // GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
-        // GPIO_InitStruct.Pull = GPIO_PULLUP;
-        // GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
-        // GPIO_InitStruct.Alternate = GPIO_AF5_SPI1;
-        // HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+        /* PA5     ------> SPI1_SCK */
+        GPIO_InitStruct.Pin = LCD_144_ST7735_MOSI | LCD_144_ST7735_CLK;
+        GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+        GPIO_InitStruct.Pull = GPIO_PULLUP;
+        GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+        GPIO_InitStruct.Alternate = GPIO_AF5_SPI4;
+        HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
     }
 }
 

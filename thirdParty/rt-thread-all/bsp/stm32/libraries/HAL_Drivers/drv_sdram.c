@@ -21,11 +21,6 @@ static SDRAM_HandleTypeDef hsdram1;
 static FMC_SDRAM_CommandTypeDef command;
 #ifdef RT_USING_MEMHEAP_AS_HEAP
 struct rt_memheap system_heap0;
-
-struct rt_memheap *rt_get_main_memheap(void)
-{
-	return &system_heap0;
-}
 #endif
 
 

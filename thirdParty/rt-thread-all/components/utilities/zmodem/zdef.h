@@ -191,7 +191,7 @@ struct zfile
 };
 extern struct finsh_shell* shell;
  
-#define ZDEBUG 0
+// #define ZDEBUG 0
 /* sz.c */
 extern void zs_start(char *path);
 /* rz.c */

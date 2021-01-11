@@ -17,33 +17,41 @@
 
 static void dfs_device_mnt(void)
 {
+#ifdef RT_USING_SDIO
     dfs_sdmmc_mnt_init();
+#endif
+#ifdef RT_USING_SFUD
     dfs_spi_flash_mnt_init();
-
-    if (rt_device_find("spi10") != NULL) {
-        rt_kprintf("found spi10\n");
-    }
-
-    if (rt_device_find("W25Q64") != NULL) {
-        rt_kprintf("found W25Q64\n");
-    }
+#endif
 }
-MSH_CMD_EXPORT(dfs_device_mnt, "mount dfs for Sd Card and SPI Flash.");
+MSH_CMD_EXPORT(dfs_device_mnt, mount dfs for Sd Card and SPI Flash.);
+
+static void spi1_mount(void)
+{
+	#define SF0    "W25Q128"
+#define SF0_MP "/"
+	int res;
+	res = dfs_mount(SF0, SF0_MP, "elm", 0, NULL);
+        if (res != 0) {
+            rt_kprintf("DFS for %s mounted failed.\n", SF0_MP);
+        }
+}
+MSH_CMD_EXPORT(spi1_mount, spi1_mount);
 #endif
 
 #ifdef RT_USING_PIN
 #include "pin.h"
 #include "drv_gpio.h"
-static void pinctl(int argc, char **argv)
+static void pinctl(int argc, char** argv)
 {
-	
+    
 }
 #endif
 
 #ifdef BSP_USING_LCD
-static void show_pic(int argc, char **argv)
+static void show_pic(int argc, char** argv)
 {
-	
+
 }
 MSH_CMD_EXPORT(show_pic, scr show pic from device)
 #endif

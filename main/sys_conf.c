@@ -81,13 +81,9 @@ void SystemClock_Config(void)
     if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInitStruct) != HAL_OK) {
         Error_Handler();
     }
-    /** Enables the Clock Security System
-    */
-    HAL_RCC_EnableCSS();
-    /** Enables the Clock Security System
-    */
-    HAL_RCCEx_EnableLSECSS();
+
 }
+
 
 /* USER CODE BEGIN 4 */
 
