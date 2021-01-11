@@ -318,5 +318,5 @@ void lcd_st7735_clear_with(uint16_t color)
             lcd_st7735_send_pixel_dat(color);
         }
     }
-
+    
 }
