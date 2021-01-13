@@ -27,6 +27,7 @@ void _Error_Handler(char *s, int num);
 
 #define DMA_NOT_AVAILABLE ((DMA_INSTANCE_TYPE *)0xFFFFFFFFU)
 
+
 #ifdef __cplusplus
 }
 #endif

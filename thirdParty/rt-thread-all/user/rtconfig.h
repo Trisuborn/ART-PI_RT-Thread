@@ -35,11 +35,11 @@
 
 /* Memory Management */
 
-// #define RT_USING_MEMPOOL
-// #define RT_USING_SMALL_MEM
+#define RT_USING_MEMPOOL
+#define RT_USING_SMALL_MEM
 #define RT_USING_HEAP
 #define RT_USING_MEMHEAP
-#define RT_USING_MEMHEAP_AS_HEAP
+// #define RT_USING_MEMHEAP_AS_HEAP
 
 /* Kernel Device Object */
 #define RT_USING_DEVICE
@@ -62,7 +62,7 @@
 
 #define RT_USING_COMPONENTS_INIT
 #define RT_USING_USER_MAIN
-#define RT_MAIN_THREAD_STACK_SIZE 4096
+#define RT_MAIN_THREAD_STACK_SIZE (32*1024)
 #define RT_MAIN_THREAD_PRIORITY 10
 
 /* C++ features */
@@ -77,7 +77,7 @@
 #define FINSH_USING_SYMTAB
 #define FINSH_USING_DESCRIPTION
 #define FINSH_THREAD_PRIORITY 20
-#define FINSH_THREAD_STACK_SIZE (64*1024)
+#define FINSH_THREAD_STACK_SIZE (32*1024)
 #define FINSH_CMD_SIZE 128
 #define FINSH_USING_MSH
 #define FINSH_USING_MSH_DEFAULT
@@ -103,7 +103,7 @@
 #define RT_HWCRYPTO_USING_RNG
 #define RT_HWCRYPTO_USING_CRC
 
-// #define DRV_DEBUG
+//#define DRV_DEBUG
 
 /* Using USB */
 
@@ -163,19 +163,20 @@
 
 /* system packages */
 #define RT_USING_DFS
-#define RT_USING_DFS_ELMFAT
 #define RT_USING_DFS_DEVFS
 #define DFS_USING_WORKDIR
 #define DFS_FILESYSTEMS_MAX 10
 #define DFS_FILESYSTEM_TYPES_MAX 10
 #define DFS_FD_MAX 16
 
+#define RT_USING_DFS_ELMFAT
+
 /* peripheral libraries and drivers */
-#define RT_USING_SFUD
-#define RT_SFUD_USING_SFDP
-#define RT_SFUD_USING_QSPI
-#define RT_SFUD_USING_FLASH_INFO_TABLE
-#define RT_SFUD_SPI_MAX_HZ  (120 * 1000000)
+// #define RT_USING_SFUD
+// #define RT_SFUD_USING_SFDP
+// #define RT_SFUD_USING_QSPI
+// #define RT_SFUD_USING_FLASH_INFO_TABLE
+// #define RT_SFUD_SPI_MAX_HZ  (120 * 1000000)
 /* miscellaneous packages */
 
 
@@ -204,9 +205,14 @@
 #define BSP_USING_SDMMC
 #define BSP_USING_SDIO
 
+
 #define RT_USING_SPI
+
 #define BSP_USING_SPI1
+
 #define BSP_USING_SPI4
+// #define BSP_SPI4_TX_USING_DMA
+
 
 #define RT_USING_QSPI
 #define BSP_USING_QSPI

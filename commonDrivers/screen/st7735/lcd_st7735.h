@@ -61,7 +61,7 @@ typedef enum {
 /* function */
 void lcd_st7735_init( void );
 
-uint8_t lcd_st7735_trans_byte( uint8_t byte );
+void lcd_st7735_trans_byte( uint8_t byte );
 
 void lcd_st7735_send_cmd( uint8_t cmd );
 void lcd_st7735_send_dat( uint8_t dat );

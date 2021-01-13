@@ -29,12 +29,12 @@ static SPI_HandleTypeDef h_st7735_spi = {
     .Instance = LCD_ST7735_SPI
 };
 
-// SECTION("AHB_SRAM1") 
-uint8_t st7735_gram[ST7735_H][ST7735_W][2];
+// // SECTION("AHB_SRAM1") 
+// uint8_t st7735_gram[ST7735_H][ST7735_W][2];
 
 void lcd_gpio(void)
 {
-#if USER_USE_RTTHREAD == 1
+//#if USER_USE_RTTHREAD == 1
     rt_pin_mode(LCD_BLK, PIN_MODE_OUTPUT);
     rt_pin_mode(LCD_DC, PIN_MODE_OUTPUT);
     rt_pin_mode(LCD_CS, PIN_MODE_OUTPUT);
@@ -45,30 +45,30 @@ void lcd_gpio(void)
 
     st7735_cfg.data_width = 8;
     st7735_cfg.mode = RT_SPI_MODE_3 | RT_SPI_MSB;
-    st7735_cfg.max_hz = 240 * 1000 * 1000;
+    st7735_cfg.max_hz = 120 * 1000 * 1000;
 
     rt_spi_configure(st7735, &st7735_cfg);
 
-#else
-    GPIO_InitTypeDef lcd_st7735_io_s;
+//#else
+    // GPIO_InitTypeDef lcd_st7735_io_s;
 
-    __HAL_RCC_SPI4_CLK_ENABLE();
-    __HAL_RCC_GPIOE_CLK_ENABLE();
+    // __HAL_RCC_SPI4_CLK_ENABLE();
+    // __HAL_RCC_GPIOE_CLK_ENABLE();
 
-    lcd_st7735_io_s.Pin = LCD_144_ST7735_DC | LCD_144_ST7735_BLK | LCD_144_ST7735_CS;
-    lcd_st7735_io_s.Mode = GPIO_MODE_OUTPUT_PP;
-    lcd_st7735_io_s.Pull = GPIO_PULLUP;
-    lcd_st7735_io_s.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
-    HAL_GPIO_Init(GPIOE, &lcd_st7735_io_s);
+    // lcd_st7735_io_s.Pin = LCD_144_ST7735_DC | LCD_144_ST7735_BLK | LCD_144_ST7735_CS;
+    // lcd_st7735_io_s.Mode = GPIO_MODE_OUTPUT_PP;
+    // lcd_st7735_io_s.Pull = GPIO_PULLUP;
+    // lcd_st7735_io_s.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+    // HAL_GPIO_Init(GPIOE, &lcd_st7735_io_s);
 
     // /* SPI */
     // /* PA5     ------> SPI1_SCK */
-    lcd_st7735_io_s.Pin = LCD_144_ST7735_MOSI | LCD_144_ST7735_CLK;
-    lcd_st7735_io_s.Mode = GPIO_MODE_AF_PP;
-    lcd_st7735_io_s.Pull = GPIO_PULLUP;
-    lcd_st7735_io_s.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
-    lcd_st7735_io_s.Alternate = GPIO_AF5_SPI4;
-    HAL_GPIO_Init(GPIOE, &lcd_st7735_io_s);
+    // lcd_st7735_io_s.Pin = LCD_144_ST7735_MOSI | LCD_144_ST7735_CLK;
+    // lcd_st7735_io_s.Mode = GPIO_MODE_AF_PP;
+    // lcd_st7735_io_s.Pull = GPIO_PULLUP;
+    // lcd_st7735_io_s.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+    // lcd_st7735_io_s.Alternate = GPIO_AF5_SPI4;
+    // HAL_GPIO_Init(GPIOE, &lcd_st7735_io_s);
 
     h_st7735_spi.Instance = SPI4;
     h_st7735_spi.Init.Mode = SPI_MODE_MASTER;
@@ -77,7 +77,7 @@ void lcd_gpio(void)
     h_st7735_spi.Init.CLKPolarity = SPI_POLARITY_HIGH;
     h_st7735_spi.Init.CLKPhase = SPI_PHASE_2EDGE;
     h_st7735_spi.Init.NSS = SPI_NSS_SOFT;
-    h_st7735_spi.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_64;
+    h_st7735_spi.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_2;
     h_st7735_spi.Init.FirstBit = SPI_FIRSTBIT_MSB;
     h_st7735_spi.Init.TIMode = SPI_TIMODE_DISABLE;
     h_st7735_spi.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
@@ -92,21 +92,26 @@ void lcd_gpio(void)
     h_st7735_spi.Init.MasterReceiverAutoSusp = SPI_MASTER_RX_AUTOSUSP_DISABLE;
     h_st7735_spi.Init.MasterKeepIOState = SPI_MASTER_KEEP_IO_STATE_ENABLE;
     h_st7735_spi.Init.IOSwap = SPI_IO_SWAP_DISABLE;
-    if (HAL_SPI_Init(&h_st7735_spi) != HAL_OK) {
-    }
+
+    HAL_SPI_Init(&h_st7735_spi);
     __HAL_SPI_ENABLE(&h_st7735_spi);
-#endif
+    SPI_1LINE_TX(&h_st7735_spi);
+//#endif
 }
 
-
-uint8_t lcd_st7735_trans_byte(uint8_t byte)
+void lcd_st7735_trans_byte(uint8_t byte)
 {
-#if USER_USE_RTTHREAD == 1
+#if USER_USE_RTTHREAD == 0
     rt_spi_transfer(st7735, &byte, RT_NULL, 1);
 #else
-    HAL_SPI_Transmit(&h_st7735_spi, &byte, 1, 0xFFFF);
+    MODIFY_REG(h_st7735_spi.Instance->CR2, SPI_CR2_TSIZE, 1);
+    SET_BIT(h_st7735_spi.Instance->CR1, SPI_CR1_CSTART);
+    while (!(h_st7735_spi.Instance->SR & (SPI_FLAG_TXP)));
+    *((__IO uint8_t*) & h_st7735_spi.Instance->TXDR) = byte;
+    while (!(h_st7735_spi.Instance->SR & (SPI_FLAG_EOT)));
+    h_st7735_spi.Instance->IFCR |= (SPI_IFCR_EOTC | SPI_IFCR_TXTFC);
 #endif
-    return 0;
+
 }
 
 void lcd_st7735_hw_reset(void)
@@ -117,7 +122,9 @@ void lcd_st7735_hw_reset(void)
     DELAY(10);
 }
 
+#if USER_USE_RTTHREAD == 1
 INIT_DEVICE_EXPORT(lcd_st7735_init);
+#endif
 void lcd_st7735_init(void)
 {
     lcd_gpio();
@@ -171,7 +178,6 @@ void lcd_st7735_init(void)
     lcd_st7735_send(0x0E, ST7735_DAT);
 
     lcd_st7735_send(0x36, ST7735_CMD);
-    // lcd_st7735_send(0xA8, ST7735_DAT);
     lcd_st7735_send(0xA8, ST7735_DAT);
 
     lcd_st7735_send(0x21, ST7735_CMD);
@@ -318,5 +324,5 @@ void lcd_st7735_clear_with(uint16_t color)
             lcd_st7735_send_pixel_dat(color);
         }
     }
-    
+
 }

@@ -64,8 +64,8 @@ void SystemClock_Config(void)
         Error_Handler();
     }
     PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_RTC | RCC_PERIPHCLK_LTDC
-        | RCC_PERIPHCLK_UART4 | RCC_PERIPHCLK_SDMMC
-        | RCC_PERIPHCLK_FMC;
+        | RCC_PERIPHCLK_UART4 | RCC_PERIPHCLK_SPI4
+        | RCC_PERIPHCLK_SDMMC | RCC_PERIPHCLK_FMC;
     PeriphClkInitStruct.PLL3.PLL3M = 1;
     PeriphClkInitStruct.PLL3.PLL3N = 4;
     PeriphClkInitStruct.PLL3.PLL3P = 2;
@@ -76,12 +76,12 @@ void SystemClock_Config(void)
     PeriphClkInitStruct.PLL3.PLL3FRACN = 0;
     PeriphClkInitStruct.FmcClockSelection = RCC_FMCCLKSOURCE_D1HCLK;
     PeriphClkInitStruct.SdmmcClockSelection = RCC_SDMMCCLKSOURCE_PLL;
+    PeriphClkInitStruct.Spi45ClockSelection = RCC_SPI45CLKSOURCE_D2PCLK1;
     PeriphClkInitStruct.Usart234578ClockSelection = RCC_USART234578CLKSOURCE_D2PCLK1;
     PeriphClkInitStruct.RTCClockSelection = RCC_RTCCLKSOURCE_LSE;
     if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInitStruct) != HAL_OK) {
         Error_Handler();
     }
-
 }
 
 

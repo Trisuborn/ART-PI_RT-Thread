@@ -22,7 +22,7 @@
 
 #ifdef RT_USING_FINSH
 #include <finsh.h>
-static void reboot(uint8_t argc, char **argv)
+static void reboot(uint8_t argc, char** argv)
 {
     rt_hw_cpu_reset();
 }
@@ -35,7 +35,7 @@ void rt_hw_systick_init(void)
 #if defined (SOC_SERIES_STM32H7)
     HAL_SYSTICK_Config((HAL_RCCEx_GetD1SysClockFreq()) / RT_TICK_PER_SECOND);
 #elif defined (SOC_SERIES_STM32MP1)
-	HAL_SYSTICK_Config(HAL_RCC_GetSystemCoreClockFreq() / RT_TICK_PER_SECOND);
+    HAL_SYSTICK_Config(HAL_RCC_GetSystemCoreClockFreq() / RT_TICK_PER_SECOND);
 #else
     HAL_SYSTICK_Config(HAL_RCC_GetHCLKFreq() / RT_TICK_PER_SECOND);
 #endif
@@ -91,12 +91,11 @@ HAL_StatusTypeDef HAL_InitTick(uint32_t TickPriority)
   * @param  None
   * @retval None
   */
-void _Error_Handler(char *s, int num)
+void _Error_Handler(char* s, int num)
 {
     /* USER CODE BEGIN Error_Handler */
     /* User can add his own implementation to report the HAL error return state */
-    while(1)
-    {
+    while (1) {
     }
     /* USER CODE END Error_Handler */
 }
@@ -115,18 +114,18 @@ void rt_hw_us_delay(rt_uint32_t us)
     do {
         now = SysTick->VAL;
         delta = start > now ? start - now : reload + start - now;
-    } while(delta < us_tick * us);
+    } while (delta < us_tick * us);
 }
 
 /**
  * This function will initial STM32 board.
  */
+
 RT_WEAK void rt_hw_board_init()
 {
 
-	SCB_EnableICache();
-	SCB_EnableDCache();
-
+    SCB_EnableICache();
+    SCB_EnableDCache();
 
     /* HAL_Init() function is called at the beginning of the program */
     HAL_Init();
@@ -142,8 +141,9 @@ RT_WEAK void rt_hw_board_init()
 
     /* Heap initialization */
 #if defined(RT_USING_HEAP)
-    rt_system_heap_init((void *)HEAP_BEGIN, (void *)HEAP_END);
+    rt_system_heap_init((void*)HEAP_BEGIN, (void*)HEAP_END);
 #endif
+
 
     /* Pin driver initialization is open by default */
 #ifdef RT_USING_PIN
@@ -159,7 +159,6 @@ RT_WEAK void rt_hw_board_init()
 #ifdef RT_USING_CONSOLE
     rt_console_set_device(RT_CONSOLE_DEVICE_NAME);
 #endif
-
     /* Board underlying hardware initialization */
 #ifdef RT_USING_COMPONENTS_INIT
     rt_components_board_init();

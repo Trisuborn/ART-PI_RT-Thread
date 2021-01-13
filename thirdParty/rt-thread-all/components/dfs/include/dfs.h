@@ -32,7 +32,7 @@
  * skip stdin/stdout/stderr normally
  */
 #ifndef DFS_FD_OFFSET
-#define DFS_FD_OFFSET           3
+#define DFS_FD_OFFSET           0
 #endif
 
 #ifndef DFS_PATH_MAX

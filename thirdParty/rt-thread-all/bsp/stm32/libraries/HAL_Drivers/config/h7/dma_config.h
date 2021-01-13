@@ -99,7 +99,7 @@ extern "C" {
 #define SPI4_DMA_TX_IRQHandler           DMA2_Stream1_IRQHandler
 #define SPI4_TX_DMA_RCC                  RCC_AHB1ENR_DMA2EN
 #define SPI4_TX_DMA_INSTANCE             DMA2_Stream1
-#define SPI4_TX_DMA_CHANNEL              DMA_CHANNEL_4
+#define SPI4_TX_DMA_CHANNEL              DMA_REQUEST_SPI4_TX
 #define SPI4_TX_DMA_IRQ                  DMA2_Stream1_IRQn
 #endif
 

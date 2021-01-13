@@ -135,7 +135,7 @@ extern "C" {
     {                                               \
         .dma_rcc = SPI4_TX_DMA_RCC,                 \
         .Instance = SPI4_TX_DMA_INSTANCE,           \
-        .channel = SPI4_TX_DMA_CHANNEL,             \
+        .request = SPI4_TX_DMA_CHANNEL,             \
         .dma_irq = SPI4_TX_DMA_IRQ,                 \
     }
 #endif /* SPI4_TX_DMA_CONFIG */
