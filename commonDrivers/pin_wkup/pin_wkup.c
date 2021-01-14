@@ -32,9 +32,65 @@ rt_uint32_t wkup_pin = 0;
 uint32_t wkup_pin = 0;
 #endif
 
+#if USER_USE_RTTHREAD == 1
 static rt_mailbox_t wkup_mb = RT_NULL;
+#endif
+
+static void rcc_reset(void)
+{
+    __HAL_RCC_GPIOA_FORCE_RESET();
+    __HAL_RCC_GPIOB_FORCE_RESET();
+    __HAL_RCC_GPIOC_FORCE_RESET();
+    __HAL_RCC_GPIOD_FORCE_RESET();
+    __HAL_RCC_GPIOE_FORCE_RESET();
+    __HAL_RCC_GPIOF_FORCE_RESET();
+    __HAL_RCC_GPIOG_FORCE_RESET();
+    __HAL_RCC_GPIOH_FORCE_RESET();
+    __HAL_RCC_GPIOI_FORCE_RESET();
+}
+
+void sys_enter_standby(void)
+{
+    HAL_PWR_DisableWakeUpPin(WKUP_USE_PIN);
+    HAL_PWR_EnableWakeUpPin(WKUP_USE_PIN);
+    rcc_reset();
+    HAL_PWR_EnterSTANDBYMode();
+}
+
+/************************************************
+ * @brief wkup_pin_check
+ *
+ * @return uint8_t successful:0 failed:1
+*************************************************/
+uint8_t wkup_pin_check(uint8_t os_flag)
+{
+    uint8_t wkup_cnt = 0;       // 长按时间(秒)
+    uint8_t wkup_max = 20;      // 长按所需关机时间(单位100毫秒) 2S
+
+    while (1) {
+        if (HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13) == GPIO_PIN_RESET) {
+            wkup_cnt = 0;
+            //rt_kprintf("released wkup (%d)\n", wkup_cnt);
+            return 1;
+        } else {
+            wkup_cnt += 1;
+            //rt_kprintf("pressed wkup (%d)\n", wkup_cnt);
+            if (wkup_cnt == wkup_max) {
+                return 0;
+            }
+        }
+        if (os_flag)
+            rt_thread_mdelay(100);
+        else
+            HAL_Delay(100);
+    }
+}
 
 
+
+/************************************************
+ * @brief wkup 检测进程
+*************************************************/
 #if USER_USE_RTTHREAD == 1
 /* sys_wkup thread */
 #define PIN_WKUP_THREAD_NAME        "sys_wkup"
@@ -44,7 +100,7 @@ static rt_mailbox_t wkup_mb = RT_NULL;
 static rt_thread_t sys_wkup_th;
 static void sys_wkup(void* param)
 {
-    // param = param;
+    param = param;
     rt_err_t err = RT_ERROR;
     uint8_t* mb_val = 0;
 
@@ -54,7 +110,12 @@ static void sys_wkup(void* param)
             rt_kprintf("mail recv error\n");
             goto __delay;
         }
+
         rt_kprintf("mail content is: %s\n", mb_val);
+
+        if (!wkup_pin_check(1)) {
+            sys_enter_standby();
+        }
 
     __delay:
         rt_thread_mdelay(100);
@@ -62,7 +123,10 @@ static void sys_wkup(void* param)
 }
 #endif 
 
-static uint8_t led_flag = 0;
+
+/************************************************
+ * @brief PC13 外部中断
+*************************************************/
 static uint8_t buf[] = "Hello mailbox.";
 static void pin_callback(void* param)
 {
@@ -71,7 +135,9 @@ static void pin_callback(void* param)
     rt_mb_send(wkup_mb, (rt_ubase_t)&buf);
 }
 
-
+/************************************************
+ * @brief 硬件初始化
+*************************************************/
 static void pin_wkup_hw_init(void)
 {
 #if USER_USE_RTTHREAD == 1
@@ -114,6 +180,9 @@ static void pin_wkup_hw_init(void)
 #endif 
 }
 
+/************************************************
+ * @brief wkup pin 相关初始化
+*************************************************/
 int pin_wkup_init(void)
 {
 #if USER_USE_RTTHREAD == 1

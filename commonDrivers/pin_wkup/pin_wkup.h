@@ -36,6 +36,9 @@ extern "C" {
 #define WKUP_USE_PIN    PWR_WAKEUP_PIN3     // PC13 HIGH
 
 
+void sys_enter_standby(void);
+uint8_t wkup_pin_check(uint8_t os_flag);
+
 #ifdef __cplusplus
 }
 #endif

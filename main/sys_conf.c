@@ -85,19 +85,96 @@ void SystemClock_Config(void)
 }
 
 
-/* USER CODE BEGIN 4 */
-
-/* USER CODE END 4 */
-
-/**
-  * @brief  This function is executed in case of error occurrence.
-  * @retval None
-  */
 void Error_Handler(void)
 {
-  /* USER CODE BEGIN Error_Handler_Debug */
-  /* User can add his own implementation to report the HAL error return state */
 
-  /* USER CODE END Error_Handler_Debug */
 }
 
+
+
+TIM_HandleTypeDef        htim5;
+
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim)
+{
+    if (htim->Instance == TIM5) {
+        HAL_IncTick();
+    }
+}
+
+void TIM5_IRQHandler(void)
+{
+
+    HAL_TIM_IRQHandler(&htim5);
+
+}
+
+
+HAL_StatusTypeDef HAL_InitTick(uint32_t TickPriority)
+{
+  RCC_ClkInitTypeDef    clkconfig;
+  uint32_t              uwTimclock = 0;
+  uint32_t              uwPrescalerValue = 0;
+  uint32_t              pFLatency;
+  /*Configure the TIM5 IRQ priority */
+  HAL_NVIC_SetPriority(TIM5_IRQn, TickPriority ,0);
+
+  /* Enable the TIM5 global Interrupt */
+  HAL_NVIC_EnableIRQ(TIM5_IRQn);
+  /* Enable TIM5 clock */
+  __HAL_RCC_TIM5_CLK_ENABLE();
+
+  /* Get clock configuration */
+  HAL_RCC_GetClockConfig(&clkconfig, &pFLatency);
+
+  /* Compute TIM5 clock */
+  uwTimclock = 2*HAL_RCC_GetPCLK1Freq();
+
+  /* Compute the prescaler value to have TIM5 counter clock equal to 1MHz */
+  uwPrescalerValue = (uint32_t) ((uwTimclock / 1000000) - 1);
+
+  /* Initialize TIM5 */
+  htim5.Instance = TIM5;
+
+  /* Initialize TIMx peripheral as follow:
+  + Period = [(TIM5CLK/1000) - 1]. to have a (1/1000) s time base.
+  + Prescaler = (uwTimclock/1000000 - 1) to have a 1MHz counter clock.
+  + ClockDivision = 0
+  + Counter direction = Up
+  */
+  htim5.Init.Period = (1000000 / 1000) - 1;
+  htim5.Init.Prescaler = uwPrescalerValue;
+  htim5.Init.ClockDivision = 0;
+  htim5.Init.CounterMode = TIM_COUNTERMODE_UP;
+  if(HAL_TIM_Base_Init(&htim5) == HAL_OK)
+  {
+    /* Start the TIM time Base generation in interrupt mode */
+    return HAL_TIM_Base_Start_IT(&htim5);
+  }
+
+  /* Return function status */
+  return HAL_ERROR;
+}
+
+/**
+  * @brief  Suspend Tick increment.
+  * @note   Disable the tick increment by disabling TIM5 update interrupt.
+  * @param  None
+  * @retval None
+  */
+void HAL_SuspendTick(void)
+{
+  /* Disable TIM5 update Interrupt */
+  __HAL_TIM_DISABLE_IT(&htim5, TIM_IT_UPDATE);
+}
+
+/**
+  * @brief  Resume Tick increment.
+  * @note   Enable the tick increment by Enabling TIM5 update interrupt.
+  * @param  None
+  * @retval None
+  */
+void HAL_ResumeTick(void)
+{
+  /* Enable TIM5 Update interrupt */
+  __HAL_TIM_ENABLE_IT(&htim5, TIM_IT_UPDATE);
+}

@@ -11,6 +11,7 @@
 #include "drv_common.h"
 #include "board.h"
 #include "sys_conf.h"
+#include "pin_wkup.h"
 
 #ifdef RT_USING_SERIAL
 #include "drv_usart.h"
@@ -61,30 +62,30 @@ void SysTick_Handler(void)
     rt_interrupt_leave();
 }
 
-uint32_t HAL_GetTick(void)
-{
-    return rt_tick_get() * 1000 / RT_TICK_PER_SECOND;
-}
+// uint32_t HAL_GetTick(void)
+// {
+//     return rt_tick_get() * 1000 / RT_TICK_PER_SECOND;
+// }
 
-void HAL_SuspendTick(void)
-{
-}
+// void HAL_SuspendTick(void)
+// {
+// }
 
-void HAL_ResumeTick(void)
-{
-}
+// void HAL_ResumeTick(void)
+// {
+// }
 
-void HAL_Delay(__IO uint32_t Delay)
-{
-    rt_thread_mdelay(Delay);
-}
+// void HAL_Delay(__IO uint32_t Delay)
+// {
+//     rt_thread_mdelay(Delay);
+// }
 
 /* re-implement tick interface for STM32 HAL */
-HAL_StatusTypeDef HAL_InitTick(uint32_t TickPriority)
-{
-    /* Return function status */
-    return HAL_OK;
-}
+// HAL_StatusTypeDef HAL_InitTick(uint32_t TickPriority)
+// {
+//     /* Return function status */
+//     return HAL_OK;
+// }
 
 /**
   * @brief  This function is executed in case of error occurrence.
@@ -126,14 +127,29 @@ RT_WEAK void rt_hw_board_init()
 
     SCB_EnableICache();
     SCB_EnableDCache();
-
+    
     /* HAL_Init() function is called at the beginning of the program */
     HAL_Init();
 
-    /* enable interrupt */
+/* enable interrupt */
     __set_PRIMASK(0);
-    /* System clock initialization */
     SystemClock_Config();
+
+
+    /* 开机实现 */
+    __HAL_RCC_GPIOC_CLK_ENABLE();
+    GPIO_InitTypeDef wkup_pin;
+    wkup_pin.Mode = GPIO_MODE_INPUT;
+    wkup_pin.Pin = GPIO_PIN_13;
+    wkup_pin.Pull = GPIO_PULLDOWN;
+    wkup_pin.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+    HAL_GPIO_Init(GPIOC, &wkup_pin);
+    if (wkup_pin_check(0)) {
+        sys_enter_standby();
+    } else {
+        HAL_PWR_DisableWakeUpPin(PWR_WAKEUP_PIN3);
+    }
+
     /* disable interrupt */
     __set_PRIMASK(1);
 
@@ -159,9 +175,48 @@ RT_WEAK void rt_hw_board_init()
 #ifdef RT_USING_CONSOLE
     rt_console_set_device(RT_CONSOLE_DEVICE_NAME);
 #endif
+
     /* Board underlying hardware initialization */
 #ifdef RT_USING_COMPONENTS_INIT
     rt_components_board_init();
 #endif
 }
 
+
+static void boot()
+{
+    /* 开机实现 */
+    // __HAL_RCC_GPIOC_CLK_ENABLE();
+    // GPIO_InitTypeDef wkup_pin;
+    // wkup_pin.Mode = GPIO_MODE_INPUT;
+    // wkup_pin.Pin = GPIO_PIN_13;
+    // wkup_pin.Pull = GPIO_PULLDOWN;
+    // wkup_pin.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+    // HAL_GPIO_Init(GPIOC, &wkup_pin);
+    // if (wkup_pin_check(0)) {
+    // 	__HAL_RCC_GPIOC_CLK_DISABLE();
+    //     sys_enter_standby();
+    // } else {
+    //     HAL_PWR_DisableWakeUpPin(PWR_WAKEUP_PIN3);
+    // }
+
+    // __HAL_RCC_GPIOC_CLK_ENABLE();
+    // GPIO_InitTypeDef GPIO_InitStruct = { 0 };
+    // GPIO_InitStruct.Pin = GPIO_PIN_13;
+    // GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+    // GPIO_InitStruct.Pull = GPIO_PULLDOWN;
+    // HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+    // if (HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13) == GPIO_PIN_RESET) {
+    //     HAL_PWR_DisableWakeUpPin(PWR_WAKEUP_PIN3);
+    //     HAL_PWR_EnableWakeUpPin(PWR_WAKEUP_PIN3);
+    //     SET_BIT(PWR->CPUCR, (PWR_CPUCR_PDDS_D2));
+    //     SET_BIT(PWR->CPUCR, (PWR_CPUCR_PDDS_D1));
+    //     SET_BIT(SCB->SCR, SCB_SCR_SLEEPDEEP_Msk);
+    //     __DSB();
+    //     __ISB();
+    //     __WFI();
+    // } else {
+    //     HAL_PWR_DisableWakeUpPin(PWR_WAKEUP_PIN3);
+    // }
+}
+INIT_PREV_EXPORT(boot);
