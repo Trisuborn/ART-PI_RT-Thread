@@ -15,7 +15,7 @@
 
 #define DBG_LEVEL           DBG_WARNING
 #define DBG_SECTION_NAME    "ECM"
-#include <rtdbg.h>
+#include "rtdbg.h"
 
 /* RT-Thread LWIP ethernet interface */
 #include <netif/ethernetif.h>

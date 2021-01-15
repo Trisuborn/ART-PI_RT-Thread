@@ -14,6 +14,8 @@
 #include <rtthread.h>
 #include <rthw.h>
 #include <rtdevice.h>
+#include "drv_gpio.h"
+#include "i2c-bit-ops.h"
 
 /* stm32 config class */
 struct stm32_soft_i2c_config
@@ -30,6 +32,8 @@ struct stm32_i2c
 };
 
 #ifdef BSP_USING_I2C1
+#define BSP_I2C1_SCL_PIN    GET_PIN(B, 8)
+#define BSP_I2C1_SDA_PIN    GET_PIN(B, 9)
 #define I2C1_BUS_CONFIG                                  \
     {                                                    \
         .scl = BSP_I2C1_SCL_PIN,                         \
@@ -37,7 +41,7 @@ struct stm32_i2c
         .bus_name = "i2c1",                              \
     }
 #endif
-    
+
 #ifdef BSP_USING_I2C2
 #define I2C2_BUS_CONFIG                                  \
     {                                                    \

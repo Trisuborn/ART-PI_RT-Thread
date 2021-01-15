@@ -18,7 +18,7 @@
 
 #define DBG_TAG              "usbd.audio.mic"
 #define DBG_LVL              DBG_INFO
-#include <rtdbg.h>
+#include "rtdbg.h"
 
 #define RECORD_SAMPLERATE   16000
 #define RECORD_CHANNEL      1

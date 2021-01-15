@@ -30,7 +30,7 @@
 
 #define DBG_TAG                        "sal.skt"
 #define DBG_LVL                        DBG_INFO
-#include <rtdbg.h>
+#include "rtdbg.h"
 
 #define SOCKET_TABLE_STEP_LEN          4
 

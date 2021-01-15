@@ -16,9 +16,15 @@
 #include <rtdevice.h>
 #include "drv_gpio.h"
 #include "drv_spi.h"
+#include "rt_drv_pwm.h"
+
+#define LOG_TAG             "drv.spi4"
+#define LOG_LVL             LOG_LVL_DBG
+#include "drv_log.h"
 
 static struct rt_spi_device* st7735;
-struct rt_spi_configuration st7735_cfg;
+static struct rt_spi_configuration st7735_cfg;
+static struct rt_device_pwm* lcd_blk_pwm;
 
 #define LCD_BLK     GET_PIN(E, 10)
 #define LCD_DC      GET_PIN(E, 13)
@@ -29,14 +35,26 @@ static SPI_HandleTypeDef h_st7735_spi = {
     .Instance = LCD_ST7735_SPI
 };
 
-// // SECTION("AHB_SRAM1") 
-// uint8_t st7735_gram[ST7735_H][ST7735_W][2];
 
 void lcd_gpio(void)
 {
 #if USER_USE_RTTHREAD == 1
+    rt_err_t err;
 #if !defined(RT_USING_PWM)
     rt_pin_mode(LCD_BLK, PIN_MODE_OUTPUT);
+#else
+//     lcd_blk_pwm = (struct rt_device_pwm*)rt_device_find("pwm1");
+//     if (lcd_blk_pwm == RT_NULL) {
+//         LOG_E("lcd blk pwm device got error.\n");
+//         goto __other;
+//     }
+//     err = rt_pwm_set(&lcd_blk_pwm, 2, 100, 50);
+//     if (err != RT_EOK) {
+//         LOG_E("lcd blk pwm set error.\n");
+//         goto __other;
+//     }
+//     rt_pwm_enable(&lcd_blk_pwm, 2, 1);
+// __other:
 #endif
     rt_pin_mode(LCD_DC, PIN_MODE_OUTPUT);
     rt_pin_mode(LCD_CS, PIN_MODE_OUTPUT);
@@ -103,17 +121,12 @@ void lcd_gpio(void)
 
 void lcd_st7735_trans_byte(uint8_t byte)
 {
-#if USER_USE_RTTHREAD == 0
-    rt_spi_transfer(st7735, &byte, RT_NULL, 1);
-#else
     MODIFY_REG(h_st7735_spi.Instance->CR2, SPI_CR2_TSIZE, 1);
     SET_BIT(h_st7735_spi.Instance->CR1, SPI_CR1_CSTART);
     while (!(h_st7735_spi.Instance->SR & (SPI_FLAG_TXP)));
     *((__IO uint8_t*) & h_st7735_spi.Instance->TXDR) = byte;
     while (!(h_st7735_spi.Instance->SR & (SPI_FLAG_EOT)));
     h_st7735_spi.Instance->IFCR |= (SPI_IFCR_EOTC | SPI_IFCR_TXTFC);
-#endif
-
 }
 
 void lcd_st7735_hw_reset(void)
@@ -125,15 +138,14 @@ void lcd_st7735_hw_reset(void)
 }
 
 #if USER_USE_RTTHREAD == 1
-INIT_DEVICE_EXPORT(lcd_st7735_init);
+INIT_APP_EXPORT(lcd_st7735_init);
 #endif
-void lcd_st7735_init(void)
+int lcd_st7735_init(void)
 {
     lcd_gpio();
     // lcd_st7735_hw_reset();
 
     lcd_st7735_send(0x11, ST7735_CMD);//Sleep exit
-
 
   //ST7735R Frame Rate
     lcd_st7735_send(0xB1, ST7735_CMD);
@@ -154,7 +166,7 @@ void lcd_st7735_init(void)
     lcd_st7735_send(0x2C, ST7735_DAT);
     lcd_st7735_send(0x2D, ST7735_DAT);
 
-    lcd_st7735_send(0xB4, ST7735_CMD); //Column inversion 
+    lcd_st7735_send(0xB4, ST7735_CMD); //Column inversion
     lcd_st7735_send(0x07, ST7735_DAT);
 
     //ST7735R Power Sequence
@@ -176,7 +188,7 @@ void lcd_st7735_init(void)
     lcd_st7735_send(0x8A, ST7735_DAT);
     lcd_st7735_send(0xEE, ST7735_DAT);
 
-    lcd_st7735_send(0xC5, ST7735_CMD); //VCOM 
+    lcd_st7735_send(0xC5, ST7735_CMD); //VCOM
     lcd_st7735_send(0x0E, ST7735_DAT);
 
     lcd_st7735_send(0x36, ST7735_CMD);
@@ -221,18 +233,19 @@ void lcd_st7735_init(void)
     lcd_st7735_send(0x03, ST7735_DAT);
     lcd_st7735_send(0x10, ST7735_DAT);
 
-    lcd_st7735_send(0xF0, ST7735_CMD); //Enable test command  
+    lcd_st7735_send(0xF0, ST7735_CMD); //Enable test command
     lcd_st7735_send(0x01, ST7735_DAT);
-    lcd_st7735_send(0xF6, ST7735_CMD); //Disable ram power save mode 
+    lcd_st7735_send(0xF6, ST7735_CMD); //Disable ram power save mode
     lcd_st7735_send(0x00, ST7735_DAT);
 
-    lcd_st7735_send(0x3A, ST7735_CMD); //65k mode 
+    lcd_st7735_send(0x3A, ST7735_CMD); //65k mode
     lcd_st7735_send(0x05, ST7735_DAT);
 
-    lcd_st7735_powerUp();
+    lcd_st7735_send(0x11, ST7735_CMD);//Sleep exit
+    lcd_st7735_displayOn();
 
     lcd_st7735_clear_with(0xf800);
-
+    return 0;
 }
 
 void lcd_st7735_send_cmd(uint8_t cmd)

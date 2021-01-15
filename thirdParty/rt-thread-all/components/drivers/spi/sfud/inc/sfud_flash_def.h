@@ -187,7 +187,7 @@ typedef struct {
 {                                                \
     .mode = RT_SPI_MODE_3 | RT_SPI_MSB,          \
     .data_width = 8,                             \
-    .max_hz = RT_SFUD_SPI_MAX_HZ,                \
+    .max_hz = RT_SFUD_SPI_MAX_HZ / 1,                \
 }
 
 #ifdef RT_SFUD_USING_QSPI

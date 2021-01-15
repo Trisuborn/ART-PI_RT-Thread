@@ -13,7 +13,7 @@
 
 #define DBG_TAG    "LWPMEM"
 #define DBG_LVL    DBG_WARNING
-#include <rtdbg.h>
+#include "rtdbg.h"
 
 // todo: remove repleat code
 #define RT_MEMHEAP_SIZE         RT_ALIGN(sizeof(struct rt_lwp_memheap_item), RT_ALIGN_SIZE)

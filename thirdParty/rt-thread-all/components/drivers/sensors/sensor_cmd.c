@@ -14,7 +14,7 @@
 
 #define DBG_TAG  "sensor.cmd"
 #define DBG_LVL DBG_INFO
-#include <rtdbg.h>
+#include "rtdbg.h"
 
 #include <stdlib.h>
 #include <string.h>

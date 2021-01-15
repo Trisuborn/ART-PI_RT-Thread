@@ -20,7 +20,7 @@
 #define DRV_DEBUG
 //#define CAMERA_DUMP
 #define LOG_TAG     "drv.ov2640"
-#include <drv_log.h>
+#include "drv_log.h"
 
 #define DEV_ADDRESS      0x30 /* OV2640 address */
 #define I2C_NAME        "i2c2"

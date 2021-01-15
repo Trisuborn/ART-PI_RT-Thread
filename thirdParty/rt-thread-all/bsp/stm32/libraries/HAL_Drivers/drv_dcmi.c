@@ -16,7 +16,7 @@
 
 #define DRV_DEBUG
 #define LOG_TAG             "drv.dcmi"
-#include <drv_log.h>
+#include "drv_log.h"
 
 struct stm32_dcmi
 {

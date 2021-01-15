@@ -19,7 +19,7 @@
 #else
 #define DBG_LVL DBG_INFO
 #endif /* RT_WLAN_PROT_DEBUG */
-#include <rtdbg.h>
+#include "rtdbg.h"
 
 #ifdef RT_WLAN_PROT_ENABLE
 

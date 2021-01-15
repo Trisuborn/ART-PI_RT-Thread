@@ -17,7 +17,7 @@
 #ifdef BSP_USING_CAN
 
 #define LOG_TAG    "drv_can"
-#include <drv_log.h>
+#include "drv_log.h"
 
 /* attention !!! baud calculation example: Tclk / ((ss + bs1 + bs2) * brp)  36 / ((1 + 8 + 3) * 3) = 1MHz*/
 #if defined (SOC_SERIES_STM32F1)/* APB1 36MHz(max) */

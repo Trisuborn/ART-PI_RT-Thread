@@ -16,7 +16,7 @@
 #else
 #define DBG_LVL               DBG_INFO
 #endif
-#include <rtdbg.h>
+#include "rtdbg.h"
 
 rt_err_t rt_i2c_bus_device_register(struct rt_i2c_bus_device *bus,
                                     const char               *bus_name)

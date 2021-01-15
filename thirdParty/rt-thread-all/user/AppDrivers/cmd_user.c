@@ -18,23 +18,21 @@
 static void dfs_device_mnt(void)
 {
 #ifdef RT_USING_SDIO
-    dfs_sdmmc_mnt_init();
+    //dfs_sdmmc_mnt_init();
 #endif
 #ifdef RT_USING_SFUD
     dfs_spi_flash_mnt_init();
 #endif
 }
-MSH_CMD_EXPORT(dfs_device_mnt, mount dfs for Sd Card and SPI Flash.);
+MSH_CMD_EXPORT(dfs_device_mnt, mount dfs for Sd Cardand SPI Flash.);
 
 static void spi1_mount(void)
 {
-	#define SF0    "W25Q128"
-#define SF0_MP "/"
-	int res;
-	res = dfs_mount(SF0, SF0_MP, "elm", 0, NULL);
-        if (res != 0) {
-            rt_kprintf("DFS for %s mounted failed.\n", SF0_MP);
-        }
+    int res;
+    res = dfs_mount("W25Q128", "/", "elm", 0, NULL);
+    if (res != 0) {
+        rt_kprintf("%s mounted failed.\n", SF0);
+    }
 }
 MSH_CMD_EXPORT(spi1_mount, spi1_mount);
 #endif
@@ -44,7 +42,7 @@ MSH_CMD_EXPORT(spi1_mount, spi1_mount);
 #include "drv_gpio.h"
 static void pinctl(int argc, char** argv)
 {
-    
+
 }
 #endif
 

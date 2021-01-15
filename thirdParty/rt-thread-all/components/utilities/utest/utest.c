@@ -24,7 +24,7 @@
 #else
 #define DBG_LVL          DBG_INFO
 #endif
-#include <rtdbg.h>
+#include "rtdbg.h"
 
 #if RT_CONSOLEBUF_SIZE < 256
 #error "RT_CONSOLEBUF_SIZE is less than 256!"

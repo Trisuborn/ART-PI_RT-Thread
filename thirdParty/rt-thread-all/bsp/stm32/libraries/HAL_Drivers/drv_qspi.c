@@ -15,9 +15,8 @@
 
 #ifdef RT_USING_QSPI
 
-#define DRV_DEBUG
 #define LOG_TAG              "drv.qspi"
-#include <drv_log.h>
+#include "drv_log.h"
 
 #if defined(BSP_USING_QSPI)
 
@@ -343,8 +342,11 @@ void HAL_QSPI_MspInit(QSPI_HandleTypeDef* qspiHandle)
         __HAL_RCC_QSPI_CLK_ENABLE();
 
         __HAL_RCC_GPIOB_CLK_ENABLE();
+        __HAL_RCC_GPIOD_CLK_ENABLE();
+        __HAL_RCC_GPIOE_CLK_ENABLE();
         __HAL_RCC_GPIOF_CLK_ENABLE();
         __HAL_RCC_GPIOG_CLK_ENABLE();
+#if USER_USE_BOARD == USER_USE_ARTPI
         /**QUADSPI GPIO Configuration
         PG6     ------> QUADSPI_BK1_NCS
         PF6     ------> QUADSPI_BK1_IO3
@@ -373,6 +375,43 @@ void HAL_QSPI_MspInit(QSPI_HandleTypeDef* qspiHandle)
         GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
         GPIO_InitStruct.Alternate = GPIO_AF10_QUADSPI;
         HAL_GPIO_Init(GPIOF, &GPIO_InitStruct);
+#elif USER_USE_BOARD == USER_USE_MiniSTM32H7xx
+        /*QUADSPI GPIO Configuration
+        PE2     ------> QUADSPI_BK1_IO2
+        PB6     ------> QUADSPI_BK1_NCS
+        PB2     ------> QUADSPI_CLK
+        PD13     ------> QUADSPI_BK1_IO3
+        PD12     ------> QUADSPI_BK1_IO1
+        PD11     ------> QUADSPI_BK1_IO0
+        */
+        GPIO_InitStruct.Pin = GPIO_PIN_2;
+        GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+        GPIO_InitStruct.Pull = GPIO_NOPULL;
+        GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+        GPIO_InitStruct.Alternate = GPIO_AF9_QUADSPI;
+        HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
+
+        GPIO_InitStruct.Pin = GPIO_PIN_6;
+        GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+        GPIO_InitStruct.Pull = GPIO_NOPULL;
+        GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+        GPIO_InitStruct.Alternate = GPIO_AF10_QUADSPI;
+        HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+        GPIO_InitStruct.Pin = GPIO_PIN_2;
+        GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+        GPIO_InitStruct.Pull = GPIO_PULLUP;
+        GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+        GPIO_InitStruct.Alternate = GPIO_AF9_QUADSPI;
+        HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+        GPIO_InitStruct.Pin = GPIO_PIN_13 | GPIO_PIN_12 | GPIO_PIN_11;
+        GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+        GPIO_InitStruct.Pull = GPIO_NOPULL;
+        GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+        GPIO_InitStruct.Alternate = GPIO_AF9_QUADSPI;
+        HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
+#endif
     }
 }
 

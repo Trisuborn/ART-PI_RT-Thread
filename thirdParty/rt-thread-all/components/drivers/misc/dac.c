@@ -16,7 +16,7 @@
 
 #define DBG_TAG "dac"
 #define DBG_LVL DBG_INFO
-#include <rtdbg.h>
+#include "rtdbg.h"
 
 static rt_size_t _dac_write(rt_device_t dev, rt_off_t pos, const void *buffer, rt_size_t size)
 {

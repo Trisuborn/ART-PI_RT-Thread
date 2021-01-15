@@ -17,7 +17,7 @@
 
 //#define DRV_DEBUG
 #define LOG_TAG             "drv.hwtimer"
-#include <drv_log.h>
+#include "drv_log.h"
 
 #ifdef RT_USING_HWTIMER
 enum

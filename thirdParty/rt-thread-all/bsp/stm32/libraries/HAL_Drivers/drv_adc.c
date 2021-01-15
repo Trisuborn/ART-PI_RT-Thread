@@ -19,7 +19,7 @@
 
 //#define DRV_DEBUG
 #define LOG_TAG             "drv.adc"
-#include <drv_log.h>
+#include "drv_log.h"
 
 static ADC_HandleTypeDef adc_config[] =
 {

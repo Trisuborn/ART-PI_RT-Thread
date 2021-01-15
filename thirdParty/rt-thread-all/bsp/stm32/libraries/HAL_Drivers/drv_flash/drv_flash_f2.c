@@ -20,7 +20,7 @@
 
 //#define DRV_DEBUG
 #define LOG_TAG                "drv.flash"
-#include <drv_log.h>
+#include "drv_log.h"
 
 /* Base address of the Flash sectors Bank 1 */
 #define ADDR_FLASH_SECTOR_0     ((uint32_t)0x08000000) /* Base @ of Sector 0, 16 Kbytes */

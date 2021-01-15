@@ -17,7 +17,7 @@
 #else
 #define DBG_LVL DBG_INFO
 #endif /* RT_WLAN_CFG_DEBUG */
-#include <rtdbg.h>
+#include "rtdbg.h"
 
 #ifdef RT_WLAN_CFG_ENABLE
 

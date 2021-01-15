@@ -16,7 +16,7 @@
 
 #define DRV_DEBUG
 #define LOG_TAG             "drv.lcd"
-#include <drv_log.h>
+#include "drv_log.h"
 
 #define LCD_DEVICE(dev)     (struct drv_lcd_device*)(dev)
 

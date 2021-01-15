@@ -32,7 +32,7 @@
 
 #define DBG_TAG    "UART"
 #define DBG_LVL    DBG_INFO
-#include <rtdbg.h>
+#include "rtdbg.h"
 
 #ifdef RT_USING_POSIX
 #include <dfs_posix.h>

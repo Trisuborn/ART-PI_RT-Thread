@@ -27,9 +27,9 @@
 #include "drv_config.h"
 #include <string.h>
 
-//#define DRV_DEBUG
 #define LOG_TAG              "drv.spi"
-#include <drv_log.h>
+#define LOG_LVL              LOG_LVL_INFO
+#include "drv_log.h"
 
 enum {
 #ifdef BSP_USING_SPI1
@@ -130,9 +130,10 @@ static rt_err_t stm32_spi_init(struct stm32_spi* spi_drv, struct rt_spi_configur
 
     uint32_t SPI_PCLK;
 
-    SPI_PCLK = HAL_RCC_GetPCLK2Freq();
+    SPI_PCLK = HAL_RCC_GetPCLK2Freq() * 2;
 
-    rt_kprintf("%d\n", cfg->max_hz);
+    rt_kprintf("SPI_PCLK : %d\n", SPI_PCLK);
+    rt_kprintf("max_hz   : %d\n", cfg->max_hz);
 
     if (cfg->max_hz >= SPI_PCLK / 2) {
         spi_handle->Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_2;
@@ -883,7 +884,8 @@ void HAL_SPI_MspInit(SPI_HandleTypeDef* spiHandle)
         __HAL_RCC_GPIOD_CLK_ENABLE();
         __HAL_RCC_GPIOG_CLK_ENABLE();
 
-        /* PA5     ------> SPI1_SCK */
+#if USER_USE_BOARD == USER_USE_ARTPI
+/* PA5     ------> SPI1_SCK */
         GPIO_InitStruct.Pin = GPIO_PIN_5;
         GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
         GPIO_InitStruct.Pull = GPIO_PULLUP;
@@ -904,6 +906,26 @@ void HAL_SPI_MspInit(SPI_HandleTypeDef* spiHandle)
         GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
         GPIO_InitStruct.Alternate = GPIO_AF5_SPI1;
         HAL_GPIO_Init(GPIOG, &GPIO_InitStruct);
+#elif USER_USE_BOARD == USER_USE_MiniSTM32H7xx
+        /* PB3     ------> SPI1_SCK
+        *  PB4     ------> SPI1_MISO
+        */
+        GPIO_InitStruct.Pin = GPIO_PIN_3 | GPIO_PIN_4;
+        GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+        GPIO_InitStruct.Pull = GPIO_PULLUP;
+        GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+        GPIO_InitStruct.Alternate = GPIO_AF5_SPI1;
+        HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+        /* PD7     ------> SPI1_MOSI */
+        GPIO_InitStruct.Pin = GPIO_PIN_7;
+        GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+        GPIO_InitStruct.Pull = GPIO_PULLUP;
+        GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+        GPIO_InitStruct.Alternate = GPIO_AF5_SPI1;
+        HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
+#endif
+
+
     } else if (spiHandle->Instance == SPI4) {
       /* SPI1 clock enable */
         __HAL_RCC_SPI4_CLK_ENABLE();

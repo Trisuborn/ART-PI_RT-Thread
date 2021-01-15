@@ -64,8 +64,17 @@ void SystemClock_Config(void)
         Error_Handler();
     }
     PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_RTC | RCC_PERIPHCLK_LTDC
-        | RCC_PERIPHCLK_UART4 | RCC_PERIPHCLK_SPI4
-        | RCC_PERIPHCLK_SDMMC | RCC_PERIPHCLK_FMC;
+        | RCC_PERIPHCLK_LPUART1 | RCC_PERIPHCLK_UART4
+        | RCC_PERIPHCLK_SPI4 | RCC_PERIPHCLK_SPI1
+        | RCC_PERIPHCLK_SDMMC | RCC_PERIPHCLK_QSPI;
+    PeriphClkInitStruct.PLL2.PLL2M = 5;
+    PeriphClkInitStruct.PLL2.PLL2N = 192;
+    PeriphClkInitStruct.PLL2.PLL2P = 4;
+    PeriphClkInitStruct.PLL2.PLL2Q = 2;
+    PeriphClkInitStruct.PLL2.PLL2R = 2;
+    PeriphClkInitStruct.PLL2.PLL2RGE = RCC_PLL2VCIRANGE_2;
+    PeriphClkInitStruct.PLL2.PLL2VCOSEL = RCC_PLL2VCOWIDE;
+    PeriphClkInitStruct.PLL2.PLL2FRACN = 0;
     PeriphClkInitStruct.PLL3.PLL3M = 1;
     PeriphClkInitStruct.PLL3.PLL3N = 4;
     PeriphClkInitStruct.PLL3.PLL3P = 2;
@@ -74,10 +83,12 @@ void SystemClock_Config(void)
     PeriphClkInitStruct.PLL3.PLL3RGE = RCC_PLL3VCIRANGE_3;
     PeriphClkInitStruct.PLL3.PLL3VCOSEL = RCC_PLL3VCOWIDE;
     PeriphClkInitStruct.PLL3.PLL3FRACN = 0;
-    PeriphClkInitStruct.FmcClockSelection = RCC_FMCCLKSOURCE_D1HCLK;
+    PeriphClkInitStruct.QspiClockSelection = RCC_QSPICLKSOURCE_D1HCLK;
     PeriphClkInitStruct.SdmmcClockSelection = RCC_SDMMCCLKSOURCE_PLL;
+    PeriphClkInitStruct.Spi123ClockSelection = RCC_SPI123CLKSOURCE_PLL2;
     PeriphClkInitStruct.Spi45ClockSelection = RCC_SPI45CLKSOURCE_D2PCLK1;
     PeriphClkInitStruct.Usart234578ClockSelection = RCC_USART234578CLKSOURCE_D2PCLK1;
+    PeriphClkInitStruct.Lpuart1ClockSelection = RCC_LPUART1CLKSOURCE_D3PCLK1;
     PeriphClkInitStruct.RTCClockSelection = RCC_RTCCLKSOURCE_LSE;
     if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInitStruct) != HAL_OK) {
         Error_Handler();
@@ -111,48 +122,47 @@ void TIM5_IRQHandler(void)
 
 HAL_StatusTypeDef HAL_InitTick(uint32_t TickPriority)
 {
-  RCC_ClkInitTypeDef    clkconfig;
-  uint32_t              uwTimclock = 0;
-  uint32_t              uwPrescalerValue = 0;
-  uint32_t              pFLatency;
-  /*Configure the TIM5 IRQ priority */
-  HAL_NVIC_SetPriority(TIM5_IRQn, TickPriority ,0);
+    RCC_ClkInitTypeDef    clkconfig;
+    uint32_t              uwTimclock = 0;
+    uint32_t              uwPrescalerValue = 0;
+    uint32_t              pFLatency;
+    /*Configure the TIM5 IRQ priority */
+    HAL_NVIC_SetPriority(TIM5_IRQn, TickPriority, 0);
 
-  /* Enable the TIM5 global Interrupt */
-  HAL_NVIC_EnableIRQ(TIM5_IRQn);
-  /* Enable TIM5 clock */
-  __HAL_RCC_TIM5_CLK_ENABLE();
+    /* Enable the TIM5 global Interrupt */
+    HAL_NVIC_EnableIRQ(TIM5_IRQn);
+    /* Enable TIM5 clock */
+    __HAL_RCC_TIM5_CLK_ENABLE();
 
-  /* Get clock configuration */
-  HAL_RCC_GetClockConfig(&clkconfig, &pFLatency);
+    /* Get clock configuration */
+    HAL_RCC_GetClockConfig(&clkconfig, &pFLatency);
 
-  /* Compute TIM5 clock */
-  uwTimclock = 2*HAL_RCC_GetPCLK1Freq();
+    /* Compute TIM5 clock */
+    uwTimclock = 2 * HAL_RCC_GetPCLK1Freq();
 
-  /* Compute the prescaler value to have TIM5 counter clock equal to 1MHz */
-  uwPrescalerValue = (uint32_t) ((uwTimclock / 1000000) - 1);
+    /* Compute the prescaler value to have TIM5 counter clock equal to 1MHz */
+    uwPrescalerValue = (uint32_t)((uwTimclock / 1000000) - 1);
 
-  /* Initialize TIM5 */
-  htim5.Instance = TIM5;
+    /* Initialize TIM5 */
+    htim5.Instance = TIM5;
 
-  /* Initialize TIMx peripheral as follow:
-  + Period = [(TIM5CLK/1000) - 1]. to have a (1/1000) s time base.
-  + Prescaler = (uwTimclock/1000000 - 1) to have a 1MHz counter clock.
-  + ClockDivision = 0
-  + Counter direction = Up
-  */
-  htim5.Init.Period = (1000000 / 1000) - 1;
-  htim5.Init.Prescaler = uwPrescalerValue;
-  htim5.Init.ClockDivision = 0;
-  htim5.Init.CounterMode = TIM_COUNTERMODE_UP;
-  if(HAL_TIM_Base_Init(&htim5) == HAL_OK)
-  {
-    /* Start the TIM time Base generation in interrupt mode */
-    return HAL_TIM_Base_Start_IT(&htim5);
-  }
+    /* Initialize TIMx peripheral as follow:
+    + Period = [(TIM5CLK/1000) - 1]. to have a (1/1000) s time base.
+    + Prescaler = (uwTimclock/1000000 - 1) to have a 1MHz counter clock.
+    + ClockDivision = 0
+    + Counter direction = Up
+    */
+    htim5.Init.Period = (1000000 / 1000) - 1;
+    htim5.Init.Prescaler = uwPrescalerValue;
+    htim5.Init.ClockDivision = 0;
+    htim5.Init.CounterMode = TIM_COUNTERMODE_UP;
+    if (HAL_TIM_Base_Init(&htim5) == HAL_OK) {
+      /* Start the TIM time Base generation in interrupt mode */
+        return HAL_TIM_Base_Start_IT(&htim5);
+    }
 
-  /* Return function status */
-  return HAL_ERROR;
+    /* Return function status */
+    return HAL_ERROR;
 }
 
 /**
@@ -164,7 +174,7 @@ HAL_StatusTypeDef HAL_InitTick(uint32_t TickPriority)
 void HAL_SuspendTick(void)
 {
   /* Disable TIM5 update Interrupt */
-  __HAL_TIM_DISABLE_IT(&htim5, TIM_IT_UPDATE);
+    __HAL_TIM_DISABLE_IT(&htim5, TIM_IT_UPDATE);
 }
 
 /**
@@ -176,5 +186,5 @@ void HAL_SuspendTick(void)
 void HAL_ResumeTick(void)
 {
   /* Enable TIM5 Update interrupt */
-  __HAL_TIM_ENABLE_IT(&htim5, TIM_IT_UPDATE);
+    __HAL_TIM_ENABLE_IT(&htim5, TIM_IT_UPDATE);
 }

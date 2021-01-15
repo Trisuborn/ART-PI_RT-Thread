@@ -24,7 +24,7 @@
 
 #define DBG_TAG              "netdev"
 #define DBG_LVL              DBG_INFO
-#include <rtdbg.h>
+#include "rtdbg.h"
 
 /* The list of network interface device */
 struct netdev *netdev_list;

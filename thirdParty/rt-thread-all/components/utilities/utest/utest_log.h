@@ -24,7 +24,7 @@
 #else
 #define DBG_LVL              DBG_INFO
 #endif
-#include <rtdbg.h>
+#include "rtdbg.h"
 
 #define UTEST_LOG_ALL    (1u)
 #define UTEST_LOG_ASSERT (2u)

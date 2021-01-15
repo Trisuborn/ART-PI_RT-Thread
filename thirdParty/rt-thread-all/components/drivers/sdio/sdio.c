@@ -18,7 +18,7 @@
 #else
 #define DBG_LVL               DBG_INFO
 #endif /* RT_SDIO_DEBUG */
-#include <rtdbg.h>
+#include "rtdbg.h"
 
 #ifndef RT_SDIO_STACK_SIZE
 #define RT_SDIO_STACK_SIZE 512

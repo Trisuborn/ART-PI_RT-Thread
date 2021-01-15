@@ -17,7 +17,7 @@
 
 #define DBG_TAG              "audio"
 #define DBG_LVL              DBG_INFO
-#include <rtdbg.h>
+#include "rtdbg.h"
 
 #define MIN(a, b)         ((a) < (b) ? (a) : (b))
 

@@ -1229,7 +1229,7 @@ int ulog_init(void)
 {
     if (ulog.init_ok)
         return 0;
-
+ 
     rt_mutex_init(&ulog.output_locker, "ulog lock", RT_IPC_FLAG_FIFO);
     rt_slist_init(&ulog.backend_list);
 

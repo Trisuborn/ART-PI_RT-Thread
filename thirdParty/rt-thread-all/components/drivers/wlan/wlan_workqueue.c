@@ -15,7 +15,7 @@
 
 #define DBG_TAG "WLAN.work"
 #define DBG_LVL DBG_INFO
-#include <rtdbg.h>
+#include "rtdbg.h"
 
 #ifdef RT_WLAN_WORK_THREAD_ENABLE
 

@@ -19,7 +19,7 @@
 
 //#define DRV_DEBUG
 #define LOG_TAG             "drv.rtc"
-#include <drv_log.h>
+#include "drv_log.h"
 
 #define BKUP_REG_DATA 0x0904
 

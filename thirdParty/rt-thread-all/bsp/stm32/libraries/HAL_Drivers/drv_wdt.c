@@ -14,7 +14,7 @@
 
 //#define DRV_DEBUG
 #define LOG_TAG             "drv.wdt"
-#include <drv_log.h>
+#include "drv_log.h"
 
 struct stm32_wdt_obj
 {

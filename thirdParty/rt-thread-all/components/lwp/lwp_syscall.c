@@ -26,7 +26,7 @@
 
 #define DBG_TAG    "LWP_CALL"
 #define DBG_LVL           DBG_WARNING
-#include <rtdbg.h>
+#include "rtdbg.h"
 
 static void __exit_files(rt_thread_t tid)
 {

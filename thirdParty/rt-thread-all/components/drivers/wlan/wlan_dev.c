@@ -19,7 +19,7 @@
 #else
 #define DBG_LVL DBG_INFO
 #endif /* RT_WLAN_DEV_DEBUG */
-#include <rtdbg.h>
+#include "rtdbg.h"
 
 #if defined(RT_USING_WIFI) || defined(RT_USING_WLAN)
 

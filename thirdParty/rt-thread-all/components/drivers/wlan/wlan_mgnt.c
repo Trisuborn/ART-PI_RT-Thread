@@ -22,7 +22,7 @@
 #else
 #define DBG_LVL DBG_INFO
 #endif /* RT_WLAN_MGNT_DEBUG */
-#include <rtdbg.h>
+#include "rtdbg.h"
 
 #ifdef RT_WLAN_MANAGE_ENABLE
 

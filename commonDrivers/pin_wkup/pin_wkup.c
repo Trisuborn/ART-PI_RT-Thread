@@ -15,14 +15,6 @@
 #if USER_USE_RTTHREAD == 1
 #include <rtthread.h>
 #include <drv_gpio.h>
-#else
-#define __STM32_PORT(port)  GPIO##port##_BASE
-
-#if defined(SOC_SERIES_STM32MP1)
-#define GET_PIN(PORTx,PIN) (GPIO##PORTx == GPIOZ) ? (176 + PIN) : ((rt_base_t)((16 * ( ((rt_base_t)__STM32_PORT(PORTx) - (rt_base_t)GPIOA_BASE)/(0x1000UL) )) + PIN))
-#else
-#define GET_PIN(PORTx,PIN) (rt_base_t)((16 * ( ((rt_base_t)__STM32_PORT(PORTx) - (rt_base_t)GPIOA_BASE)/(0x0400UL) )) + PIN)
-#endif
 #endif
 
 

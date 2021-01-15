@@ -32,7 +32,7 @@
 #else
 #define DBG_LVL DBG_INFO
 #endif /* RT_WLAN_LWIP_DEBUG */
-#include <rtdbg.h>
+#include "rtdbg.h"
 
 #ifndef IPADDR_STRLEN_MAX
 #define IPADDR_STRLEN_MAX    (32)

@@ -14,13 +14,12 @@
  * Function    ota_app_vtor_reconfig
  * Description Set Vector Table base location to the start addr of app(RT_APP_PART_ADDR).
 */
-static int ota_app_vtor_reconfig(void)
+__attribute__((unused)) static int ota_app_vtor_reconfig(void)
 {
 #define RT_APP_PART_ADDR 0x08020000
 #define NVIC_VTOR_MASK   0x3FFFFF80
 /* Set the Vector Table base location by user application firmware definition */
     SCB->VTOR = RT_APP_PART_ADDR & NVIC_VTOR_MASK;
-
     return 0;
 }
 // INIT_BOARD_EXPORT(ota_app_vtor_reconfig);
@@ -28,11 +27,10 @@ static int ota_app_vtor_reconfig(void)
 
 /* memheap initialization */
 static struct rt_memheap axi_sram0 = { 0 };
-
 static struct rt_memheap ahb_sram123 = { 0 };
-static struct rt_memheap ahb_sram1 = { 0 };
-static struct rt_memheap ahb_sram2 = { 0 };
-static struct rt_memheap ahb_sram3 = { 0 };
+// static struct rt_memheap ahb_sram1 = { 0 };
+// static struct rt_memheap ahb_sram2 = { 0 };
+// static struct rt_memheap ahb_sram3 = { 0 };
 static struct rt_memheap ahb_sram4 = { 0 };
 static struct rt_memheap bkup_sram = { 0 };
 static int stm32_ex_sram_init()
@@ -61,7 +59,7 @@ static int stm32_ex_sram_init()
     *sram_p = tmp;
     HAL_Delay(5);
     if (*sram_p == tmp) {
-        rt_memheap_init(&ahb_sram123, "ahb_sram123", (void*)(0x30000000), (128 * 2 + 32) * 1024);
+        err = rt_memheap_init(&ahb_sram123, "ahb_sram123", (void*)(0x30000000), (128 * 2 + 32) * 1024);
         if (err != RT_EOK) {
             rt_kprintf("ahb_sram123 memheap init error.\n");
         }
@@ -71,7 +69,7 @@ static int stm32_ex_sram_init()
     // *sram_p = tmp;
     // HAL_Delay(5);
     // if (*sram_p == tmp) {
-    //     rt_memheap_init(&ahb_sram1, "ahb_sram1", (void*)(0x30000000), (128 * 1024));
+    //     err = rt_memheap_init(&ahb_sram1, "ahb_sram1", (void*)(0x30000000), (128 * 1024));
     //     if (err != RT_EOK) {
     //         rt_kprintf("ahb_sram1 memheap init error.\n");
     //     }
@@ -81,7 +79,7 @@ static int stm32_ex_sram_init()
     // *sram_p = tmp;
     // HAL_Delay(5);
     // if (*sram_p == tmp) {
-    //     rt_memheap_init(&ahb_sram2, "ahb_sram2", (void*)(0x30020000), (128 * 1024));
+    //     err = rt_memheap_init(&ahb_sram2, "ahb_sram2", (void*)(0x30020000), (128 * 1024));
     //     if (err != RT_EOK) {
     //         rt_kprintf("ahb_sram2 memheap init error.\n");
     //     }
@@ -91,7 +89,7 @@ static int stm32_ex_sram_init()
     // *sram_p = tmp;
     // HAL_Delay(5);
     // if (*sram_p == tmp) {
-    //     rt_memheap_init(&ahb_sram3, "ahb_sram3", (void*)(0x30040000), (32 * 1024));
+    //     err = rt_memheap_init(&ahb_sram3, "ahb_sram3", (void*)(0x30040000), (32 * 1024));
     //     if (err != RT_EOK) {
     //         rt_kprintf("ahb_sram3 memheap init error.\n");
     //     }
@@ -101,7 +99,7 @@ static int stm32_ex_sram_init()
     *sram_p = tmp;
     HAL_Delay(5);
     if (*sram_p == tmp) {
-        rt_memheap_init(&ahb_sram4, "ahb_sram4", (void*)(0x38000000), (64 * 1024));
+        err = rt_memheap_init(&ahb_sram4, "ahb_sram4", (void*)(0x38000000), (64 * 1024));
         if (err != RT_EOK) {
             rt_kprintf("ahb_sram4 memheap init error.\n");
         }
@@ -111,7 +109,7 @@ static int stm32_ex_sram_init()
     *sram_p = tmp;
     HAL_Delay(5);
     if (*sram_p == tmp) {
-        rt_memheap_init(&bkup_sram, "bkup_sram", (void*)(0x38800000), (4 * 1024));
+        err = rt_memheap_init(&bkup_sram, "bkup_sram", (void*)(0x38800000), (4 * 1024));
         if (err != RT_EOK) {
             rt_kprintf("bkup_sram memheap init error.\n");
         }

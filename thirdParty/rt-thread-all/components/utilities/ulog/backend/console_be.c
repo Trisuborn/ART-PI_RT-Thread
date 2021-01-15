@@ -9,7 +9,7 @@
  */
 
 #include <rthw.h>
-#include <ulog.h>
+#include "ulog.h"
 
 #ifdef ULOG_BACKEND_USING_CONSOLE
 

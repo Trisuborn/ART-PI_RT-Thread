@@ -9,7 +9,7 @@
  */
 
 #include <stdarg.h>
-#include <ulog.h>
+#include "ulog.h"
 #include <rthw.h>
 #include <stdint.h>
 #include "syslog.h"

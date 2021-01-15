@@ -13,7 +13,7 @@
 
 #define DBG_TAG  "touch"
 #define DBG_LVL DBG_INFO
-#include <rtdbg.h>
+#include "rtdbg.h"
 
 /* ISR for touch interrupt */
 static void irq_callback(void *args)

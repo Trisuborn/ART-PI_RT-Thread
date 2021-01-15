@@ -19,10 +19,12 @@ extern "C" {
 
 #define RT_I2C_WR                0x0000
 #define RT_I2C_RD               (1u << 0)
+#define RT_I2C_NO_STOP          (1u << 1)
 #define RT_I2C_ADDR_10BIT       (1u << 2)  /* this is a ten bit chip address */
 #define RT_I2C_NO_START         (1u << 4)
 #define RT_I2C_IGNORE_NACK      (1u << 5)
 #define RT_I2C_NO_READ_ACK      (1u << 6)  /* when I2C reading, we do not ACK */
+
 
 struct rt_i2c_msg
 {

@@ -24,7 +24,7 @@
 
 #define DBG_TAG     "SIGN"
 #define DBG_LVL     DBG_WARNING
-#include <rtdbg.h>
+#include "rtdbg.h"
 
 #define sig_mask(sig_no)    (1u << sig_no)
 #define sig_valid(sig_no)   (sig_no >= 0 && sig_no < RT_SIG_MAX)

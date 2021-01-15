@@ -33,7 +33,7 @@ void ulog_deinit(void);
  *
  * #define LOG_TAG              "example"
  * #define LOG_LVL              LOG_LVL_DBG
- * #include <ulog.h>
+ * #include "ulog.h"
  *
  * Then you can using LOG_X API to output log
  *

@@ -15,7 +15,7 @@
 
 #define DRV_DEBUG
 #define LOG_TAG             "drv.sdram"
-#include <drv_log.h>
+#include "drv_log.h"
 
 static SDRAM_HandleTypeDef hsdram1;
 static FMC_SDRAM_CommandTypeDef command;

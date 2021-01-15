@@ -13,9 +13,8 @@
 #include "drv_config.h"
 #include <drivers/rt_drv_pwm.h>
 
-#define DRV_DEBUG
 #define LOG_TAG             "drv.pwm"
-#include <drv_log.h>
+#include "drv_log.h"
 
 #define MAX_PERIOD 65535
 #define MIN_PERIOD 3
@@ -311,7 +310,6 @@ static rt_err_t stm32_hw_pwm_init(struct stm32_pwm* device)
     TIM_OC_InitTypeDef oc_config = { 0 };
     TIM_MasterConfigTypeDef master_config = { 0 };
     TIM_ClockConfigTypeDef clock_config = { 0 };
-    TIM_BreakDeadTimeConfigTypeDef sBreakDeadTimeConfig = { 0 };
 
     RT_ASSERT(device != RT_NULL);
 
@@ -370,7 +368,6 @@ static rt_err_t stm32_hw_pwm_init(struct stm32_pwm* device)
             result = -RT_ERROR;
             goto __exit;
         }
-        LOG_D("%s channel2 config Ok ", device->name);
     }
 
     if (device->channel & 0x04) {
@@ -389,30 +386,11 @@ static rt_err_t stm32_hw_pwm_init(struct stm32_pwm* device)
         }
     }
 
-    sBreakDeadTimeConfig.OffStateRunMode = TIM_OSSR_DISABLE;
-    sBreakDeadTimeConfig.OffStateIDLEMode = TIM_OSSI_DISABLE;
-    sBreakDeadTimeConfig.LockLevel = TIM_LOCKLEVEL_OFF;
-    sBreakDeadTimeConfig.DeadTime = 0;
-    sBreakDeadTimeConfig.BreakState = TIM_BREAK_DISABLE;
-    sBreakDeadTimeConfig.BreakPolarity = TIM_BREAKPOLARITY_HIGH;
-    sBreakDeadTimeConfig.BreakFilter = 0;
-    sBreakDeadTimeConfig.Break2State = TIM_BREAK2_DISABLE;
-    sBreakDeadTimeConfig.Break2Polarity = TIM_BREAK2POLARITY_HIGH;
-    sBreakDeadTimeConfig.Break2Filter = 0;
-    sBreakDeadTimeConfig.AutomaticOutput = TIM_AUTOMATICOUTPUT_DISABLE;
-    if (HAL_TIMEx_ConfigBreakDeadTime(tim, &sBreakDeadTimeConfig) != HAL_OK) {
-        LOG_E("%s BreakDead config failed", device->name);
-        result = -RT_ERROR;
-        goto __exit;
-    }
-
     /* pwm pin configuration */
     HAL_TIM_MspPostInit(tim);
 
     /* enable update request source */
     __HAL_TIM_URS_ENABLE(tim);
-
-    HAL_TIMEx_PWMN_Start(tim, (device->channel - 1) * 4);
 
 __exit:
     return result;
@@ -544,15 +522,12 @@ static int stm32_pwm_init(void)
     pwm_get_channel();
 
     for (i = 0; i < sizeof(stm32_pwm_obj) / sizeof(stm32_pwm_obj[0]); i++) {
-        LOG_D("%s conf", stm32_pwm_obj[i].name);
         /* pwm init */
         if (stm32_hw_pwm_init(&stm32_pwm_obj[i]) != RT_EOK) {
             LOG_E("%s init failed", stm32_pwm_obj[i].name);
             result = -RT_ERROR;
             goto __exit;
         } else {
-            LOG_D("%s init success", stm32_pwm_obj[i].name);
-
             /* register pwm device */
             if (rt_device_pwm_register(&stm32_pwm_obj[i].pwm_device, stm32_pwm_obj[i].name, &drv_ops, &stm32_pwm_obj[i].tim_handle) == RT_EOK) {
                 LOG_D("%s register success", stm32_pwm_obj[i].name);

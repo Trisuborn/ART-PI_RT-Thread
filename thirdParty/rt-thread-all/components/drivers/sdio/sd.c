@@ -17,7 +17,7 @@
 #else
 #define DBG_LVL               DBG_INFO
 #endif /* RT_SDIO_DEBUG */
-#include <rtdbg.h>
+#include "rtdbg.h"
 
 static const rt_uint32_t tran_unit[] =
 {

@@ -65,6 +65,27 @@
 #define RT_MAIN_THREAD_STACK_SIZE (4*1024)
 #define RT_MAIN_THREAD_PRIORITY 10
 
+// #define RT_USING_ULOG
+#define ULOG_USING_SYSLOG
+#define ULOG_OUTPUT_FLOAT
+//#define ULOG_TIME_USING_TIMESTAMP
+#define ULOG_USING_COLOR
+#define ULOG_USING_FILTER
+//#define ULOG_USING_ASYNC_OUTPUT
+#define ULOG_ASYNC_OUTPUT_STORE_LINES       32
+#define ULOG_ASYNC_OUTPUT_BUF_SIZE          1024
+#define ULOG_ASYNC_OUTPUT_THREAD_STACK      2048
+#define ULOG_ASYNC_OUTPUT_THREAD_PRIORITY   20
+#define ULOG_OUTPUT_LVL 7
+#define ULOG_ASSERT_ENABLE
+#define ULOG_LINE_BUF_SIZE 256
+//#define ULOG_OUTPUT_TIME
+//#define ULOG_OUTPUT_LEVEL
+#define ULOG_OUTPUT_TAG
+#define ULOG_BACKEND_USING_CONSOLE
+
+// #define DRV_DEBUG
+
 /* C++ features */
 
 
@@ -77,7 +98,7 @@
 #define FINSH_USING_SYMTAB
 #define FINSH_USING_DESCRIPTION
 #define FINSH_THREAD_PRIORITY 20
-#define FINSH_THREAD_STACK_SIZE (64*1024)
+#define FINSH_THREAD_STACK_SIZE (16*1024)
 #define FINSH_CMD_SIZE 128
 #define FINSH_USING_MSH
 #define FINSH_USING_MSH_DEFAULT
@@ -93,7 +114,6 @@
 #define RT_USING_DEVICE_IPC
 #define RT_PIPE_BUFSZ 512
 #define RT_USING_SERIAL
-// #define RT_SERIAL_USING_DMA
 #define RT_SERIAL_RB_BUFSZ 64
 #define RT_USING_PIN
 #define RT_USING_HWCRYPTO
@@ -103,15 +123,13 @@
 #define RT_HWCRYPTO_USING_RNG
 #define RT_HWCRYPTO_USING_CRC
 
-//#define DRV_DEBUG
-
 /* Using USB */
 
 
 /* POSIX layer and C standard library */
 // #define RT_USING_LIBC
 // #define RT_USING_POSIX
-// #define RT_LIBC_USING_TIME
+#define RT_LIBC_USING_TIME
 
 /* Network */
 
@@ -170,13 +188,14 @@
 #define DFS_FD_MAX 16
 
 #define RT_USING_DFS_ELMFAT
+#define RT_DFS_ELM_REENTRANT
 
 /* peripheral libraries and drivers */
-// #define RT_USING_SFUD
-// #define RT_SFUD_USING_SFDP
-// #define RT_SFUD_USING_QSPI
-// #define RT_SFUD_USING_FLASH_INFO_TABLE
-// #define RT_SFUD_SPI_MAX_HZ  (120 * 1000000)
+#define RT_USING_SFUD
+#define RT_SFUD_USING_SFDP
+#define RT_SFUD_USING_QSPI
+#define RT_SFUD_USING_FLASH_INFO_TABLE
+#define RT_SFUD_SPI_MAX_HZ  (120 * 1000000)
 /* miscellaneous packages */
 
 
@@ -195,7 +214,6 @@
 #endif
 
 /* On-chip Peripheral Drivers */
-
 #define BSP_USING_DCMI
 
 #define RT_USING_PWM
@@ -213,9 +231,7 @@
 
 
 #define RT_USING_SPI
-
 #define BSP_USING_SPI1
-
 #define BSP_USING_SPI4
 // #define BSP_SPI4_TX_USING_DMA
 
@@ -223,6 +239,9 @@
 #define RT_USING_QSPI
 #define BSP_USING_QSPI
 #define BSP_USING_QSPI_FLASH
+
+#define RT_USING_I2C
+#define BSP_USING_I2C1
 
 #define BSP_USING_UART
 #define BSP_USING_UART4

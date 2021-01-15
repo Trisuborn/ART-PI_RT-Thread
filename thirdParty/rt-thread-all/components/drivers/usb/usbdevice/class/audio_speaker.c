@@ -18,7 +18,7 @@
 
 #define DBG_TAG              "usbd.audio.speaker"
 #define DBG_LVL              DBG_INFO
-#include <rtdbg.h>
+#include "rtdbg.h"
 
 #define AUDIO_SAMPLERATE   16000
 #define AUDIO_CHANNEL      1

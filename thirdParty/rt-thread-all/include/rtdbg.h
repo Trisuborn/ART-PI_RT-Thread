@@ -20,7 +20,7 @@
  *
  * #define DBG_TAG           "MOD_TAG"
  * #define DBG_LVL           DBG_INFO
- * #include <rtdbg.h>          // must after of DBG_LVL, DBG_TAG or other options
+ * #include "rtdbg.h"          // must after of DBG_LVL, DBG_TAG or other options
  *
  * Then in your C/C++ file, you can use LOG_X macro to print out logs:
  * LOG_D("this is a debug log!");
@@ -48,7 +48,7 @@ extern "C" {
 
 #if defined(RT_USING_ULOG)
 /* using ulog compatible with rtdbg  */
-#include <ulog.h>
+#include "ulog.h"
 #else
 
 /* DEBUG level */

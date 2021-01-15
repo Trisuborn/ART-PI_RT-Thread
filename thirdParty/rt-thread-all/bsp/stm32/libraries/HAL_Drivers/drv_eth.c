@@ -27,7 +27,7 @@
 //#define ETH_TX_DUMP
 //#define DRV_DEBUG
 #define LOG_TAG             "drv.emac"
-#include <drv_log.h>
+#include "drv_log.h"
 
 #define MAX_ADDR_LEN 6
 

@@ -20,7 +20,7 @@
 
 //#define DRV_DEBUG
 #define LOG_TAG             "drv.usart"
-#include <drv_log.h>
+#include "drv_log.h"
 
 #if !defined(BSP_USING_UART1) && !defined(BSP_USING_UART2) && !defined(BSP_USING_UART3) && \
     !defined(BSP_USING_UART4) && !defined(BSP_USING_UART5) && !defined(BSP_USING_UART6) && \
@@ -1022,7 +1022,6 @@ int rt_hw_usart_init(void)
             , NULL);
         RT_ASSERT(result == RT_EOK);
     }
-
     return result;
 }
 

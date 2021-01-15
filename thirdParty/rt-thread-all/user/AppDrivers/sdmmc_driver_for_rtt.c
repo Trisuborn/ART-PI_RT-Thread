@@ -25,6 +25,6 @@ int dfs_sdmmc_mnt_init(void)
 
     return 0;
 }
-INIT_APP_EXPORT(dfs_sdmmc_mnt_init);
+INIT_ENV_EXPORT(dfs_sdmmc_mnt_init);
 
 #endif

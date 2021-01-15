@@ -59,7 +59,7 @@ typedef enum {
 } ST7735_DC_OPT;
 
 /* function */
-void lcd_st7735_init( void );
+int  lcd_st7735_init( void );
 
 void lcd_st7735_trans_byte( uint8_t byte );
 

@@ -13,46 +13,12 @@
 #define LED0_PIN    GET_PIN(I, 8)
 #define LED1_PIN    GET_PIN(E, 3)
 #define LCD_BLK     GET_PIN(D, 4)
-
 #endif
-
-
-uint8_t* buf = RT_NULL;
-static int sram_mc(void)
-{
-    uint32_t i = 0;
-    uint32_t size = (64 * 1024);
-    // while (size) {
-    //     buf = (uint8_t*)rt_malloc(size);
-    //     if (buf == RT_NULL) {
-    //         rt_kprintf("rt_malloc malloc error (%d)\n", i++);
-    //         size -= RT_ALIGN_SIZE;
-    //     } else {
-    //         break;
-    //     }
-    //     rt_thread_mdelay(10);
-    // }
-
-    // while (size) {
-    //     buf = (uint8_t*)rt_malloc(4096);
-    //     if (buf == RT_NULL) {
-    //         rt_kprintf("rt_malloc malloc error (%d)\n", i++);
-    //         break;
-    //     } else {
-    //         size -= 4096;
-    //     }
-    // }
-    buf = (uint8_t*)rt_malloc(size);
-    *buf = 0x0904;
-    rt_free(buf);
-}
-MSH_CMD_EXPORT(sram_mc, sram_mc);
 
 
 int main()
 {
-    
-    rt_kprintf("AXI_SRAM_ZI_SIZE : %x\n", AXI_SRAM_ZI_SIZE);
+
 #if USER_USE_RTTHREAD == (1u)
 
     uint32_t ts, te, t;

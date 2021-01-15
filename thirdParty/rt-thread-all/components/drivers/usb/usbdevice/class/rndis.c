@@ -26,7 +26,7 @@
 
 #define DBG_LEVEL           DBG_WARNING
 #define DBG_SECTION_NAME    "RNDIS"
-#include <rtdbg.h>
+#include "rtdbg.h"
 
 
 /* RT-Thread LWIP ethernet interface */

@@ -14,7 +14,7 @@
 
 //#define DRV_DEBUG
 #define LOG_TAG             "drv.pulse_encoder"
-#include <drv_log.h>
+#include "drv_log.h"
 
 #if !defined(BSP_USING_PULSE_ENCODER1) && !defined(BSP_USING_PULSE_ENCODER2) && !defined(BSP_USING_PULSE_ENCODER3) \
     && !defined(BSP_USING_PULSE_ENCODER4) && !defined(BSP_USING_PULSE_ENCODER5) && !defined(BSP_USING_PULSE_ENCODER6)
