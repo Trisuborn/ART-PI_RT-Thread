@@ -51,15 +51,16 @@ static void rcc_reset(void)
 
 void sys_enter_standby(void)
 {
-    HAL_PWR_DisableWakeUpPin(WKUP_USE_PIN);
-    HAL_PWR_EnableWakeUpPin(WKUP_USE_PIN);
     rcc_reset();
+    // HAL_PWR_DisableWakeUpPin(WKUP_USE_PIN);
+    HAL_PWR_EnableWakeUpPin(WKUP_USE_PIN);
     HAL_PWR_EnterSTANDBYMode();
 }
 
 /************************************************
  * @brief wkup_pin_check
  *
+ * @param os_flag
  * @return uint8_t successful:0 failed:1
 *************************************************/
 uint8_t wkup_pin_check(uint8_t os_flag)
@@ -70,11 +71,9 @@ uint8_t wkup_pin_check(uint8_t os_flag)
     while (1) {
         if (HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13) == GPIO_PIN_RESET) {
             wkup_cnt = 0;
-            //rt_kprintf("released wkup (%d)\n", wkup_cnt);
             return 1;
         } else {
             wkup_cnt += 1;
-            //rt_kprintf("pressed wkup (%d)\n", wkup_cnt);
             if (wkup_cnt == wkup_max) {
                 return 0;
             }
@@ -187,7 +186,7 @@ int pin_wkup_init(void)
 {
 #if USER_USE_RTTHREAD == 1
 
-    wkup_mb = rt_mb_create("wkup_mb", (4 * 8), RT_IPC_FLAG_FIFO);
+    wkup_mb = rt_mb_create("wkup_mb", 4, RT_IPC_FLAG_FIFO);
     if (wkup_mb == RT_NULL) {
         rt_kprintf("Create mailbox wkup_mb error.\n");
         return -1;

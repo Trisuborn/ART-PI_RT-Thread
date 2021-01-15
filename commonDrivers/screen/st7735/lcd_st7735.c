@@ -34,8 +34,10 @@ static SPI_HandleTypeDef h_st7735_spi = {
 
 void lcd_gpio(void)
 {
-//#if USER_USE_RTTHREAD == 1
+#if USER_USE_RTTHREAD == 1
+#if !defined(RT_USING_PWM)
     rt_pin_mode(LCD_BLK, PIN_MODE_OUTPUT);
+#endif
     rt_pin_mode(LCD_DC, PIN_MODE_OUTPUT);
     rt_pin_mode(LCD_CS, PIN_MODE_OUTPUT);
 
@@ -48,27 +50,27 @@ void lcd_gpio(void)
     st7735_cfg.max_hz = 120 * 1000 * 1000;
 
     rt_spi_configure(st7735, &st7735_cfg);
+#else
+    GPIO_InitTypeDef lcd_st7735_io_s;
 
-//#else
-    // GPIO_InitTypeDef lcd_st7735_io_s;
+    __HAL_RCC_SPI4_CLK_ENABLE();
+    __HAL_RCC_GPIOE_CLK_ENABLE();
 
-    // __HAL_RCC_SPI4_CLK_ENABLE();
-    // __HAL_RCC_GPIOE_CLK_ENABLE();
+    lcd_st7735_io_s.Pin = LCD_144_ST7735_DC | LCD_144_ST7735_BLK | LCD_144_ST7735_CS;
+    lcd_st7735_io_s.Mode = GPIO_MODE_OUTPUT_PP;
+    lcd_st7735_io_s.Pull = GPIO_PULLUP;
+    lcd_st7735_io_s.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+    HAL_GPIO_Init(GPIOE, &lcd_st7735_io_s);
 
-    // lcd_st7735_io_s.Pin = LCD_144_ST7735_DC | LCD_144_ST7735_BLK | LCD_144_ST7735_CS;
-    // lcd_st7735_io_s.Mode = GPIO_MODE_OUTPUT_PP;
-    // lcd_st7735_io_s.Pull = GPIO_PULLUP;
-    // lcd_st7735_io_s.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
-    // HAL_GPIO_Init(GPIOE, &lcd_st7735_io_s);
-
-    // /* SPI */
-    // /* PA5     ------> SPI1_SCK */
-    // lcd_st7735_io_s.Pin = LCD_144_ST7735_MOSI | LCD_144_ST7735_CLK;
-    // lcd_st7735_io_s.Mode = GPIO_MODE_AF_PP;
-    // lcd_st7735_io_s.Pull = GPIO_PULLUP;
-    // lcd_st7735_io_s.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
-    // lcd_st7735_io_s.Alternate = GPIO_AF5_SPI4;
-    // HAL_GPIO_Init(GPIOE, &lcd_st7735_io_s);
+    /* SPI */
+    /* PA5     ------> SPI1_SCK */
+    lcd_st7735_io_s.Pin = LCD_144_ST7735_MOSI | LCD_144_ST7735_CLK;
+    lcd_st7735_io_s.Mode = GPIO_MODE_AF_PP;
+    lcd_st7735_io_s.Pull = GPIO_PULLUP;
+    lcd_st7735_io_s.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+    lcd_st7735_io_s.Alternate = GPIO_AF5_SPI4;
+    HAL_GPIO_Init(GPIOE, &lcd_st7735_io_s);
+#endif
 
     h_st7735_spi.Instance = SPI4;
     h_st7735_spi.Init.Mode = SPI_MODE_MASTER;
@@ -96,7 +98,7 @@ void lcd_gpio(void)
     HAL_SPI_Init(&h_st7735_spi);
     __HAL_SPI_ENABLE(&h_st7735_spi);
     SPI_1LINE_TX(&h_st7735_spi);
-//#endif
+
 }
 
 void lcd_st7735_trans_byte(uint8_t byte)

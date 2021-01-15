@@ -21,20 +21,60 @@ Target DLL:      STLink\ST-LINKIII-KEIL_SWO.dll V3.0.7.0
 Dialog DLL:      TCM.DLL V1.46.0.0
  
 <h2>Project:</h2>
-F:\work\Embed\project\stm32\STM32H7\stm32h743vih6.uvprojx
-Project File Date:  01/14/2021
+f:\work\Embed\project\stm32\STM32H7\stm32h743vih6.uvprojx
+Project File Date:  01/15/2021
 
 <h2>Output:</h2>
 *** Using Compiler 'V5.06 update 6 (build 750)', folder: 'F:\SoftWare\Keil_v5\ARM\ARMCC\Bin'
 Build target 'MiniSTM32H7xx'
+compiling main.c...
+main\main.c(46): warning:  #69-D: integer conversion resulted in truncation
+      *buf = 0x0904;
+main\main.c(48): warning:  #940-D: missing return statement at end of non-void function "sram_mc" 
+  }
+main\main.c(23): warning:  #177-D: variable "i"  was declared but never referenced
+      uint32_t i = 0;
+main\main.c(96): warning:  #111-D: statement is unreachable
+      return 0;
+main\main.c(58): warning:  #177-D: variable "ts"  was declared but never referenced
+      uint32_t ts, te, t;
+main\main.c(58): warning:  #177-D: variable "te"  was declared but never referenced
+      uint32_t ts, te, t;
+main\main.c(58): warning:  #177-D: variable "t"  was declared but never referenced
+      uint32_t ts, te, t;
+main\main.c: 7 warnings, 0 errors
+compiling pin_wkup.c...
+compiling lcd_st7735.c...
+commonDrivers\screen\st7735\lcd_st7735.c(128): warning:  #144-D: a value of type "void (*)(void)" cannot be used to initialize an entity of type "const init_fn_t"
+  INIT_DEVICE_EXPORT(lcd_st7735_init);
+commonDrivers\screen\st7735\lcd_st7735.c: 1 warning, 0 errors
+compiling cpu_cache.c...
+compiling drv_flash_h7.c...
 compiling drv_common.c...
-thirdParty\rt-thread-all\bsp\stm32\libraries\HAL_Drivers\drv_common.c(225): warning:  #144-D: a value of type "void (*)()" cannot be used to initialize an entity of type "const init_fn_t"
+thirdParty\rt-thread-all\bsp\stm32\libraries\HAL_Drivers\drv_common.c(222): warning:  #144-D: a value of type "void (*)()" cannot be used to initialize an entity of type "const init_fn_t"
   INIT_PREV_EXPORT(boot);
 thirdParty\rt-thread-all\bsp\stm32\libraries\HAL_Drivers\drv_common.c: 1 warning, 0 errors
+compiling drv_rtc.c...
+compiling drv_gpio.c...
+compiling drv_spi.c...
+compiling drv_usart.c...
+compiling drv_sdio.c...
+compiling drv_pwm.c...
+compiling board.c...
+thirdParty\rt-thread-all\user\board.c(17): warning:  #177-D: function "ota_app_vtor_reconfig"  was declared but never referenced
+  static int ota_app_vtor_reconfig(void)
+thirdParty\rt-thread-all\user\board.c(33): warning:  #177-D: variable "ahb_sram1"  was declared but never referenced
+  static struct rt_memheap ahb_sram1 = { 0 };
+thirdParty\rt-thread-all\user\board.c(34): warning:  #177-D: variable "ahb_sram2"  was declared but never referenced
+  static struct rt_memheap ahb_sram2 = { 0 };
+thirdParty\rt-thread-all\user\board.c(35): warning:  #177-D: variable "ahb_sram3"  was declared but never referenced
+  static struct rt_memheap ahb_sram3 = { 0 };
+thirdParty\rt-thread-all\user\board.c: 4 warnings, 0 errors
+compiling sdmmc_driver_for_rtt.c...
 linking...
-Program Size: Code=94928 RO-data=9216 RW-data=1112 ZI-data=14152  
+Program Size: Code=95904 RO-data=9100 RW-data=1232 ZI-data=13992  
 FromELF: creating hex file...
-".\project\obj\MiniSTM32H7xx.axf" - 0 Error(s), 1 Warning(s).
+".\project\obj\MiniSTM32H7xx.axf" - 0 Error(s), 13 Warning(s).
 
 <h2>Software Packages used:</h2>
 
@@ -47,7 +87,7 @@ Package Vendor: Keil
   F:\SoftWare\Keil_v5\Arm\Packs\Keil\STM32H7xx_DFP\2.7.0\Drivers\CMSIS\Device\ST\STM32H7xx\Include
 
 <h2>Collection of Component Files used:</h2>
-Build Time Elapsed:  00:00:06
+Build Time Elapsed:  00:00:08
 </pre>
 </body>
 </html>

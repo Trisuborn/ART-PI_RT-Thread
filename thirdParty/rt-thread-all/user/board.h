@@ -26,30 +26,25 @@ extern "C" {
 #define STM32_SRAM_END            (0x20000000 + STM32_SRAM_SIZE * 1024)
 
 #if defined(__CC_ARM) || defined(__CLANG_ARM)
-//extern int Image$$AXI_SRAM$$ZI$$Limit;
-//#define HEAP_BEGIN      (&Image$$AXI_SRAM$$ZI$$Limit)
+    extern int Image$$AXI_SRAM$$ZI$$Limit;
+#define AXI_SRAM_ADDR       ((uint32_t)0x24000000)
+#define AXI_SRAM_ZI_END     ((uint32_t)&Image$$AXI_SRAM$$ZI$$Limit)
+#define AXI_SRAM_ZI_SIZE    (uint32_t)(AXI_SRAM_ZI_END-AXI_SRAM_ADDR)
+#define AXI_SRAM_FREE_SIZE  (uint32_t)((512*1024)-AXI_SRAM_ZI_SIZE)
 
-extern int Image$$DTCM$$ZI$$Limit;
+    extern int Image$$DTCM$$ZI$$Limit;
 #define HEAP_BEGIN      (&Image$$DTCM$$ZI$$Limit)
 
 #elif __ICCARM__
 #pragma section="CSTACK"
 #define HEAP_BEGIN      (__segment_end("CSTACK"))
 #else
-extern int __bss_end;
+    extern int __bss_end;
 #define HEAP_BEGIN      (&__bss_end)
 #endif
 
 #define HEAP_END        STM32_SRAM_END
 
-
-#if defined(RT_USING_MEMHEAP) && defined(SOC_SERIES_STM32H7)
-extern struct rt_memheap ahb_sram1;
-extern struct rt_memheap ahb_sram2;
-extern struct rt_memheap ahb_sram3;
-extern struct rt_memheap ahb_sram4;
-extern struct rt_memheap bkup_sram;
-#endif
 
 
 #ifdef __cplusplus

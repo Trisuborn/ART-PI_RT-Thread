@@ -35,11 +35,11 @@
 
 /* Memory Management */
 
-#define RT_USING_MEMPOOL
-#define RT_USING_SMALL_MEM
+// #define RT_USING_MEMPOOL
+// #define RT_USING_SMALL_MEM
 #define RT_USING_HEAP
 #define RT_USING_MEMHEAP
-// #define RT_USING_MEMHEAP_AS_HEAP
+#define RT_USING_MEMHEAP_AS_HEAP
 
 /* Kernel Device Object */
 #define RT_USING_DEVICE
@@ -62,7 +62,7 @@
 
 #define RT_USING_COMPONENTS_INIT
 #define RT_USING_USER_MAIN
-#define RT_MAIN_THREAD_STACK_SIZE (32*1024)
+#define RT_MAIN_THREAD_STACK_SIZE (4*1024)
 #define RT_MAIN_THREAD_PRIORITY 10
 
 /* C++ features */
@@ -77,7 +77,7 @@
 #define FINSH_USING_SYMTAB
 #define FINSH_USING_DESCRIPTION
 #define FINSH_THREAD_PRIORITY 20
-#define FINSH_THREAD_STACK_SIZE (32*1024)
+#define FINSH_THREAD_STACK_SIZE (64*1024)
 #define FINSH_CMD_SIZE 128
 #define FINSH_USING_MSH
 #define FINSH_USING_MSH_DEFAULT
@@ -195,6 +195,12 @@
 #endif
 
 /* On-chip Peripheral Drivers */
+
+#define BSP_USING_DCMI
+
+#define RT_USING_PWM
+#define BSP_USING_PWM1
+#define BSP_USING_PWM1_CH2
 
 #define BSP_USING_GPIO
 

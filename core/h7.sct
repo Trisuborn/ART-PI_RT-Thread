@@ -27,7 +27,7 @@ LR_IROM1 0x08000000 0x00200000  {    ; load region size_region
   ; AHB_SRAM2 0x30020000 0x00020000  {  ; RW data D2 128kb
   ;  .ANY (+RW)
   ; }
-  ; AHB_SRAM3 0x30040000 0x00020000  {  ; RW data D2 128kb
+  ; AHB_SRAM3 0x30040000 0x00020000  {  ; RW data D2 32kb
   ;  .ANY (+RW)
   ; }
   ; AHB_SRAM4 0x38000000 0x00010000  {  ; RW data D2 64kb
