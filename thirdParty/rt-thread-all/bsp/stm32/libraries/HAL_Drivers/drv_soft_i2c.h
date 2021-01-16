@@ -18,15 +18,13 @@
 #include "i2c-bit-ops.h"
 
 /* stm32 config class */
-struct stm32_soft_i2c_config
-{
+struct stm32_soft_i2c_config {
     rt_uint8_t scl;
     rt_uint8_t sda;
-    const char *bus_name;
+    const char* bus_name;
 };
 /* stm32 i2c dirver class */
-struct stm32_i2c
-{
+struct stm32_i2c {
     struct rt_i2c_bit_ops ops;
     struct rt_i2c_bus_device i2c2_bus;
 };
@@ -50,7 +48,7 @@ struct stm32_i2c
         .bus_name = "i2c2",                              \
     }
 #endif
-    
+
 #ifdef BSP_USING_I2C3
 #define I2C3_BUS_CONFIG                                  \
     {                                                    \
@@ -59,7 +57,7 @@ struct stm32_i2c
         .bus_name = "i2c3",                              \
     }
 #endif
-		
+
 #ifdef BSP_USING_I2C4
 #define I2C4_BUS_CONFIG                                  \
     {                                                    \

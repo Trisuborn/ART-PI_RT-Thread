@@ -1,4 +1,13 @@
-
+/************************************************
+ * @file main.c
+ * @author Trisuborn (ttowfive@gmail.com)
+ * @brief
+ * @version 0.1
+ * @date 2021-01-16
+ *
+ * @copyright Copyright (c) 2021
+ *
+*************************************************/
 #include "main.h"
 #include "sys_conf.h"
 #include "pro_conf.h"
@@ -18,6 +27,7 @@
 
 int main()
 {
+    
 
 #if USER_USE_RTTHREAD == (1u)
 
@@ -29,7 +39,7 @@ int main()
     while (1) {
         rt_thread_mdelay(14);
         //ts = rt_tick_get();
-        lcd_st7735_clear_with(i);
+        // lcd_st7735_clear_with(i);
         //te = rt_tick_get();
         //rt_kprintf("%d tick/f\n", te - ts);
         i += 0xF;
@@ -60,5 +70,5 @@ int main()
 #endif
 
     return 0;
-}
+    }
 

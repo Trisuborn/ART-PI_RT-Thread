@@ -1,0 +1,18 @@
+﻿F:\SoftWare\Microsoft Visual Studio\2019\Community\MSBuild\Microsoft\VC\v160\Microsoft.CppCommon.targets(37,5): warning MSB4211: 正在首次将属性“IntermediateOutputPath”设置为某个值，但已在“F:\SoftWare\Microsoft Visual Studio\2019\Community\MSBuild\Microsoft\VC\v160\Microsoft.CppCommon.targets (36,5)”处使用了该属性。
+F:\SoftWare\Microsoft Visual Studio\2019\Community\MSBuild\Current\Bin\Microsoft.Common.CurrentVersion.targets(340,5): warning MSB4211: 正在首次将属性“CleanFile”设置为某个值，但已在“F:\SoftWare\Microsoft Visual Studio\2019\Community\MSBuild\Microsoft\VC\v160\Microsoft.CppCommon.targets (36,5)”处使用了该属性。
+cl : 命令行 warning D9035: “Gm”选项已否决，并将在将来的版本中移除
+  version.c
+  timer.c
+  synth.c
+  stream.c
+  layer3.c
+  layer12.c
+  huffman.c
+  frame.c
+  fixed.c
+  decoder.c
+  bit.c
+  正在生成代码...
+F:\SoftWare\Microsoft Visual Studio\2019\Community\MSBuild\Microsoft\VC\v160\Microsoft.CppBuild.targets(1523,5): warning MSB8012: TargetPath(D:\开源软件包\libzplay-2.02-src\libzplay-2.02-src\decoders\libmad\msvc++\Debug\libmad.lib) 与 Library 的 OutputFile 属性值(D:\开源软件包\libzplay-2.02-src\libzplay-2.02-src\decoders\libmad\msvc++\Debug\libmad_d.lib)不匹配。这可能导致项目生成不正确。若要更正此问题，请确保 $(OutDir)、$(TargetName) 和 $(TargetExt) 属性值与 %(Lib.OutputFile) 中指定的值匹配。
+F:\SoftWare\Microsoft Visual Studio\2019\Community\MSBuild\Microsoft\VC\v160\Microsoft.CppBuild.targets(1525,5): warning MSB8012: TargetName(libmad) 与 Library 的 OutputFile 属性值(libmad_d)不匹配。这可能导致项目生成不正确。若要更正此问题，请确保 $(OutDir)、$(TargetName) 和 $(TargetExt) 属性值与 %(Lib.OutputFile) 中指定的值匹配。
+  libmad.vcxproj -> D:\开源软件包\libzplay-2.02-src\libzplay-2.02-src\decoders\libmad\msvc++\Debug\libmad.lib

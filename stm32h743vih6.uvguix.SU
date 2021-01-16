@@ -6,7 +6,7 @@
   <Header>### uVision Project, (C) Keil Software</Header>
 
   <PrjGuiSettings>
-    <LastAddFilePath>F:\work\Embed\project\stm32\STM32H7\thirdParty\rt-thread-all\components</LastAddFilePath>
+    <LastAddFilePath>F:\work\Embed\project\stm32\STM32H7\commonDrivers\camera\OV7725</LastAddFilePath>
   </PrjGuiSettings>
 
   <ViewPool/>

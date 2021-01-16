@@ -97,7 +97,7 @@ void lcd_gpio(void)
     h_st7735_spi.Init.CLKPolarity = SPI_POLARITY_HIGH;
     h_st7735_spi.Init.CLKPhase = SPI_PHASE_2EDGE;
     h_st7735_spi.Init.NSS = SPI_NSS_SOFT;
-    h_st7735_spi.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_2;
+    h_st7735_spi.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_16;
     h_st7735_spi.Init.FirstBit = SPI_FIRSTBIT_MSB;
     h_st7735_spi.Init.TIMode = SPI_TIMODE_DISABLE;
     h_st7735_spi.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
@@ -112,11 +112,9 @@ void lcd_gpio(void)
     h_st7735_spi.Init.MasterReceiverAutoSusp = SPI_MASTER_RX_AUTOSUSP_DISABLE;
     h_st7735_spi.Init.MasterKeepIOState = SPI_MASTER_KEEP_IO_STATE_ENABLE;
     h_st7735_spi.Init.IOSwap = SPI_IO_SWAP_DISABLE;
-
     HAL_SPI_Init(&h_st7735_spi);
     __HAL_SPI_ENABLE(&h_st7735_spi);
     SPI_1LINE_TX(&h_st7735_spi);
-
 }
 
 void lcd_st7735_trans_byte(uint8_t byte)
@@ -127,6 +125,9 @@ void lcd_st7735_trans_byte(uint8_t byte)
     *((__IO uint8_t*) & h_st7735_spi.Instance->TXDR) = byte;
     while (!(h_st7735_spi.Instance->SR & (SPI_FLAG_EOT)));
     h_st7735_spi.Instance->IFCR |= (SPI_IFCR_EOTC | SPI_IFCR_TXTFC);
+
+    /* (SPI_FLAG_RXWNE | SPI_FLAG_FRLVL) */
+
 }
 
 void lcd_st7735_hw_reset(void)
@@ -341,3 +342,35 @@ void lcd_st7735_clear_with(uint16_t color)
     }
 
 }
+
+
+struct test {
+    uint16_t reg;
+    uint16_t ram;
+};
+
+static void st7735_read_id(void)
+{
+    uint8_t RDID1 = 0xDA;
+
+    LCD_144_ST7735_CS_CLR;
+    LCD_144_ST7735_DC_CLR;
+    HAL_SPI_Transmit(&h_st7735_spi, &RDID1, 1, 0xFFFFFFFF);
+    rt_hw_us_delay(10);
+    LCD_144_ST7735_DC_SET;
+    HAL_SPI_Receive(&h_st7735_spi, &RDID1, 1, 0xFFFFFFFF);
+    LCD_144_ST7735_CS_SET;
+    rt_kprintf("RDID1 : %x\n", RDID1);
+
+    struct test* tp = (struct test*)malloc(sizeof(struct test));
+
+    rt_kprintf("reg : 0x%08x\n", &tp->reg);
+    rt_kprintf("ram : 0x%08x\n", &tp->ram);
+
+
+
+    if (tp)
+        free(tp);
+
+}
+MSH_CMD_EXPORT(st7735_read_id, st7735_read_id);

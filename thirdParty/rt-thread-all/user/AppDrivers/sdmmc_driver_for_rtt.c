@@ -18,9 +18,9 @@ int dfs_sdmmc_mnt_init(void)
     rt_thread_delay(RT_TICK_PER_SECOND);
 
     if (dfs_mount("sd0", "/", "elm", 0, 0) != 0) {
-        rt_kprintf("SDMMC's file system mount failed!\n");
+        rt_kprintf("SDMMC's file system mounted failed!\n");
     } else {
-        rt_kprintf("SDMMC's file system mount success!\n");
+        rt_kprintf("SDMMC's file system mounted success!\n");
     }
 
     return 0;

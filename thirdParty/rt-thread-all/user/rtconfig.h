@@ -241,6 +241,8 @@
 #define BSP_USING_QSPI_FLASH
 
 #define RT_USING_I2C
+#define RT_I2C_BITOPS_DEBUG
+#define RT_I2C_DEBUG
 #define BSP_USING_I2C1
 
 #define BSP_USING_UART

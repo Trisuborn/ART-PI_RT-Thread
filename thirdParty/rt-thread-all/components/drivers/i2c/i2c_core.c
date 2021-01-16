@@ -44,9 +44,7 @@ struct rt_i2c_bus_device *rt_i2c_bus_device_find(const char *bus_name)
 
         return RT_NULL;
     }
-
     bus = (struct rt_i2c_bus_device *)dev->user_data;
-
     return bus;
 }
 
