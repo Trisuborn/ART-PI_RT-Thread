@@ -62,7 +62,7 @@
 
 #define RT_USING_COMPONENTS_INIT
 #define RT_USING_USER_MAIN
-#define RT_MAIN_THREAD_STACK_SIZE (4*1024)
+#define RT_MAIN_THREAD_STACK_SIZE (8*1024)
 #define RT_MAIN_THREAD_PRIORITY 10
 
 // #define RT_USING_ULOG
@@ -98,7 +98,7 @@
 #define FINSH_USING_SYMTAB
 #define FINSH_USING_DESCRIPTION
 #define FINSH_THREAD_PRIORITY 20
-#define FINSH_THREAD_STACK_SIZE (16*1024)
+#define FINSH_THREAD_STACK_SIZE (32*1024)
 #define FINSH_CMD_SIZE 128
 #define FINSH_USING_MSH
 #define FINSH_USING_MSH_DEFAULT
@@ -116,12 +116,12 @@
 #define RT_USING_SERIAL
 #define RT_SERIAL_RB_BUFSZ 64
 #define RT_USING_PIN
-#define RT_USING_HWCRYPTO
-#define RT_HWCRYPTO_DEFAULT_NAME "hwcryto"
-#define RT_HWCRYPTO_IV_MAX_SIZE 16
-#define RT_HWCRYPTO_KEYBIT_MAX_SIZE 256
-#define RT_HWCRYPTO_USING_RNG
-#define RT_HWCRYPTO_USING_CRC
+// #define RT_USING_HWCRYPTO
+// #define RT_HWCRYPTO_DEFAULT_NAME "hwcryto"
+// #define RT_HWCRYPTO_IV_MAX_SIZE 16
+// #define RT_HWCRYPTO_KEYBIT_MAX_SIZE 256
+// #define RT_HWCRYPTO_USING_RNG
+// #define RT_HWCRYPTO_USING_CRC
 
 /* Using USB */
 
@@ -129,7 +129,7 @@
 /* POSIX layer and C standard library */
 // #define RT_USING_LIBC
 // #define RT_USING_POSIX
-#define RT_LIBC_USING_TIME
+// #define RT_LIBC_USING_TIME
 
 /* Network */
 
@@ -191,11 +191,11 @@
 #define RT_DFS_ELM_REENTRANT
 
 /* peripheral libraries and drivers */
-#define RT_USING_SFUD
-#define RT_SFUD_USING_SFDP
-#define RT_SFUD_USING_QSPI
-#define RT_SFUD_USING_FLASH_INFO_TABLE
-#define RT_SFUD_SPI_MAX_HZ  (120 * 1000000)
+//#define RT_USING_SFUD
+//#define RT_SFUD_USING_SFDP
+//#define RT_SFUD_USING_QSPI
+//#define RT_SFUD_USING_FLASH_INFO_TABLE
+//#define RT_SFUD_SPI_MAX_HZ  (120 * 1000000)
 /* miscellaneous packages */
 
 

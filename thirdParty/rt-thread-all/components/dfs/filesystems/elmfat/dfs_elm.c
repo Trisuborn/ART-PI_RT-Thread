@@ -446,26 +446,26 @@ int dfs_elm_ioctl(struct dfs_fd* file, int cmd, void* args)
 {
     switch (cmd) {
     case RT_FIOFTRUNCATE:
-        {
-            FIL* fd;
-            FSIZE_t fptr, length;
-            FRESULT result = FR_OK;
-            fd = (FIL*)(file->data);
-            RT_ASSERT(fd != RT_NULL);
+    {
+        FIL* fd;
+        FSIZE_t fptr, length;
+        FRESULT result = FR_OK;
+        fd = (FIL*)(file->data);
+        RT_ASSERT(fd != RT_NULL);
 
-            /* save file read/write point */
-            fptr = fd->fptr;
-            length = *(off_t*)args;
-            if (length <= fd->obj.objsize) {
-                fd->fptr = length;
-                result = f_truncate(fd);
-            } else {
-                result = f_lseek(fd, length);
-            }
-            /* restore file read/write point */
-            fd->fptr = fptr;
-            return elm_result_to_dfs(result);
+        /* save file read/write point */
+        fptr = fd->fptr;
+        length = *(off_t*)args;
+        if (length <= fd->obj.objsize) {
+            fd->fptr = length;
+            result = f_truncate(fd);
+        } else {
+            result = f_lseek(fd, length);
         }
+        /* restore file read/write point */
+        fd->fptr = fptr;
+        return elm_result_to_dfs(result);
+    }
     }
     return -ENOSYS;
 }
@@ -792,9 +792,7 @@ static const struct dfs_filesystem_ops dfs_elm =
 int elm_init(void)
 {
     /* register fatfs file system */
-    rt_kprintf("elm fatfs register.\n");
     dfs_register(&dfs_elm);
-
     return 0;
 }
 INIT_COMPONENT_EXPORT(elm_init);

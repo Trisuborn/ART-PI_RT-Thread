@@ -49,8 +49,6 @@ int dfs_init(void)
 {
     static rt_bool_t init_ok = RT_FALSE;
 
-    rt_kprintf("dfs init.\n");
-
     if (init_ok) {
         rt_kprintf("dfs already init.\n");
         return 0;

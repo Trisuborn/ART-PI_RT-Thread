@@ -29,6 +29,9 @@
 #include "../inc/sfud.h"
 #include <string.h>
 
+#if defined(RT_USING_SFUD)
+
+
 /* send dummy data for read data */
 #define DUMMY_DATA                               0xFF
 
@@ -1034,3 +1037,6 @@ sfud_err sfud_write_status(const sfud_flash *flash, bool is_volatile, uint8_t st
 
     return result;
 }
+
+
+#endif

@@ -11,7 +11,6 @@
 #include "main.h"
 #include "sys_conf.h"
 #include "pro_conf.h"
-#include "lcd_port.h"
 #include "lcd_st7735.h"
 
 #if USER_USE_RTTHREAD == (1u)
@@ -27,7 +26,6 @@
 
 int main()
 {
-    
 
 #if USER_USE_RTTHREAD == (1u)
 
@@ -37,12 +35,12 @@ int main()
 
     uint32_t i = 0;
     while (1) {
-        rt_thread_mdelay(14);
         //ts = rt_tick_get();
-        // lcd_st7735_clear_with(i);
+        
         //te = rt_tick_get();
         //rt_kprintf("%d tick/f\n", te - ts);
         i += 0xF;
+        rt_thread_mdelay(14);
     }
 
 #else
@@ -70,5 +68,5 @@ int main()
 #endif
 
     return 0;
-    }
+}
 
