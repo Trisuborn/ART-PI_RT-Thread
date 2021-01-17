@@ -392,7 +392,7 @@ static rt_err_t stm32_hw_pwm_init(struct stm32_pwm* device)
     /* enable update request source */
     __HAL_TIM_URS_ENABLE(tim);
 
-    HAL_TIMEx_PWMN_Start(tim, TIM_CHANNEL_2);
+    // HAL_TIMEx_PWMN_Start(tim, TIM_CHANNEL_2);
 
 __exit:
     return result;

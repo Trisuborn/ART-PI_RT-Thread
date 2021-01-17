@@ -11,7 +11,7 @@
 #include "main.h"
 #include "sys_conf.h"
 #include "pro_conf.h"
-#include "lcd_st7735.h"
+#include "screen.h"
 
 #if USER_USE_RTTHREAD == (1u)
 #include <rtthread.h>
@@ -28,17 +28,15 @@ int main()
 {
 
 #if USER_USE_RTTHREAD == (1u)
-
     uint32_t ts, te, t;
-
-    rt_pin_mode(LED1_PIN, PIN_MODE_OUTPUT);
-
     uint32_t i = 0;
-    while (1) {
-        //ts = rt_tick_get();
-        
-        //te = rt_tick_get();
-        //rt_kprintf("%d tick/f\n", te - ts);
+
+    scr_init();
+    while ( 1 ) {
+        ts = rt_tick_get();
+        scr_flush(i);
+        te = rt_tick_get();
+        rt_kprintf("%d tick/f\n", te - ts);
         i += 0xF;
         rt_thread_mdelay(14);
     }
@@ -58,7 +56,7 @@ int main()
 
 
     uint32_t i = 0;
-    while (1) {
+    while ( 1 ) {
         HAL_GPIO_TogglePin(GPIOE, GPIO_PIN_3);
         lcd_st7735_clear_with(i);
         i += 0xF;
@@ -67,6 +65,5 @@ int main()
 
 #endif
 
-    return 0;
 }
 

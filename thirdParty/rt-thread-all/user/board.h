@@ -48,11 +48,17 @@ extern "C" {
 #endif
 
 
-
-
-
-
 #define HEAP_END        STM32_SRAM_END
+
+
+
+extern struct rt_memheap axi_sram0;
+extern struct rt_memheap ahb_sram123;
+//extern struct rt_memheap ahb_sram1;
+//extern struct rt_memheap ahb_sram2;
+//extern struct rt_memheap ahb_sram3;
+extern struct rt_memheap ahb_sram4;
+extern struct rt_memheap bkup_sram;
 
 
 

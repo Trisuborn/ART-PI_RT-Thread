@@ -7,7 +7,7 @@
 
 #define USER_USE_ARTPI				1
 #define USER_USE_MiniSTM32H7xx		2
-#define USER_USE_BOARD	USER_USE_MiniSTM32H7xx
+#define USER_USE_BOARD	            USER_USE_MiniSTM32H7xx
 
 
 /* RT-Thread Kernel */
@@ -257,6 +257,5 @@
 #define BSP_USING_UDID
 
 /* Board extended module Drivers */
-
 
 #endif

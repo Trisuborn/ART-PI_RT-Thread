@@ -29,7 +29,8 @@ typedef enum {
  * @brief  LCD ST77XX 的操作方法
 *************************************************/
 struct lcd_st77xx_ops {
-    void(*init)(lcd_interface_t lcd_if);
+    void(*init)(void);
+    void(*hw_init)(lcd_interface_t lcd_if);
     HAL_StatusTypeDef(*read_id)(uint32_t* id);
 
     void(*set_region)(uint16_t x1_res, uint16_t y1_res, uint16_t x2_res, uint16_t y2_res);
