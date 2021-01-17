@@ -391,7 +391,8 @@ struct rt_mmcsd_host* sdio_host_create(struct stm32_sdio_des* sdio_des)
     return host;
 
 err:
-    if (sdio) rt_free(sdio);
+    if (sdio)
+        rt_free(sdio);
 
     return RT_NULL;
 }

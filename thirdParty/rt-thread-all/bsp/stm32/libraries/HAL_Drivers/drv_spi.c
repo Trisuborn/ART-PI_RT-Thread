@@ -933,7 +933,7 @@ void HAL_SPI_MspInit(SPI_HandleTypeDef* spiHandle)
         __HAL_RCC_DMA2_CLK_ENABLE();
 
         /* PA5     ------> SPI1_SCK */
-        GPIO_InitStruct.Pin = LCD_144_ST7735_MOSI | LCD_144_ST7735_CLK;
+        GPIO_InitStruct.Pin = GPIO_PIN_14 | GPIO_PIN_12;
         GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
         GPIO_InitStruct.Pull = GPIO_PULLUP;
         GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;

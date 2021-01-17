@@ -1,13 +1,43 @@
 *** Using Compiler 'V5.06 update 6 (build 750)', folder: 'F:\SoftWare\Keil_v5\ARM\ARMCC\Bin'
 Build target 'MiniSTM32H7xx'
 compiling lcd_st7735.c...
-commonDrivers\screen\st7735\lcd_st7735.c(42): warning:  #177-D: variable "err"  was declared but never referenced
+commonDrivers\screen\st7735\lcd_st7735.c(467): error:  #44: expression must have pointer type
+      lcd_st7735->
+commonDrivers\screen\st7735\lcd_st7735.c(477): error:  #134: expected a field name
+      LCD_ST7735_CS_CLR;
+commonDrivers\screen\st7735\lcd_st7735.c(493): warning:  #167-D: argument of type "uint8_t" is incompatible with parameter of type "struct lcd_st77xx_propertis *"
+      lcd_st7735_read_reg(RDID1, &RDID1);
+commonDrivers\screen\st7735\lcd_st7735.c(493): warning:  #167-D: argument of type "uint8_t *" is incompatible with parameter of type "uint8_t"
+      lcd_st7735_read_reg(RDID1, &RDID1);
+commonDrivers\screen\st7735\lcd_st7735.c(493): error:  #165: too few arguments in function call
+      lcd_st7735_read_reg(RDID1, &RDID1);
+commonDrivers\screen\st7735\lcd_st7735.c(494): warning:  #167-D: argument of type "uint8_t" is incompatible with parameter of type "struct lcd_st77xx_propertis *"
+      lcd_st7735_read_reg(RDID2, &RDID2);
+commonDrivers\screen\st7735\lcd_st7735.c(494): warning:  #167-D: argument of type "uint8_t *" is incompatible with parameter of type "uint8_t"
+      lcd_st7735_read_reg(RDID2, &RDID2);
+commonDrivers\screen\st7735\lcd_st7735.c(494): error:  #165: too few arguments in function call
+      lcd_st7735_read_reg(RDID2, &RDID2);
+commonDrivers\screen\st7735\lcd_st7735.c(495): warning:  #167-D: argument of type "uint8_t" is incompatible with parameter of type "struct lcd_st77xx_propertis *"
+      lcd_st7735_read_reg(RDID3, &RDID3);
+commonDrivers\screen\st7735\lcd_st7735.c(495): warning:  #167-D: argument of type "uint8_t *" is incompatible with parameter of type "uint8_t"
+      lcd_st7735_read_reg(RDID3, &RDID3);
+commonDrivers\screen\st7735\lcd_st7735.c(495): error:  #165: too few arguments in function call
+      lcd_st7735_read_reg(RDID3, &RDID3);
+commonDrivers\screen\st7735\lcd_st7735.c(506): warning:  #940-D: missing return statement at end of non-void function "lcd_st7735_read_id" 
+  }
+commonDrivers\screen\st7735\lcd_st7735.c(545): warning:  #177-D: variable "lcd_st7735_io_s"  was declared but never referenced
+      GPIO_InitTypeDef lcd_st7735_io_s;
+commonDrivers\screen\st7735\lcd_st7735.c(548): warning:  #177-D: variable "err"  was declared but never referenced
       rt_err_t err;
-commonDrivers\screen\st7735\lcd_st7735.c(27): warning:  #177-D: variable "lcd_blk_pwm"  was declared but never referenced
+commonDrivers\screen\st7735\lcd_st7735.c(657): warning:  #127-D: expected a statement
+  }
+commonDrivers\screen\st7735\lcd_st7735.c(656): warning:  #177-D: label "__err"  was declared but never referenced
+  __err:
+commonDrivers\screen\st7735\lcd_st7735.c(695): warning:  #144-D: a value of type "void (*)(void)" cannot be used to initialize an entity of type "const init_fn_t"
+  INIT_APP_EXPORT(st7735_init);
+commonDrivers\screen\st7735\lcd_st7735.c(405): warning:  #177-D: variable "lcd_blk_pwm"  was declared but never referenced
   static struct rt_device_pwm* lcd_blk_pwm;
-commonDrivers\screen\st7735\lcd_st7735.c: 2 warnings, 0 errors
-linking...
-Program Size: Code=111084 RO-data=12024 RW-data=1240 ZI-data=14600  
-FromELF: creating hex file...
-".\project\obj\MiniSTM32H7xx.axf" - 0 Error(s), 2 Warning(s).
-Build Time Elapsed:  00:00:07
+commonDrivers\screen\st7735\lcd_st7735.c: 13 warnings, 5 errors
+".\project\obj\MiniSTM32H7xx.axf" - 5 Error(s), 13 Warning(s).
+Target not created.
+Build Time Elapsed:  00:00:05

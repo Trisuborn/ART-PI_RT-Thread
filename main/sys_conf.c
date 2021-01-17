@@ -65,9 +65,12 @@ void SystemClock_Config(void)
     if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_4) != HAL_OK) {
         Error_Handler();
     }
-    PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_RTC | RCC_PERIPHCLK_LTDC
+    PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_RTC | RCC_PERIPHCLK_LPUART1
         | RCC_PERIPHCLK_UART4 | RCC_PERIPHCLK_SPI1
-        | RCC_PERIPHCLK_SDMMC | RCC_PERIPHCLK_QSPI;
+        | RCC_PERIPHCLK_SPI2 | RCC_PERIPHCLK_SDMMC
+        | RCC_PERIPHCLK_ADC | RCC_PERIPHCLK_I2C4
+        | RCC_PERIPHCLK_USB | RCC_PERIPHCLK_QSPI
+        | RCC_PERIPHCLK_FMC;
     PeriphClkInitStruct.PLL2.PLL2M = 5;
     PeriphClkInitStruct.PLL2.PLL2N = 192;
     PeriphClkInitStruct.PLL2.PLL2P = 4;
@@ -76,23 +79,31 @@ void SystemClock_Config(void)
     PeriphClkInitStruct.PLL2.PLL2RGE = RCC_PLL2VCIRANGE_2;
     PeriphClkInitStruct.PLL2.PLL2VCOSEL = RCC_PLL2VCOWIDE;
     PeriphClkInitStruct.PLL2.PLL2FRACN = 0;
-    PeriphClkInitStruct.PLL3.PLL3M = 1;
-    PeriphClkInitStruct.PLL3.PLL3N = 4;
+    PeriphClkInitStruct.PLL3.PLL3M = 5;
+    PeriphClkInitStruct.PLL3.PLL3N = 192;
     PeriphClkInitStruct.PLL3.PLL3P = 2;
-    PeriphClkInitStruct.PLL3.PLL3Q = 2;
+    PeriphClkInitStruct.PLL3.PLL3Q = 20;
     PeriphClkInitStruct.PLL3.PLL3R = 4;
-    PeriphClkInitStruct.PLL3.PLL3RGE = RCC_PLL3VCIRANGE_3;
+    PeriphClkInitStruct.PLL3.PLL3RGE = RCC_PLL3VCIRANGE_2;
     PeriphClkInitStruct.PLL3.PLL3VCOSEL = RCC_PLL3VCOWIDE;
     PeriphClkInitStruct.PLL3.PLL3FRACN = 0;
+    PeriphClkInitStruct.FmcClockSelection = RCC_FMCCLKSOURCE_D1HCLK;
     PeriphClkInitStruct.QspiClockSelection = RCC_QSPICLKSOURCE_D1HCLK;
     PeriphClkInitStruct.SdmmcClockSelection = RCC_SDMMCCLKSOURCE_PLL;
     PeriphClkInitStruct.Spi123ClockSelection = RCC_SPI123CLKSOURCE_PLL2;
     PeriphClkInitStruct.Usart234578ClockSelection = RCC_USART234578CLKSOURCE_D2PCLK1;
+    PeriphClkInitStruct.UsbClockSelection = RCC_USBCLKSOURCE_PLL3;
+    PeriphClkInitStruct.Lpuart1ClockSelection = RCC_LPUART1CLKSOURCE_D3PCLK1;
+    PeriphClkInitStruct.I2c4ClockSelection = RCC_I2C4CLKSOURCE_D3PCLK1;
+    PeriphClkInitStruct.AdcClockSelection = RCC_ADCCLKSOURCE_PLL2;
     PeriphClkInitStruct.RTCClockSelection = RCC_RTCCLKSOURCE_LSE;
     if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInitStruct) != HAL_OK) {
         Error_Handler();
     }
     HAL_RCC_MCOConfig(RCC_MCO1, RCC_MCO1SOURCE_HSI48, RCC_MCODIV_4);
+    /** Enable USB Voltage detector
+    */
+    HAL_PWREx_EnableUSBVoltageDetector();
 }
 
 
