@@ -18,9 +18,10 @@
 /* definations */
 struct screen_ops {
     void (*init)(void);
+    void (*reg)(void);
     void (*draw_pixel)(uint16_t x_res, uint16_t y_res, uint16_t pix_dat);
-    void (*flush)(uint16_t color);
-    void (*flush_win)(uint16_t* pix_buf, uint16_t x1_res, uint16_t y1_res, uint16_t x2_res, uint16_t y2_res);
+    void(*set_region)(uint16_t x1_res, uint16_t y1_res, uint16_t x2_res, uint16_t y2_res);
+    void(*send_pixel_data)(uint16_t pix_dat);
 };
 
 extern struct screen_ops screen;
@@ -29,6 +30,6 @@ extern struct screen_ops screen;
 /* functions prototype */
 void scr_init(void);
 void scr_draw_pixel(uint16_t x_res, uint16_t y_res, uint16_t pix_dat);
-void scr_flush(uint16_t color);
+void scr_flush(uint16_t x1_res, uint16_t y1_res, uint16_t x2_res, uint16_t y2_res, uint16_t color);
 
 #endif

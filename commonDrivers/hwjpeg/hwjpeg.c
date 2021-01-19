@@ -28,7 +28,12 @@
 JPEG_HandleTypeDef hjpeg;
 
 
+static hwjpeg_decode()
+{
+    // HAL_JPEG_Decode()
+    
 
+}
 
 
 /* JPEG init function */

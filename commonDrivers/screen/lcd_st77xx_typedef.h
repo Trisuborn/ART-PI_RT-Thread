@@ -37,7 +37,6 @@ struct lcd_st77xx_ops {
     void(*send_pixel_data)(uint16_t pix_dat);
 
     void(*draw_pixel)(uint16_t x_res, uint16_t y_res, uint16_t pix_dat);
-    void(*flush)(uint16_t color);
 
     void(*disp_on)(void);
     void(*disp_off)(void);

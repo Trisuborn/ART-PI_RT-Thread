@@ -38,13 +38,11 @@ static struct rt_device_pwm* lcd_blk_pwm = NULL;
 /************************************************
  * @brief basical function
 *************************************************/
-static void st7735_init(void);
 static void lcd_st7735_hw_init(lcd_interface_t lcd_if);
 static HAL_StatusTypeDef lcd_st7735_read_id(uint32_t* id);
 static void lcd_st7735_set_region(uint16_t x1_res, uint16_t y1_res, uint16_t x2_res, uint16_t y2_res);
 static void lcd_st7735_send_pixel_data(uint16_t pix_dat);
 static void lcd_st7735_draw_pixel(uint16_t x_res, uint16_t y_res, uint16_t pix_dat);
-static void lcd_st7735_flush(uint16_t color);
 static void lcd_st7735_disp_on(void);
 static void lcd_st7735_disp_off(void);
 static void lcd_st7735_hw_reset(void);
@@ -64,7 +62,7 @@ static void spi_alert_speed(uint32_t spi_baudrate);
  * @brief lcd structure
 *************************************************/
 static struct lcd_st77xx_ops lcd_st7735_ops;
-struct lcd_st77xx_propertis lcd_st7735 = {
+struct lcd_st77xx_propertis lcd_st7735 ={
     .id = 0,
     .x_res = LCD_ST7735_X,
     .y_res = LCD_ST7735_Y,
@@ -72,7 +70,7 @@ struct lcd_st77xx_propertis lcd_st7735 = {
     .lcd_if_t = ST77XX_SPI_SINGLE_LINE
 };
 
-static SPI_HandleTypeDef h_st7735_spi = {
+static SPI_HandleTypeDef h_st7735_spi ={
     .Instance = LCD_ST7735_SPI
 };
 
@@ -195,19 +193,6 @@ static void lcd_st7735_draw_pixel(uint16_t x_res, uint16_t y_res, uint16_t pix_d
 {
     lcd_st7735_set_region(x_res, y_res, x_res, y_res);
     lcd_st7735_send_pixel_data(pix_dat);
-}
-
-static void lcd_st7735_flush(uint16_t color)
-{
-    uint16_t x, y;
-
-    lcd_st7735_set_region(0, 0, LCD_ST7735_X - 1, LCD_ST7735_Y - 1);
-
-    for ( y = 0; y < LCD_ST7735_Y; y++ ) {
-        for ( x = 0; x < LCD_ST7735_X; x++ ) {
-            lcd_st7735_send_pixel_data(color);
-        }
-    }
 }
 
 static void lcd_st7735_disp_on(void)
@@ -471,35 +456,28 @@ static void lcd_st7735_hw_init(lcd_interface_t lcd_if)
 
     lcd_st7735_disp_on();
 
-    lcd_st7735_flush(0xf800);
+}
 
+
+void st7735_init(void)
+{
+    lcd_st7735.ops->hw_init(ST77XX_SPI_SINGLE_LINE);
+    lcd_st7735.ops->read_id(NULL);
 }
 
 
 static uint8_t flag = 0;
-static void st7735_ops_register(void)
+void st7735_ops_register(void)
 {
-    lcd_st7735_ops.init = st7735_init;
-    lcd_st7735_ops.hw_init = lcd_st7735_hw_init;
-    lcd_st7735_ops.read_id = lcd_st7735_read_id;
-    lcd_st7735_ops.disp_on = lcd_st7735_disp_on;
-    lcd_st7735_ops.disp_off = lcd_st7735_disp_off;
-    lcd_st7735_ops.draw_pixel = lcd_st7735_draw_pixel;
-    lcd_st7735_ops.flush = lcd_st7735_flush;
-    lcd_st7735_ops.hw_reset = lcd_st7735_hw_reset;
-    lcd_st7735_ops.sw_reset = lcd_st7735_sw_reset;
-    lcd_st7735_ops.send_pixel_data = lcd_st7735_send_pixel_data;
-    lcd_st7735_ops.set_region = lcd_st7735_set_region;
+    lcd_st7735.ops->init            = st7735_init;
+    lcd_st7735.ops->hw_init         = lcd_st7735_hw_init;
+    lcd_st7735.ops->read_id         = lcd_st7735_read_id;
+    lcd_st7735.ops->disp_on         = lcd_st7735_disp_on;
+    lcd_st7735.ops->disp_off        = lcd_st7735_disp_off;
+    lcd_st7735.ops->draw_pixel      = lcd_st7735_draw_pixel;
+    lcd_st7735.ops->hw_reset        = lcd_st7735_hw_reset;
+    lcd_st7735.ops->sw_reset        = lcd_st7735_sw_reset;
+    lcd_st7735.ops->send_pixel_data = lcd_st7735_send_pixel_data;
+    lcd_st7735.ops->set_region      = lcd_st7735_set_region;
     flag = 1;
 }
-
-static void st7735_init(void)
-{
-    if ( !flag )
-        st7735_ops_register();
-    lcd_st7735_ops.hw_init(ST77XX_SPI_SINGLE_LINE);
-    lcd_st7735_ops.read_id(NULL);
-}
-#if USER_USE_RTTHREAD == 1
-INIT_COMPONENT_EXPORT(st7735_init);
-#endif

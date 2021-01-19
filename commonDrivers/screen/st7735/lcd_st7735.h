@@ -46,6 +46,7 @@
 
 extern struct lcd_st77xx_propertis lcd_st7735;
 
-// int st7735_init(void);
+// void st7735_init(void);
+void st7735_ops_register(void);
 
 #endif

@@ -31,12 +31,11 @@ int main()
     uint32_t ts, te, t;
     uint32_t i = 0;
 
-    scr_init();
     while ( 1 ) {
-        ts = rt_tick_get();
-        scr_flush(i);
-        te = rt_tick_get();
-        rt_kprintf("%d tick/f\n", te - ts);
+        // ts = rt_tick_get();
+        scr_flush(0, 0, 160, 80, i);
+        // te = rt_tick_get();
+        // rt_kprintf("%d tick/f\n", te - ts);
         i += 0xF;
         rt_thread_mdelay(14);
     }

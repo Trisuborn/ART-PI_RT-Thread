@@ -1,4 +1,28 @@
+/************************************************
+ * @file sys_conf.c
+ * @author Trisuborn (ttowfive@gmail.com)
+ * @brief
+ * @version 1.0
+ * @date 2021-01-19
+ *
+ * @copyright Copyright (c) 2021
+ *
+ *************************************************/
+#include "pro_conf.h"
 #include "sys_conf.h"
+
+#define LOG_TAG        "LCD_ST7735"
+
+#if (USER_USE_RTTHREAD == 1)
+#include <rtthread.h>
+#include <rtdevice.h>
+#include "drv_log.h"
+
+#else
+#define LOG_E(fmt, ...)     printf(fmt, ##__VA_ARGS__)
+#define LOG_D(fmt, ...)     printf(fmt, ##__VA_ARGS__)
+#define LOG_I(fmt, ...)     printf(fmt, ##__VA_ARGS__)
+#endif
 
 static void Error_Handler(void);
 
@@ -8,9 +32,9 @@ static void Error_Handler(void);
   */
 void SystemClock_Config(void)
 {
-    RCC_OscInitTypeDef RCC_OscInitStruct = { 0 };
-    RCC_ClkInitTypeDef RCC_ClkInitStruct = { 0 };
-    RCC_PeriphCLKInitTypeDef PeriphClkInitStruct = { 0 };
+    RCC_OscInitTypeDef RCC_OscInitStruct ={ 0 };
+    RCC_ClkInitTypeDef RCC_ClkInitStruct ={ 0 };
+    RCC_PeriphCLKInitTypeDef PeriphClkInitStruct ={ 0 };
 
     /** Supply configuration update enable
     */
@@ -19,7 +43,7 @@ void SystemClock_Config(void)
     */
     __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE0);
 
-    while (!__HAL_PWR_GET_FLAG(PWR_FLAG_VOSRDY)) {
+    while ( !__HAL_PWR_GET_FLAG(PWR_FLAG_VOSRDY) ) {
     }
     /** Configure LSE Drive Capability
     */
@@ -46,7 +70,7 @@ void SystemClock_Config(void)
     RCC_OscInitStruct.PLL.PLLRGE = RCC_PLL1VCIRANGE_2;
     RCC_OscInitStruct.PLL.PLLVCOSEL = RCC_PLL1VCOWIDE;
     RCC_OscInitStruct.PLL.PLLFRACN = 0;
-    if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK) {
+    if ( HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK ) {
         Error_Handler();
     }
     /** Initializes the CPU, AHB and APB buses clocks
@@ -62,7 +86,7 @@ void SystemClock_Config(void)
     RCC_ClkInitStruct.APB2CLKDivider = RCC_APB2_DIV2;
     RCC_ClkInitStruct.APB4CLKDivider = RCC_APB4_DIV2;
 
-    if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_4) != HAL_OK) {
+    if ( HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_4) != HAL_OK ) {
         Error_Handler();
     }
     PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_RTC | RCC_PERIPHCLK_LPUART1
@@ -97,7 +121,7 @@ void SystemClock_Config(void)
     PeriphClkInitStruct.I2c4ClockSelection = RCC_I2C4CLKSOURCE_D3PCLK1;
     PeriphClkInitStruct.AdcClockSelection = RCC_ADCCLKSOURCE_PLL2;
     PeriphClkInitStruct.RTCClockSelection = RCC_RTCCLKSOURCE_LSE;
-    if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInitStruct) != HAL_OK) {
+    if ( HAL_RCCEx_PeriphCLKConfig(&PeriphClkInitStruct) != HAL_OK ) {
         Error_Handler();
     }
     HAL_RCC_MCOConfig(RCC_MCO1, RCC_MCO1SOURCE_HSI48, RCC_MCODIV_4);
@@ -112,13 +136,24 @@ void Error_Handler(void)
 
 }
 
+int clock_information(void)
+{
+    LOG_I("System Clock information");
+    LOG_I("SYSCLK_Frequency = %d", HAL_RCC_GetSysClockFreq());
+    LOG_I("HCLK_Frequency   = %d", HAL_RCC_GetHCLKFreq());
+    LOG_I("PCLK1_Frequency  = %d", HAL_RCC_GetPCLK1Freq());
+    LOG_I("PCLK2_Frequency  = %d", HAL_RCC_GetPCLK2Freq());
+
+    return 0;
+}
+INIT_BOARD_EXPORT(clock_information);
 
 
 TIM_HandleTypeDef        htim5;
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim)
 {
-    if (htim->Instance == TIM5) {
+    if ( htim->Instance == TIM5 ) {
         HAL_IncTick();
     }
 }
@@ -167,7 +202,7 @@ HAL_StatusTypeDef HAL_InitTick(uint32_t TickPriority)
     htim5.Init.Prescaler = uwPrescalerValue;
     htim5.Init.ClockDivision = 0;
     htim5.Init.CounterMode = TIM_COUNTERMODE_UP;
-    if (HAL_TIM_Base_Init(&htim5) == HAL_OK) {
+    if ( HAL_TIM_Base_Init(&htim5) == HAL_OK ) {
       /* Start the TIM time Base generation in interrupt mode */
         return HAL_TIM_Base_Start_IT(&htim5);
     }
@@ -199,3 +234,58 @@ void HAL_ResumeTick(void)
   /* Enable TIM5 Update interrupt */
     __HAL_TIM_ENABLE_IT(&htim5, TIM_IT_UPDATE);
 }
+
+
+
+
+
+void HAL_TIM_MspPostInit(TIM_HandleTypeDef* timHandle)
+{
+
+    GPIO_InitTypeDef GPIO_InitStruct = { 0 };
+    if (timHandle->Instance == TIM1) {
+
+        __HAL_RCC_GPIOE_CLK_ENABLE();
+        __HAL_RCC_TIM1_CLK_ENABLE();
+        /**TIM1 GPIO Configuration
+        PE10     ------> TIM1_CH2N
+        */
+
+        GPIO_InitStruct.Pin = GPIO_PIN_10;
+        GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+        GPIO_InitStruct.Pull = GPIO_PULLUP;
+        GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+        GPIO_InitStruct.Alternate = GPIO_AF1_TIM1;
+        HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
+
+    }
+
+}
+
+void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* tim_baseHandle)
+{
+
+    if (tim_baseHandle->Instance == TIM1) {
+
+      /* TIM1 clock enable */
+        __HAL_RCC_TIM1_CLK_ENABLE();
+
+        /* TIM1 interrupt Init */
+        HAL_NVIC_SetPriority(TIM1_UP_IRQn, 0, 0);
+        HAL_NVIC_EnableIRQ(TIM1_UP_IRQn);
+
+    }
+}
+
+void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef* tim_baseHandle)
+{
+
+    if (tim_baseHandle->Instance == TIM1) {
+      /* Peripheral clock disable */
+        __HAL_RCC_TIM1_CLK_DISABLE();
+
+        /* TIM1 interrupt Deinit */
+        HAL_NVIC_DisableIRQ(TIM1_UP_IRQn);
+    }
+}
+

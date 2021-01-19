@@ -5,11 +5,11 @@
   * @version V2.0.0
   * @date    3-June-2016
   * @brief   jpeg_utils configuration template file.
-  *          This file should be copied to the application folder and modified 
+  *          This file should be copied to the application folder and modified
   *          as follows:
   *            - Rename it to 'jpeg_utils_conf.h'.
   *            - Update the name of the JPEG driver's header file, depending on
-  *               the EVAL board you are using, see lines 51 and 52 below (by default this  
+  *               the EVAL board you are using, see lines 51 and 52 below (by default this
   *               file will generate compile error unless you do this modification).
   ******************************************************************************
   * @attention
@@ -39,7 +39,7 @@
   * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   *
   ******************************************************************************
-  */ 
+  */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
 
@@ -60,16 +60,16 @@
 #define JPEG_ARGB8888            0  /* ARGB8888 Color Format */
 #define JPEG_RGB888              1  /* RGB888 Color Format   */
 #define JPEG_RGB565              2  /* RGB565 Color Format   */
-    
+
 /**
 * @}
 */
-    
+
 /* Exported types ------------------------------------------------------------*/
 /* Exported constants --------------------------------------------------------*/
 /** @addtogroup JPEG_Exported_Defines
   * @{
-  */    
+  */
 #define USE_JPEG_DECODER     1  /* Enable Decoding Post-Processing functions (YCbCr to RGB conversion) */
 #define USE_JPEG_ENCODER     1  /* Enable Encoding Pre-Processing functions (RGB to YCbCr conversion)*/
 

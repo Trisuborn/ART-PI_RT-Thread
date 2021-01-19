@@ -50,7 +50,7 @@ static int get_order(rt_uint32_t data)
 {
     int order = 0;
 
-    switch (data) {
+    switch ( data ) {
     case 1:
         order = 0;
         break;
@@ -114,29 +114,29 @@ static void rthw_sdio_wait_completed(struct rthw_sdio* sdio)
     struct rt_mmcsd_cmd* cmd = sdio->pkg->cmd;
     struct stm32_sdio* hw_sdio = sdio->sdio_des.hw_sdio;
 
-    if (rt_event_recv(&sdio->event, 0xffffffff, RT_EVENT_FLAG_OR | RT_EVENT_FLAG_CLEAR,
-        rt_tick_from_millisecond(5000), &status) != RT_EOK) {
+    if ( rt_event_recv(&sdio->event, 0xffffffff, RT_EVENT_FLAG_OR | RT_EVENT_FLAG_CLEAR,
+        rt_tick_from_millisecond(5000), &status) != RT_EOK ) {
         LOG_E("wait cmd completed timeout");
         cmd->err = -RT_ETIMEOUT;
         return;
     }
 
     cmd->resp[0] = hw_sdio->resp1;
-    if (resp_type(cmd) == RESP_R2) {
+    if ( resp_type(cmd) == RESP_R2 ) {
         cmd->resp[1] = hw_sdio->resp2;
         cmd->resp[2] = hw_sdio->resp3;
         cmd->resp[3] = hw_sdio->resp4;
     }
 
-    if (status & SDIO_ERRORS) {
-        if ((status & SDMMC_STA_CCRCFAIL) && (resp_type(cmd) & (RESP_R3 | RESP_R4))) {
+    if ( status & SDIO_ERRORS ) {
+        if ( (status & SDMMC_STA_CCRCFAIL) && (resp_type(cmd) & (RESP_R3 | RESP_R4)) ) {
             cmd->err = RT_EOK;
         } else {
             cmd->err = -RT_ERROR;
         }
     }
 
-    if (cmd->err == RT_EOK) {
+    if ( cmd->err == RT_EOK ) {
         LOG_D("sta:0x%08X [%08X %08X %08X %08X]", status, cmd->resp[0], cmd->resp[1], cmd->resp[2], cmd->resp[3]);
     } else {
         LOG_D("send command error = %d", cmd->err);
@@ -180,7 +180,7 @@ static void rthw_sdio_send_command(struct rthw_sdio* sdio, struct sdio_pkg* pkg)
     reg_cmd = cmd->cmd_code | SDMMC_CMD_CPSMEN;
 
     /* data pre configuration */
-    if (data != RT_NULL) {
+    if ( data != RT_NULL ) {
         SCB_CleanInvalidateDCache();
 
         reg_cmd |= SDMMC_CMD_CMDTRANS;
@@ -192,9 +192,9 @@ static void rthw_sdio_send_command(struct rthw_sdio* sdio, struct sdio_pkg* pkg)
         hw_sdio->idmatrlr = SDMMC_IDMA_IDMAEN;
     }
 
-    if (resp_type(cmd) == RESP_R2)
+    if ( resp_type(cmd) == RESP_R2 )
         reg_cmd |= SDMMC_CMD_WAITRESP;
-    else if (resp_type(cmd) != RESP_NONE)
+    else if ( resp_type(cmd) != RESP_NONE )
         reg_cmd |= SDMMC_CMD_WAITRESP_0;
 
     hw_sdio->arg = cmd->arg;
@@ -203,20 +203,20 @@ static void rthw_sdio_send_command(struct rthw_sdio* sdio, struct sdio_pkg* pkg)
     rthw_sdio_wait_completed(sdio);
 
     /* Waiting for data to be sent to completion */
-    if (data != RT_NULL) {
+    if ( data != RT_NULL ) {
         volatile rt_uint32_t count = SDIO_TX_RX_COMPLETE_TIMEOUT_LOOPS;
 
-        while (count && (hw_sdio->sta & SDMMC_STA_DPSMACT)) {
+        while ( count && (hw_sdio->sta & SDMMC_STA_DPSMACT) ) {
             count--;
         }
-        if ((count == 0) || (hw_sdio->sta & SDIO_ERRORS)) {
+        if ( (count == 0) || (hw_sdio->sta & SDIO_ERRORS) ) {
             cmd->err = -RT_ERROR;
         }
     }
 
     /* data post configuration */
-    if (data != RT_NULL) {
-        if (data->flags & DATA_DIR_READ) {
+    if ( data != RT_NULL ) {
+        if ( data->flags & DATA_DIR_READ ) {
             rt_memcpy(data->buf, cache_buf, data->blks * data->blksize);
             SCB_CleanInvalidateDCache();
         }
@@ -235,17 +235,17 @@ static void rthw_sdio_request(struct rt_mmcsd_host* host, struct rt_mmcsd_req* r
     struct rthw_sdio* sdio = host->private_data;
     struct rt_mmcsd_data* data;
 
-    if (req->cmd != RT_NULL) {
+    if ( req->cmd != RT_NULL ) {
         rt_memset(&pkg, 0, sizeof(pkg));
         data = req->cmd->data;
         pkg.cmd = req->cmd;
 
-        if (data != RT_NULL) {
+        if ( data != RT_NULL ) {
             rt_uint32_t size = data->blks * data->blksize;
 
             RT_ASSERT(size <= SDIO_BUFF_SIZE);
 
-            if (data->flags & DATA_DIR_WRITE) {
+            if ( data->flags & DATA_DIR_WRITE ) {
                 rt_memcpy(cache_buf, data->buf, size);
             }
         }
@@ -253,7 +253,7 @@ static void rthw_sdio_request(struct rt_mmcsd_host* host, struct rt_mmcsd_req* r
         rthw_sdio_send_command(sdio, &pkg);
     }
 
-    if (req->stop != RT_NULL) {
+    if ( req->stop != RT_NULL ) {
         rt_memset(&pkg, 0, sizeof(pkg));
         pkg.cmd = req->stop;
         rthw_sdio_send_command(sdio, &pkg);
@@ -305,22 +305,22 @@ static void rthw_sdio_iocfg(struct rt_mmcsd_host* host, struct rt_mmcsd_io_cfg* 
 
     clk_src = SDIO_CLOCK_FREQ;
 
-    if (clk > 0) {
-        if (clk > host->freq_max)
+    if ( clk > 0 ) {
+        if ( clk > host->freq_max )
             clk = host->freq_max;
         temp = DIV_ROUND_UP(clk_src, 2 * clk);
-        if (temp > 0x3FF)
+        if ( temp > 0x3FF )
             temp = 0x3FF;
     }
 
-    if (io_cfg->bus_width == MMCSD_BUS_WIDTH_4)
+    if ( io_cfg->bus_width == MMCSD_BUS_WIDTH_4 )
         temp |= SDMMC_CLKCR_WIDBUS_0;
-    else if (io_cfg->bus_width == MMCSD_BUS_WIDTH_8)
+    else if ( io_cfg->bus_width == MMCSD_BUS_WIDTH_8 )
         temp |= SDMMC_CLKCR_WIDBUS_1;
 
     hw_sdio->clkcr = temp;
 
-    if (io_cfg->power_mode == MMCSD_POWER_ON)
+    if ( io_cfg->power_mode == MMCSD_POWER_ON )
         hw_sdio->power |= SDMMC_POWER_PWRCTRL;
 }
 
@@ -342,19 +342,19 @@ struct rt_mmcsd_host* sdio_host_create(struct stm32_sdio_des* sdio_des)
     struct rt_mmcsd_host* host;
     struct rthw_sdio* sdio = RT_NULL;
 
-    if (sdio_des == RT_NULL) {
+    if ( sdio_des == RT_NULL ) {
         return RT_NULL;
     }
 
     sdio = rt_malloc(sizeof(struct rthw_sdio));
-    if (sdio == RT_NULL) {
+    if ( sdio == RT_NULL ) {
         LOG_E("malloc rthw_sdio fail");
         return RT_NULL;
     }
     rt_memset(sdio, 0, sizeof(struct rthw_sdio));
 
     host = mmcsd_alloc_host();
-    if (host == RT_NULL) {
+    if ( host == RT_NULL ) {
         LOG_E("alloc host fail");
         goto err;
     }
@@ -391,7 +391,7 @@ struct rt_mmcsd_host* sdio_host_create(struct stm32_sdio_des* sdio_des)
     return host;
 
 err:
-    if (sdio)
+    if ( sdio )
         rt_free(sdio);
 
     return RT_NULL;
@@ -407,6 +407,11 @@ void SDMMC1_IRQHandler(void)
     rt_interrupt_leave();
 }
 
+void stm32_mmcsd_change(void)
+{
+    mmcsd_change(host);
+}
+
 int rt_hw_sdio_init(void)
 {
     struct stm32_sdio_des sdio_des;
@@ -417,7 +422,7 @@ int rt_hw_sdio_init(void)
     // clock
 
     host = sdio_host_create(&sdio_des);
-    if (host == RT_NULL) {
+    if ( host == RT_NULL ) {
         LOG_E("host create fail");
         return RT_NULL;
     }
@@ -428,8 +433,8 @@ INIT_DEVICE_EXPORT(rt_hw_sdio_init);
 void HAL_SD_MspInit(SD_HandleTypeDef* sdHandle)
 {
 
-    GPIO_InitTypeDef GPIO_InitStruct = { 0 };
-    if (sdHandle->Instance == SDMMC1) {
+    GPIO_InitTypeDef GPIO_InitStruct ={ 0 };
+    if ( sdHandle->Instance == SDMMC1 ) {
 
       /* SDMMC1 clock enable */
         __HAL_RCC_SDMMC1_CLK_ENABLE();

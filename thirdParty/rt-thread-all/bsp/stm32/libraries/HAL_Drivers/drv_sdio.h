@@ -19,8 +19,11 @@
 #include <drivers/mmcsd_core.h>
 #include <drivers/sdio.h>
 
-#define SDIO_BUFF_SIZE       4096
-#define SDIO_ALIGN_LEN       32
+#define SDIO_CLOCK_FREQ      (480U * 1000 * 1000)
+#define SDIO_MAX_FREQ        (50U * 1000 * 1000)
+#define SDIO_BASE_ADDRESS    (0x52007000U)
+#define SDIO_BUFF_SIZE       8192U
+#define SDIO_ALIGN_LEN       32U
 
 #ifndef SDIO_BASE_ADDRESS
 #define SDIO_BASE_ADDRESS    (0x52007000)
@@ -57,8 +60,7 @@
 
 #define HW_SDIO_DATATIMEOUT                 (0xFFFFFFFFU)
 
-struct stm32_sdio
-{
+struct stm32_sdio {
     volatile rt_uint32_t power;         /* offset 0x00 */
     volatile rt_uint32_t clkcr;         /* offset 0x04 */
     volatile rt_uint32_t arg;           /* offset 0x08 */
@@ -85,19 +87,17 @@ struct stm32_sdio
     volatile rt_uint32_t fifo;          /* offset 0x80 */
 };
 
-typedef rt_uint32_t (*sdio_clk_get)(struct stm32_sdio *hw_sdio);
+typedef rt_uint32_t(*sdio_clk_get)(struct stm32_sdio* hw_sdio);
 
-struct stm32_sdio_des
-{
-    struct stm32_sdio *hw_sdio;
+struct stm32_sdio_des {
+    struct stm32_sdio* hw_sdio;
     sdio_clk_get clk_get;
 };
 
 /* stm32 sdio dirver class */
-struct stm32_sdio_class
-{
-    struct stm32_sdio_des *des;
-    const struct stm32_sdio_config *cfg;
+struct stm32_sdio_class {
+    struct stm32_sdio_des* des;
+    const struct stm32_sdio_config* cfg;
     struct rt_mmcsd_host host;
 };
 

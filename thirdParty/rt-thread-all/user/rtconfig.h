@@ -62,7 +62,7 @@
 
 #define RT_USING_COMPONENTS_INIT
 #define RT_USING_USER_MAIN
-#define RT_MAIN_THREAD_STACK_SIZE (8*1024)
+#define RT_MAIN_THREAD_STACK_SIZE (32*1024)
 #define RT_MAIN_THREAD_PRIORITY 10
 
 // #define RT_USING_ULOG
@@ -181,6 +181,7 @@
 
 /* system packages */
 #define RT_USING_DFS
+// #define RT_USING_DFS_MNTTABLE
 #define RT_USING_DFS_DEVFS
 #define DFS_USING_WORKDIR
 #define DFS_FILESYSTEMS_MAX 10
@@ -191,11 +192,11 @@
 #define RT_DFS_ELM_REENTRANT
 
 /* peripheral libraries and drivers */
-//#define RT_USING_SFUD
-//#define RT_SFUD_USING_SFDP
-//#define RT_SFUD_USING_QSPI
-//#define RT_SFUD_USING_FLASH_INFO_TABLE
-//#define RT_SFUD_SPI_MAX_HZ  (120 * 1000000)
+#define RT_USING_SFUD
+#define RT_SFUD_USING_SFDP
+#define RT_SFUD_USING_QSPI
+#define RT_SFUD_USING_FLASH_INFO_TABLE
+#define RT_SFUD_SPI_MAX_HZ  (120 * 1000000)
 /* miscellaneous packages */
 
 
@@ -214,6 +215,9 @@
 #endif
 
 /* On-chip Peripheral Drivers */
+
+// #define BSP_USING_ON_CHIP_FLASH
+
 #define BSP_USING_DCMI
 
 #define RT_USING_PWM

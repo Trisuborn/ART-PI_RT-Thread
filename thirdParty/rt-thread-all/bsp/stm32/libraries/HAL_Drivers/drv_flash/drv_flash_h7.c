@@ -24,6 +24,9 @@
 //#define DRV_DEBUG
 #define LOG_TAG                "drv.flash"
 #include "drv_log.h"
+
+
+
 #define ADDR_FLASH_SECTOR_0     ((rt_uint32_t)0x08000000) /* Base address of Sector 0, 128 Kbytes */
 #define ADDR_FLASH_SECTOR_1     ((rt_uint32_t)0x08020000) /* Base address of Sector 1, 128 Kbytes */
 #define ADDR_FLASH_SECTOR_2     ((rt_uint32_t)0x08040000) /* Base address of Sector 2, 128 Kbytes */
@@ -42,6 +45,9 @@
 #define FLASH_SECTOR_5             5U       /* Sector Number 5   */
 #define FLASH_SECTOR_6             6U       /* Sector Number 6   */
 #define FLASH_SECTOR_7             7U       /* Sector Number 7   */
+
+#define STM32_FLASH_END_ADDRESS         ADDR_FLASH_SECTOR_1
+#define FLASH_SIZE_GRANULARITY_128K     (128*1024)
 /**
   * @brief  Gets the sector of a given address
   * @param  addr flash address
