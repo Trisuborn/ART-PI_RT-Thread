@@ -219,6 +219,7 @@
 // #define BSP_USING_ON_CHIP_FLASH
 
 #define BSP_USING_DCMI
+#define BSP_USING_OV2640
 
 #define RT_USING_PWM
 #define BSP_USING_PWM1
@@ -245,8 +246,8 @@
 #define BSP_USING_QSPI_FLASH
 
 #define RT_USING_I2C
-#define RT_I2C_BITOPS_DEBUG
-#define RT_I2C_DEBUG
+// #define RT_I2C_BITOPS_DEBUG
+// #define RT_I2C_DEBUG
 #define BSP_USING_I2C1
 
 #define BSP_USING_UART

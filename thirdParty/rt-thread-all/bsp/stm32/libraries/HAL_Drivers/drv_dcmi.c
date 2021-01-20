@@ -16,7 +16,7 @@
 
 #define DRV_DEBUG
 #define LOG_TAG             "drv.dcmi"
-#include "drv_log.h"
+#include <drv_log.h>
 
 struct stm32_dcmi
 {
@@ -45,20 +45,19 @@ static void rt_hw_dcmi_dma_init(void)
     hdma_dcmi.Init.MemBurst            = DMA_MBURST_SINGLE;
     hdma_dcmi.Init.PeriphBurst         = DMA_PBURST_SINGLE;
 
-    HAL_DMA_DeInit(&hdma_dcmi);
     HAL_DMA_Init(&hdma_dcmi);
 
     __HAL_LINKDMA(&rt_dcmi.DCMI_Handle, DMA_Handle, hdma_dcmi);
 
     HAL_NVIC_SetPriority(DMA2_Stream1_IRQn, 0x00, 0x00);
-    HAL_NVIC_EnableIRQ(DMA2_Stream1_IRQn);;
+    HAL_NVIC_EnableIRQ(DMA2_Stream1_IRQn);
+
+    rt_kprintf("rt_hw_dcmi_dma_init 1\n");
 }
 
 void rt_hw_dcmi_dma_config(rt_uint32_t dst_addr1, rt_uint32_t dst_addr2, rt_uint32_t len)
 {
-    __HAL_UNLOCK(&hdma_dcmi);
-
-    HAL_DMAEx_MultiBufferStart(&hdma_dcmi, (rt_uint32_t)&DCMI->DR, dst_addr1, dst_addr2, len);
+      HAL_DMAEx_MultiBufferStart(&hdma_dcmi, (rt_uint32_t)&DCMI->DR, dst_addr1, dst_addr2, len);
 
     __HAL_DMA_ENABLE_IT(&hdma_dcmi, DMA_IT_TC);
 }
@@ -122,20 +121,21 @@ void DCMI_Stop(void)
 void HAL_DCMI_FrameEventCallback(DCMI_HandleTypeDef *hdcmi)
 {
     extern void camera_frame_data_process(void);
+    static int i = 0;
     /* enter interrupt */
     rt_interrupt_enter();
     /* move frame data to buffer */
     camera_frame_data_process();
-
     __HAL_DCMI_ENABLE_IT(&rt_dcmi.DCMI_Handle, DCMI_IT_FRAME);
-
+    rt_kprintf("HAL_DCMI_FrameEventCallback %d\n", i++);
     /* leave interrupt */
     rt_interrupt_leave();
 }
 
+extern void camera_dma_data_process(void);
 void DMA2_Stream1_IRQHandler(void)
 {
-    extern void camera_dma_data_process(void);
+    static int i = 0;
     /* enter interrupt */
     rt_interrupt_enter();
 
@@ -144,8 +144,9 @@ void DMA2_Stream1_IRQHandler(void)
         __HAL_DMA_CLEAR_FLAG(&hdma_dcmi, DMA_FLAG_TCIF1_5);
         /* move dma data to buffer */
         camera_dma_data_process();
+        SCB_CleanInvalidateDCache();
+        rt_kprintf("DMA2_Stream1_IRQHandler %d\n", i++);
     }
-
     /* leave interrupt */
     rt_interrupt_leave();
 }
@@ -220,4 +221,96 @@ int dcmi_init(void)
 }
 INIT_BOARD_EXPORT(dcmi_init);
 
+
+
+void HAL_DCMI_MspInit(DCMI_HandleTypeDef* dcmiHandle)
+{
+
+  GPIO_InitTypeDef GPIO_InitStruct = {0};
+  if(dcmiHandle->Instance==DCMI)
+  {
+  /* USER CODE BEGIN DCMI_MspInit 0 */
+
+  /* USER CODE END DCMI_MspInit 0 */
+    /* DCMI clock enable */
+    __HAL_RCC_DCMI_CLK_ENABLE();
+
+    __HAL_RCC_GPIOE_CLK_ENABLE();
+    __HAL_RCC_GPIOA_CLK_ENABLE();
+    __HAL_RCC_GPIOC_CLK_ENABLE();
+    __HAL_RCC_GPIOD_CLK_ENABLE();
+    __HAL_RCC_GPIOB_CLK_ENABLE();
+    /**DCMI GPIO Configuration
+    PE4     ------> DCMI_D4
+    PE5     ------> DCMI_D6
+    PE6     ------> DCMI_D7
+    PA4     ------> DCMI_HSYNC
+    PA6     ------> DCMI_PIXCLK
+    PC6     ------> DCMI_D0
+    PC7     ------> DCMI_D1
+    PD3     ------> DCMI_D5
+    PB7     ------> DCMI_VSYNC
+    PE0     ------> DCMI_D2
+    PE1     ------> DCMI_D3
+    */
+    GPIO_InitStruct.Pin = GPIO_PIN_4|GPIO_PIN_5|GPIO_PIN_6|GPIO_PIN_0
+                          |GPIO_PIN_1;
+    GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+    GPIO_InitStruct.Pull = GPIO_PULLUP;
+    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+    GPIO_InitStruct.Alternate = GPIO_AF13_DCMI;
+    HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
+
+    GPIO_InitStruct.Pin = GPIO_PIN_4|GPIO_PIN_6;
+    GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+    GPIO_InitStruct.Pull = GPIO_PULLUP;
+    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+    GPIO_InitStruct.Alternate = GPIO_AF13_DCMI;
+    HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+    GPIO_InitStruct.Pin = GPIO_PIN_6|GPIO_PIN_7;
+    GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+    GPIO_InitStruct.Pull = GPIO_PULLUP;
+    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+    GPIO_InitStruct.Alternate = GPIO_AF13_DCMI;
+    HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+
+    GPIO_InitStruct.Pin = GPIO_PIN_3;
+    GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+    GPIO_InitStruct.Pull = GPIO_PULLUP;
+    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+    GPIO_InitStruct.Alternate = GPIO_AF13_DCMI;
+    HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
+
+    GPIO_InitStruct.Pin = GPIO_PIN_7;
+    GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+    GPIO_InitStruct.Pull = GPIO_PULLUP;
+    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+    GPIO_InitStruct.Alternate = GPIO_AF13_DCMI;
+    HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+  }
+}
+
+
+static int camera_xclk_config(void)
+{
+    GPIO_InitTypeDef GPIO_InitStruct ={ 0 };
+    /*Configure GPIO pin : PA8 */
+    GPIO_InitStruct.Pin = GPIO_PIN_8;
+    GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+    GPIO_InitStruct.Pull = GPIO_PULLUP;
+    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+    GPIO_InitStruct.Alternate = GPIO_AF0_MCO;
+    HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+    /* XCLK:12MHz */
+    HAL_RCC_MCOConfig(RCC_MCO1, RCC_MCO1SOURCE_HSI48, RCC_MCODIV_1);
+
+}
+INIT_BOARD_EXPORT(camera_xclk_config);
+
+
+
 #endif
+
+

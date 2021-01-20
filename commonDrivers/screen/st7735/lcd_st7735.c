@@ -239,7 +239,7 @@ static HAL_StatusTypeDef lcd_st7735_spi_single_line_init(void)
         LOG_E("lcd blk pwm set error.\n");
         goto __other;
     }
-    rt_pwm_enable(lcd_blk_pwm, 2, 1);
+    rt_pwm_enable(lcd_blk_pwm, -2);
 __other:
 #endif
     rt_pin_mode(LCD_DC, PIN_MODE_OUTPUT);

@@ -11,19 +11,16 @@
 #ifndef __CAMERA_I2C_H__
 #define __CAMERA_I2C_H__
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "stm32h7xx_hal.h"
+#include "camera_typdef.h"
 
-
-struct camera_i2c_ops {
-    uint8_t(*read_reg)(uint8_t dev_addr, uint8_t reg_addr, uint8_t* recv_buf, size_t r_size);
-    uint8_t(*writ_reg)(uint8_t dev_addr, uint8_t reg_addr, uint8_t* send_buf, size_t w_size);
-    int (*xclk_config)(uint8_t xclk_source);
-    void(*init)(void);
-};
 extern struct camera_i2c_ops camera_i2c;
 
-
-
-
-
+#ifdef __cplusplus
+}
+#endif
 #endif /* __CAMERA_I2C_H__ */

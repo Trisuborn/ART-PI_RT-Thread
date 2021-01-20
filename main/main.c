@@ -33,7 +33,7 @@ int main()
 
     while ( 1 ) {
         // ts = rt_tick_get();
-        scr_flush(0, 0, 160, 80, i);
+        // scr_flush(0, 0, 160, 80, i);
         // te = rt_tick_get();
         // rt_kprintf("%d tick/f\n", te - ts);
         i += 0xF;

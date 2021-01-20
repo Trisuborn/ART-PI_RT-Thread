@@ -11,7 +11,7 @@
 #include "pro_conf.h"
 #include "sys_conf.h"
 
-#define LOG_TAG        "LCD_ST7735"
+#define LOG_TAG        "SYS"
 
 #if (USER_USE_RTTHREAD == 1)
 #include <rtthread.h>
@@ -273,7 +273,6 @@ void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* tim_baseHandle)
         /* TIM1 interrupt Init */
         HAL_NVIC_SetPriority(TIM1_UP_IRQn, 0, 0);
         HAL_NVIC_EnableIRQ(TIM1_UP_IRQn);
-
     }
 }
 

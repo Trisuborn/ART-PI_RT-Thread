@@ -213,8 +213,6 @@ static rt_err_t drv_pwm_get(TIM_HandleTypeDef *htim, struct rt_pwm_configuration
     {
 #if !defined(SOC_SERIES_STM32F0) && !defined(SOC_SERIES_STM32G0)
         tim_clock = HAL_RCC_GetPCLK2Freq() * 2;
-#else
-        tim_clock = HAL_RCC_GetPCLK2Freq();
 #endif
     }
     else
@@ -262,8 +260,6 @@ static rt_err_t drv_pwm_set(TIM_HandleTypeDef *htim, struct rt_pwm_configuration
     {
 #if !defined(SOC_SERIES_STM32F0) && !defined(SOC_SERIES_STM32G0)
         tim_clock = HAL_RCC_GetPCLK2Freq() * 2;
-#else
-        tim_clock = HAL_RCC_GetPCLK2Freq();
 #endif
     }
     else
@@ -313,8 +309,12 @@ static rt_err_t drv_pwm_control(struct rt_device_pwm *device, int cmd, void *arg
 
     switch (cmd)
     {
+    case PWMN_CMD_ENABLE:
+        configuration->complementary = RT_TRUE;
     case PWM_CMD_ENABLE:
         return drv_pwm_enable(htim, configuration, RT_TRUE);
+    case PWMN_CMD_DISABLE:
+        configuration->complementary = RT_TRUE;
     case PWM_CMD_DISABLE:
         return drv_pwm_enable(htim, configuration, RT_FALSE);
     case PWM_CMD_SET:

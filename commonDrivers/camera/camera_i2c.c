@@ -20,7 +20,7 @@
 #define LOG_TAG       "CAM_I2C"
 #include <drv_log.h>
 
-static struct rt_i2c_bus_device* i2c_dev = { 0 };
+static struct rt_i2c_bus_device* i2c_dev ={ 0 };
 
 #else
 // #define LOG_I     rt_kprintf
@@ -31,18 +31,14 @@ I2C_HandleTypeDef hi2c1;
 #endif
 
 
-
-static uint8_t camera_i2c_read(uint8_t dev_addr, uint8_t reg_addr, uint8_t* recv_buf, size_t r_size);
-static uint8_t camera_i2c_writ(uint8_t dev_addr, uint8_t reg_addr, uint8_t* send_buf, size_t w_size);
+/* camera's default function when user unspecified any obj of camera */
+static uint8_t camera_i2c_read_reg(uint8_t dev_addr, uint8_t reg_addr, uint8_t* recv_buf, size_t r_size);
+static uint8_t camera_i2c_writ_reg(uint8_t dev_addr, uint8_t reg_addr, uint8_t* send_buf, size_t w_size);
 static int camera_xclk_config(uint8_t xclk_source);
-static int camera_i2c_init(void);
+static int camera_i2c_init();
 
-
-struct camera_i2c_ops camera_i2c = {
-    .read_reg = camera_i2c_read,
-    .writ_reg = camera_i2c_writ,
+struct camera_i2c_ops camera_i2c ={
     .init = camera_i2c_init,
-    .xclk_config = camera_xclk_config
 };
 
 /************************************************
@@ -56,27 +52,21 @@ struct camera_i2c_ops camera_i2c = {
  *                  0 : successfully
  *                  1 : err
 *************************************************/
-static uint8_t camera_i2c_read(uint8_t dev_addr, uint8_t reg_addr, uint8_t* recv_buf, size_t r_size)
+static uint8_t camera_i2c_read_reg(uint8_t dev_addr, uint8_t reg_addr, uint8_t* recv_buf, size_t r_size)
 {
     size_t len = 0;
 
-
-    LOG_E("camera_i2c_read");
-    LOG_E("dev_addr : 0x%x", dev_addr);
-    LOG_E("reg_addr : 0x%x", reg_addr);
-    LOG_E("r_size   : %d", r_size);
-
     /* Send the reg address that want to read to real i2c device specified  */
 #if USER_USE_RTTHREAD == 1
-    rt_uint8_t ret = 0;
+    int ret = 0;
     len = rt_i2c_master_send(i2c_dev, (rt_uint16_t)dev_addr, RT_I2C_WR, &reg_addr, r_size);
-    if (len != r_size) {
+    if ( len != r_size ) {
         LOG_E("Camera I2C send register's addr error. (%d)", len);
         ret = -RT_ERROR;
         goto __err;
     }
     len = rt_i2c_master_recv(i2c_dev, (rt_uint16_t)dev_addr, RT_I2C_RD, recv_buf, r_size);
-    if (len != r_size) {
+    if ( len != r_size ) {
         LOG_E("Camera I2C receive error.");
         ret = -RT_ERROR;
         goto __err;
@@ -85,13 +75,13 @@ static uint8_t camera_i2c_read(uint8_t dev_addr, uint8_t reg_addr, uint8_t* recv
 #else
     HAL_StatusTypeDef ret = HAL_ERROR;
     ret = HAL_I2C_Master_Transmit(&hi2c1, dev_addr, &reg_addr, 1, 0xFFFF);
-    if (ret != HAL_OK) {
+    if ( ret != HAL_OK ) {
         LOG_E("Camera I2C send register's addr error. (%d)", ret);
         ret = HAL_ERROR;
         goto __err;
     }
     ret = HAL_I2C_Master_Receive(&hi2c1, dev_addr, recv_buf, 1, 0xFFFF);
-    if (ret != HAL_OK) {
+    if ( ret != HAL_OK ) {
         LOG_E("Camera I2C receive error. (%d)", ret);
         ret = HAL_ERROR;
         goto __err;
@@ -113,7 +103,7 @@ __err:
  *                  0 : successfully
  *                  1 : err
 *************************************************/
-static uint8_t camera_i2c_writ(uint8_t dev_addr, uint8_t reg_addr, uint8_t* send_buf, size_t w_size)
+static uint8_t camera_i2c_writ_reg(uint8_t dev_addr, uint8_t reg_addr, uint8_t* send_buf, size_t w_size)
 {
 
 }
@@ -128,7 +118,7 @@ static uint8_t camera_i2c_writ(uint8_t dev_addr, uint8_t reg_addr, uint8_t* send
 *************************************************/
 static int camera_xclk_config(uint8_t xclk_source)
 {
-    GPIO_InitTypeDef GPIO_InitStruct = { 0 };
+    GPIO_InitTypeDef GPIO_InitStruct ={ 0 };
     /*Configure GPIO pin : PA8 */
     GPIO_InitStruct.Pin = GPIO_PIN_8;
     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
@@ -140,6 +130,7 @@ static int camera_xclk_config(uint8_t xclk_source)
     /* XCLK:12MHz */
     HAL_RCC_MCOConfig(RCC_MCO1, RCC_MCO1SOURCE_HSI48, RCC_MCODIV_4);
 
+    return 0;
 }
 
 
@@ -159,17 +150,17 @@ void MX_I2C1_Init(void)
     hi2c1.Init.OwnAddress2Masks = I2C_OA2_NOMASK;
     hi2c1.Init.GeneralCallMode = I2C_GENERALCALL_DISABLE;
     hi2c1.Init.NoStretchMode = I2C_NOSTRETCH_DISABLE;
-    if (HAL_I2C_Init(&hi2c1) != HAL_OK) {
+    if ( HAL_I2C_Init(&hi2c1) != HAL_OK ) {
 
     }
     /** Configure Analogue filter
     */
-    if (HAL_I2CEx_ConfigAnalogFilter(&hi2c1, I2C_ANALOGFILTER_ENABLE) != HAL_OK) {
+    if ( HAL_I2CEx_ConfigAnalogFilter(&hi2c1, I2C_ANALOGFILTER_ENABLE) != HAL_OK ) {
 
-}
-/** Configure Digital filter
-*/
-    if (HAL_I2CEx_ConfigDigitalFilter(&hi2c1, 0) != HAL_OK) {
+    }
+    /** Configure Digital filter
+    */
+    if ( HAL_I2CEx_ConfigDigitalFilter(&hi2c1, 0) != HAL_OK ) {
 
     }
 
@@ -178,8 +169,8 @@ void MX_I2C1_Init(void)
 void HAL_I2C_MspInit(I2C_HandleTypeDef* i2cHandle)
 {
 
-    GPIO_InitTypeDef GPIO_InitStruct = { 0 };
-    if (i2cHandle->Instance == I2C1) {
+    GPIO_InitTypeDef GPIO_InitStruct ={ 0 };
+    if ( i2cHandle->Instance == I2C1 ) {
         __HAL_RCC_GPIOB_CLK_ENABLE();
         /**I2C1 GPIO Configuration
         PB8     ------> I2C1_SCL
@@ -199,20 +190,17 @@ void HAL_I2C_MspInit(I2C_HandleTypeDef* i2cHandle)
 #endif
 
 
-
-#define OV7670_ADDRESS 0x42u
-#define OV2640_ADDRESS 0x60u
-#define OV7725_ADDRESS 0x42u
-#define OV5640_ADDRESS 0x78u
-
 static int camera_i2c_init(void)
 {
-    uint8_t ret = 0;
+    int ret = 0;
+
+    camera_i2c.read_reg = camera_i2c_read_reg;
+    camera_i2c.writ_reg = camera_i2c_writ_reg;
 
 #if USER_USE_RTTHREAD == 1
-    if (!i2c_dev) {
+    if ( !i2c_dev ) {
         i2c_dev = (struct rt_i2c_bus_device*)rt_device_find("i2c1");
-        if (i2c_dev == RT_NULL) {
+        if ( i2c_dev == RT_NULL ) {
             LOG_E("Camera's I2C get error.");
             ret = -RT_ERROR;
             goto __err;
@@ -225,24 +213,8 @@ static int camera_i2c_init(void)
     ret = 0;
 #endif
 
-
-    camera_i2c.xclk_config(1);
-
-    uint8_t buf[2] = { 0 };
-    ret = camera_i2c.read_reg(OV7725_ADDRESS, 0x0A, &buf[0], 1);
-#if USER_USE_RTTHREAD == 1
-    if (ret != RT_EOK) {
-#else
-    if (ret != 0) {
-#endif
-        LOG_E("CAM I2C test error");
-    } else {
-        rt_kprintf("i2c read : %x\n", buf[0]);
-    }
-
 __err:
     return ret;
-    }
-#if (USER_USE_RTTHREAD == 1)
-INIT_APP_EXPORT(camera_i2c_init);
-#endif
+}
+
+

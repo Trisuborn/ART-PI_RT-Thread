@@ -44,16 +44,16 @@ static int stm32_ex_sram_init()
     __IO uint32_t* sram_p;
     uint32_t offset = 0xFF;
 
-    sram_p = (__IO uint32_t*)0x24000000 + offset;
-    *sram_p = tmp;
-    HAL_Delay(5);
-    if ( *sram_p == tmp ) {
-        /* 因为axi有SDMMC占用的ZI段，所以axi的实际大小为：axi sram size - ZI size */
-        err = rt_memheap_init(&axi_sram0, "axi_sram0", (void*)(AXI_SRAM_ZI_END), AXI_SRAM_FREE_SIZE);
-        if ( err != RT_EOK ) {
-            rt_kprintf("axi_sram0 memheap init error.\n");
-        }
-    }
+    // sram_p = (__IO uint32_t*)0x24000000 + offset;
+    // *sram_p = tmp;
+    // HAL_Delay(5);
+    // if ( *sram_p == tmp ) {
+    //     /* 因为axi有SDMMC占用的ZI段，所以axi的实际大小为：axi sram size - ZI size */
+    //     err = rt_memheap_init(&axi_sram0, "axi_sram0", (void*)(AXI_SRAM_ZI_END), AXI_SRAM_FREE_SIZE);
+    //     if ( err != RT_EOK ) {
+    //         rt_kprintf("axi_sram0 memheap init error.\n");
+    //     }
+    // }
 
     sram_p = (__IO uint32_t*)0x30000000 + offset;
     *sram_p = tmp;
@@ -64,36 +64,6 @@ static int stm32_ex_sram_init()
             rt_kprintf("ahb_sram123 memheap init error.\n");
         }
     }
-
-    // sram_p = (__IO uint32_t*)0x30000000 + offset;
-    // *sram_p = tmp;
-    // HAL_Delay(5);
-    // if (*sram_p == tmp) {
-    //     err = rt_memheap_init(&ahb_sram1, "ahb_sram1", (void*)(0x30000000), (128 * 1024));
-    //     if (err != RT_EOK) {
-    //         rt_kprintf("ahb_sram1 memheap init error.\n");
-    //     }
-    // }
-
-    // sram_p = (__IO uint32_t*)0x30020000 + offset;
-    // *sram_p = tmp;
-    // HAL_Delay(5);
-    // if (*sram_p == tmp) {
-    //     err = rt_memheap_init(&ahb_sram2, "ahb_sram2", (void*)(0x30020000), (128 * 1024));
-    //     if (err != RT_EOK) {
-    //         rt_kprintf("ahb_sram2 memheap init error.\n");
-    //     }
-    // }
-
-    // sram_p = (__IO uint32_t*)0x30040000 + offset;
-    // *sram_p = tmp;
-    // HAL_Delay(5);
-    // if (*sram_p == tmp) {
-    //     err = rt_memheap_init(&ahb_sram3, "ahb_sram3", (void*)(0x30040000), (32 * 1024));
-    //     if (err != RT_EOK) {
-    //         rt_kprintf("ahb_sram3 memheap init error.\n");
-    //     }
-    // }
 
     sram_p = (__IO uint32_t*)0x38000000 + offset;
     *sram_p = tmp;
