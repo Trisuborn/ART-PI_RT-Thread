@@ -35,7 +35,7 @@ I2C_HandleTypeDef hi2c1;
 static uint8_t camera_i2c_read_reg(uint8_t dev_addr, uint8_t reg_addr, uint8_t* recv_buf, size_t r_size);
 static uint8_t camera_i2c_writ_reg(uint8_t dev_addr, uint8_t reg_addr, uint8_t* send_buf, size_t w_size);
 static int camera_xclk_config(uint8_t xclk_source);
-static int camera_i2c_init();
+static int camera_i2c_init(void);
 
 struct camera_i2c_ops camera_i2c ={
     .init = camera_i2c_init,
@@ -73,17 +73,17 @@ static uint8_t camera_i2c_read_reg(uint8_t dev_addr, uint8_t reg_addr, uint8_t* 
     }
     ret = RT_EOK;
 #else
-    HAL_StatusTypeDef ret = HAL_ERROR;
+    uint8_t ret = 1;
     ret = HAL_I2C_Master_Transmit(&hi2c1, dev_addr, &reg_addr, 1, 0xFFFF);
     if ( ret != HAL_OK ) {
         LOG_E("Camera I2C send register's addr error. (%d)", ret);
-        ret = HAL_ERROR;
+        ret = 1;
         goto __err;
     }
     ret = HAL_I2C_Master_Receive(&hi2c1, dev_addr, recv_buf, 1, 0xFFFF);
     if ( ret != HAL_OK ) {
         LOG_E("Camera I2C receive error. (%d)", ret);
-        ret = HAL_ERROR;
+        ret = 1;
         goto __err;
     }
 #endif

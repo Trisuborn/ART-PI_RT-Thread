@@ -16,7 +16,7 @@ extern "C" {
 #endif
 
 #include "stm32h7xx_hal.h"
-#include "camera_typdef.h"
+#include "camera_typedef.h"
 
 extern struct camera_i2c_ops camera_i2c;
 

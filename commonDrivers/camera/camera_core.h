@@ -16,9 +16,12 @@ extern "C" {
 #endif
 
 #include "stm32h7xx_hal.h"
-#include "camera_typdef.h"
+#include "camera_typedef.h"
 
-void camera_init(struct camera_ov_t* cam);
+
+
+// uint8_t camera_read_id(struct camera_ov_t* cam);
+// void camera_init(struct camera_ov_t* cam);
 
 #ifdef __cplusplus
 }

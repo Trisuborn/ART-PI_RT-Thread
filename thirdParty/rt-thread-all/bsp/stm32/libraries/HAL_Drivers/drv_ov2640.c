@@ -554,8 +554,8 @@ int rt_ov2640_init(void)
     ov2640_set_brightness(4);
     ov2640_set_contrast(3);
     ov2640_jpeg_mode();
-    ov2640_set_image_window_size(0, 0, 128, 128);
-    ov2640_set_image_out_size(128, 128);
+    ov2640_set_image_window_size(0, 0, 320, 240);
+    ov2640_set_image_out_size(320, 240);
 
     dcmi_dev = rt_device_find("dcmi");
     if ( dcmi_dev == RT_NULL ) {

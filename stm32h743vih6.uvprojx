@@ -1048,21 +1048,6 @@
           <GroupName>Common/driver</GroupName>
           <Files>
             <File>
-              <FileName>lcd_st7735.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\commonDrivers\screen\st7735\lcd_st7735.c</FilePath>
-            </File>
-            <File>
-              <FileName>pin_wkup.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\commonDrivers\pin_wkup\pin_wkup.c</FilePath>
-            </File>
-            <File>
-              <FileName>camera_i2c.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\commonDrivers\camera\camera_i2c.c</FilePath>
-            </File>
-            <File>
               <FileName>jpeg_utils.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\commonDrivers\hwjpeg\jpeg_utils.c</FilePath>
@@ -1078,14 +1063,34 @@
               <FilePath>.\commonDrivers\screen\screen.c</FilePath>
             </File>
             <File>
-              <FileName>camera_core.c</FileName>
+              <FileName>lcd_st7735.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\commonDrivers\camera\camera_core.c</FilePath>
+              <FilePath>.\commonDrivers\screen\st7735\lcd_st7735.c</FilePath>
+            </File>
+            <File>
+              <FileName>pin_wkup.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\commonDrivers\pin_wkup\pin_wkup.c</FilePath>
             </File>
             <File>
               <FileName>ov2640.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\commonDrivers\camera\OV2640\ov2640.c</FilePath>
+            </File>
+            <File>
+              <FileName>camera_i2c.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\commonDrivers\camera\camera_i2c.c</FilePath>
+            </File>
+            <File>
+              <FileName>camera_core.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\commonDrivers\camera\camera_core.c</FilePath>
+            </File>
+            <File>
+              <FileName>ov2640_regs.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\commonDrivers\camera\OV2640\ov2640_regs.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -3410,72 +3415,6 @@
           <GroupName>Common/driver</GroupName>
           <Files>
             <File>
-              <FileName>lcd_st7735.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\commonDrivers\screen\st7735\lcd_st7735.c</FilePath>
-            </File>
-            <File>
-              <FileName>pin_wkup.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\commonDrivers\pin_wkup\pin_wkup.c</FilePath>
-            </File>
-            <File>
-              <FileName>camera_i2c.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\commonDrivers\camera\camera_i2c.c</FilePath>
-              <FileOption>
-                <CommonProperty>
-                  <UseCPPCompiler>2</UseCPPCompiler>
-                  <RVCTCodeConst>0</RVCTCodeConst>
-                  <RVCTZI>0</RVCTZI>
-                  <RVCTOtherData>0</RVCTOtherData>
-                  <ModuleSelection>0</ModuleSelection>
-                  <IncludeInBuild>0</IncludeInBuild>
-                  <AlwaysBuild>2</AlwaysBuild>
-                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
-                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
-                  <PublicsOnly>2</PublicsOnly>
-                  <StopOnExitCode>11</StopOnExitCode>
-                  <CustomArgument></CustomArgument>
-                  <IncludeLibraryModules></IncludeLibraryModules>
-                  <ComprImg>1</ComprImg>
-                </CommonProperty>
-                <FileArmAds>
-                  <Cads>
-                    <interw>2</interw>
-                    <Optim>0</Optim>
-                    <oTime>2</oTime>
-                    <SplitLS>2</SplitLS>
-                    <OneElfS>2</OneElfS>
-                    <Strict>2</Strict>
-                    <EnumInt>2</EnumInt>
-                    <PlainCh>2</PlainCh>
-                    <Ropi>2</Ropi>
-                    <Rwpi>2</Rwpi>
-                    <wLevel>0</wLevel>
-                    <uThumb>2</uThumb>
-                    <uSurpInc>2</uSurpInc>
-                    <uC99>2</uC99>
-                    <uGnu>2</uGnu>
-                    <useXO>2</useXO>
-                    <v6Lang>0</v6Lang>
-                    <v6LangP>0</v6LangP>
-                    <vShortEn>2</vShortEn>
-                    <vShortWch>2</vShortWch>
-                    <v6Lto>2</v6Lto>
-                    <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
-                    <VariousControls>
-                      <MiscControls></MiscControls>
-                      <Define></Define>
-                      <Undefine></Undefine>
-                      <IncludePath></IncludePath>
-                    </VariousControls>
-                  </Cads>
-                </FileArmAds>
-              </FileOption>
-            </File>
-            <File>
               <FileName>jpeg_utils.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\commonDrivers\hwjpeg\jpeg_utils.c</FilePath>
@@ -3593,116 +3532,34 @@
               <FilePath>.\commonDrivers\screen\screen.c</FilePath>
             </File>
             <File>
-              <FileName>camera_core.c</FileName>
+              <FileName>lcd_st7735.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\commonDrivers\camera\camera_core.c</FilePath>
-              <FileOption>
-                <CommonProperty>
-                  <UseCPPCompiler>2</UseCPPCompiler>
-                  <RVCTCodeConst>0</RVCTCodeConst>
-                  <RVCTZI>0</RVCTZI>
-                  <RVCTOtherData>0</RVCTOtherData>
-                  <ModuleSelection>0</ModuleSelection>
-                  <IncludeInBuild>0</IncludeInBuild>
-                  <AlwaysBuild>2</AlwaysBuild>
-                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
-                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
-                  <PublicsOnly>2</PublicsOnly>
-                  <StopOnExitCode>11</StopOnExitCode>
-                  <CustomArgument></CustomArgument>
-                  <IncludeLibraryModules></IncludeLibraryModules>
-                  <ComprImg>1</ComprImg>
-                </CommonProperty>
-                <FileArmAds>
-                  <Cads>
-                    <interw>2</interw>
-                    <Optim>0</Optim>
-                    <oTime>2</oTime>
-                    <SplitLS>2</SplitLS>
-                    <OneElfS>2</OneElfS>
-                    <Strict>2</Strict>
-                    <EnumInt>2</EnumInt>
-                    <PlainCh>2</PlainCh>
-                    <Ropi>2</Ropi>
-                    <Rwpi>2</Rwpi>
-                    <wLevel>0</wLevel>
-                    <uThumb>2</uThumb>
-                    <uSurpInc>2</uSurpInc>
-                    <uC99>2</uC99>
-                    <uGnu>2</uGnu>
-                    <useXO>2</useXO>
-                    <v6Lang>0</v6Lang>
-                    <v6LangP>0</v6LangP>
-                    <vShortEn>2</vShortEn>
-                    <vShortWch>2</vShortWch>
-                    <v6Lto>2</v6Lto>
-                    <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
-                    <VariousControls>
-                      <MiscControls></MiscControls>
-                      <Define></Define>
-                      <Undefine></Undefine>
-                      <IncludePath></IncludePath>
-                    </VariousControls>
-                  </Cads>
-                </FileArmAds>
-              </FileOption>
+              <FilePath>.\commonDrivers\screen\st7735\lcd_st7735.c</FilePath>
+            </File>
+            <File>
+              <FileName>pin_wkup.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\commonDrivers\pin_wkup\pin_wkup.c</FilePath>
             </File>
             <File>
               <FileName>ov2640.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\commonDrivers\camera\OV2640\ov2640.c</FilePath>
-              <FileOption>
-                <CommonProperty>
-                  <UseCPPCompiler>2</UseCPPCompiler>
-                  <RVCTCodeConst>0</RVCTCodeConst>
-                  <RVCTZI>0</RVCTZI>
-                  <RVCTOtherData>0</RVCTOtherData>
-                  <ModuleSelection>0</ModuleSelection>
-                  <IncludeInBuild>0</IncludeInBuild>
-                  <AlwaysBuild>2</AlwaysBuild>
-                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
-                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
-                  <PublicsOnly>2</PublicsOnly>
-                  <StopOnExitCode>11</StopOnExitCode>
-                  <CustomArgument></CustomArgument>
-                  <IncludeLibraryModules></IncludeLibraryModules>
-                  <ComprImg>1</ComprImg>
-                </CommonProperty>
-                <FileArmAds>
-                  <Cads>
-                    <interw>2</interw>
-                    <Optim>0</Optim>
-                    <oTime>2</oTime>
-                    <SplitLS>2</SplitLS>
-                    <OneElfS>2</OneElfS>
-                    <Strict>2</Strict>
-                    <EnumInt>2</EnumInt>
-                    <PlainCh>2</PlainCh>
-                    <Ropi>2</Ropi>
-                    <Rwpi>2</Rwpi>
-                    <wLevel>0</wLevel>
-                    <uThumb>2</uThumb>
-                    <uSurpInc>2</uSurpInc>
-                    <uC99>2</uC99>
-                    <uGnu>2</uGnu>
-                    <useXO>2</useXO>
-                    <v6Lang>0</v6Lang>
-                    <v6LangP>0</v6LangP>
-                    <vShortEn>2</vShortEn>
-                    <vShortWch>2</vShortWch>
-                    <v6Lto>2</v6Lto>
-                    <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
-                    <VariousControls>
-                      <MiscControls></MiscControls>
-                      <Define></Define>
-                      <Undefine></Undefine>
-                      <IncludePath></IncludePath>
-                    </VariousControls>
-                  </Cads>
-                </FileArmAds>
-              </FileOption>
+            </File>
+            <File>
+              <FileName>camera_i2c.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\commonDrivers\camera\camera_i2c.c</FilePath>
+            </File>
+            <File>
+              <FileName>camera_core.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\commonDrivers\camera\camera_core.c</FilePath>
+            </File>
+            <File>
+              <FileName>ov2640_regs.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\commonDrivers\camera\OV2640\ov2640_regs.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -4242,6 +4099,57 @@
               <FileName>drv_dcmi.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\thirdParty\rt-thread-all\bsp\stm32\libraries\HAL_Drivers\drv_dcmi.c</FilePath>
+              <FileOption>
+                <CommonProperty>
+                  <UseCPPCompiler>2</UseCPPCompiler>
+                  <RVCTCodeConst>0</RVCTCodeConst>
+                  <RVCTZI>0</RVCTZI>
+                  <RVCTOtherData>0</RVCTOtherData>
+                  <ModuleSelection>0</ModuleSelection>
+                  <IncludeInBuild>0</IncludeInBuild>
+                  <AlwaysBuild>2</AlwaysBuild>
+                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
+                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
+                  <PublicsOnly>2</PublicsOnly>
+                  <StopOnExitCode>11</StopOnExitCode>
+                  <CustomArgument></CustomArgument>
+                  <IncludeLibraryModules></IncludeLibraryModules>
+                  <ComprImg>1</ComprImg>
+                </CommonProperty>
+                <FileArmAds>
+                  <Cads>
+                    <interw>2</interw>
+                    <Optim>0</Optim>
+                    <oTime>2</oTime>
+                    <SplitLS>2</SplitLS>
+                    <OneElfS>2</OneElfS>
+                    <Strict>2</Strict>
+                    <EnumInt>2</EnumInt>
+                    <PlainCh>2</PlainCh>
+                    <Ropi>2</Ropi>
+                    <Rwpi>2</Rwpi>
+                    <wLevel>0</wLevel>
+                    <uThumb>2</uThumb>
+                    <uSurpInc>2</uSurpInc>
+                    <uC99>2</uC99>
+                    <uGnu>2</uGnu>
+                    <useXO>2</useXO>
+                    <v6Lang>0</v6Lang>
+                    <v6LangP>0</v6LangP>
+                    <vShortEn>2</vShortEn>
+                    <vShortWch>2</vShortWch>
+                    <v6Lto>2</v6Lto>
+                    <v6WtE>2</v6WtE>
+                    <v6Rtti>2</v6Rtti>
+                    <VariousControls>
+                      <MiscControls></MiscControls>
+                      <Define></Define>
+                      <Undefine></Undefine>
+                      <IncludePath></IncludePath>
+                    </VariousControls>
+                  </Cads>
+                </FileArmAds>
+              </FileOption>
             </File>
             <File>
               <FileName>drv_soft_i2c.c</FileName>
@@ -4259,7 +4167,7 @@
                   <RVCTZI>0</RVCTZI>
                   <RVCTOtherData>0</RVCTOtherData>
                   <ModuleSelection>0</ModuleSelection>
-                  <IncludeInBuild>1</IncludeInBuild>
+                  <IncludeInBuild>0</IncludeInBuild>
                   <AlwaysBuild>2</AlwaysBuild>
                   <GenerateAssemblyFile>2</GenerateAssemblyFile>
                   <AssembleAssemblyFile>2</AssembleAssemblyFile>
@@ -6107,21 +6015,6 @@
           </GroupOption>
           <Files>
             <File>
-              <FileName>lcd_st7735.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\commonDrivers\screen\st7735\lcd_st7735.c</FilePath>
-            </File>
-            <File>
-              <FileName>pin_wkup.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\commonDrivers\pin_wkup\pin_wkup.c</FilePath>
-            </File>
-            <File>
-              <FileName>camera_i2c.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\commonDrivers\camera\camera_i2c.c</FilePath>
-            </File>
-            <File>
               <FileName>jpeg_utils.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\commonDrivers\hwjpeg\jpeg_utils.c</FilePath>
@@ -6137,14 +6030,34 @@
               <FilePath>.\commonDrivers\screen\screen.c</FilePath>
             </File>
             <File>
-              <FileName>camera_core.c</FileName>
+              <FileName>lcd_st7735.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\commonDrivers\camera\camera_core.c</FilePath>
+              <FilePath>.\commonDrivers\screen\st7735\lcd_st7735.c</FilePath>
+            </File>
+            <File>
+              <FileName>pin_wkup.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\commonDrivers\pin_wkup\pin_wkup.c</FilePath>
             </File>
             <File>
               <FileName>ov2640.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\commonDrivers\camera\OV2640\ov2640.c</FilePath>
+            </File>
+            <File>
+              <FileName>camera_i2c.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\commonDrivers\camera\camera_i2c.c</FilePath>
+            </File>
+            <File>
+              <FileName>camera_core.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\commonDrivers\camera\camera_core.c</FilePath>
+            </File>
+            <File>
+              <FileName>ov2640_regs.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\commonDrivers\camera\OV2640\ov2640_regs.c</FilePath>
             </File>
           </Files>
         </Group>
